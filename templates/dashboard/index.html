@@ -12,7 +12,7 @@
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="mb-1 opacity-75">Total Applications</p>
+                    <p class="mb-1 opacity-75">Total Bookings</p>
                     <h3 class="mb-0">{{ total_applications }}</h3>
                     <small>New: {{ new_applications }}</small>
                 </div>
@@ -22,11 +22,11 @@
     </div>
     
     <div class="col-md-6 col-lg-3">
-        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="mb-1 opacity-75">Total Courses</p>
-                    <h3 class="mb-0">{{ total_courses }}</h3>
+                            <p class="mb-1 opacity-75">Total Listings</p>
+                            <h3 class="mb-0">{{ total_courses }}</h3>
                 </div>
                 <i class="fas fa-book fa-2x opacity-50"></i>
             </div>
@@ -34,7 +34,7 @@
     </div>
     
     <div class="col-md-6 col-lg-3">
-        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <p class="mb-1 opacity-75">Blog Posts</p>
@@ -46,7 +46,7 @@
     </div>
     
     <div class="col-md-6 col-lg-3">
-        <div class="stat-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <p class="mb-1 opacity-75">Gallery Images</p>
@@ -62,7 +62,7 @@
 <div class="row mb-4">
     <div class="col-lg-6">
         <div class="card p-4">
-            <h5 class="fw-bold mb-3">Applications by Status</h5>
+            <h5 class="fw-bold mb-3">Bookings by Status</h5>
             <div class="list-group">
                 {% for status in applications_by_status %}
                 <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -78,7 +78,7 @@
     
     <div class="col-lg-6">
         <div class="card p-4">
-            <h5 class="fw-bold mb-3">Top Courses by Applications</h5>
+            <h5 class="fw-bold mb-3">Top Listings by Bookings</h5>
             <div class="list-group">
                 {% for course in applications_by_course %}
                 <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -98,7 +98,7 @@
     <div class="col-lg-8">
         <div class="card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0">Recent Applications</h5>
+                <h5 class="fw-bold mb-0">Recent Bookings</h5>
                 <a href="{% url 'dashboard:applications_list' %}" class="btn btn-sm btn-primary">View All</a>
             </div>
             
@@ -107,7 +107,7 @@
                     <thead class="table-light">
                         <tr>
                             <th>Name</th>
-                            <th>Course</th>
+                            <th>Property</th>
                             <th>Email</th>
                             <th>Status</th>
                             <th>Date</th>
@@ -149,19 +149,19 @@
             <h5 class="fw-bold mb-3">Quick Actions</h5>
             <div class="list-group">
                 <a href="{% url 'dashboard:course_create' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-plus text-primary"></i> Add New Course
+                    <i class="fas fa-plus" style="color:var(--brand-green)"></i> Add New Listing
                 </a>
                 <a href="{% url 'dashboard:blog_create' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-plus text-primary"></i> Write Blog Post
+                    <i class="fas fa-plus" style="color:var(--brand-green)"></i> Write Blog Post
                 </a>
                 <a href="{% url 'dashboard:gallery_upload' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-plus text-primary"></i> Upload Image
+                    <i class="fas fa-plus" style="color:var(--brand-green)"></i> Upload Image
                 </a>
                 <a href="{% url 'dashboard:testimonial_create' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-plus text-primary"></i> Add Testimonial
+                    <i class="fas fa-plus" style="color:var(--brand-green)"></i> Add Testimonial
                 </a>
                 <a href="{% url 'dashboard:applications_list' %}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-list text-primary"></i> Manage Applications
+                    <i class="fas fa-list" style="color:var(--brand-green)"></i> Manage Bookings
                 </a>
             </div>
         </div>

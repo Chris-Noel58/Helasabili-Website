@@ -118,6 +118,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'website.apps.WebsiteConfig',
     'dashboard.apps.DashboardConfig',
+    'helasabili.apps.HelasabiliConfig',  # External Helasabili database (read-only)
 ]
 
 MIDDLEWARE = [
@@ -164,11 +165,19 @@ if USE_PROD_DB:
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'NAME': config('DB_NAME', default='School_DB'),
+                'NAME': config('DB_NAME', default='HelasabiliWebsite2'),
                 'USER': config('DB_USER', default='postgres'),
                 'PASSWORD': config('DB_PASSWORD', default='Chris6658'),
                 'HOST': config('DB_HOST', default='localhost'),
                 'PORT': config('DB_PORT', default='5432'),
+            },
+            'helasabili': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': config('HELASABILI_DB_NAME', default='Helasabili'),
+                'USER': config('HELASABILI_DB_USER', default='postgres'),
+                'PASSWORD': config('HELASABILI_DB_PASSWORD', default='Chris6658'),
+                'HOST': config('HELASABILI_DB_HOST', default='localhost'),
+                'PORT': config('HELASABILI_DB_PORT', default='5432'),
             }
         }
     elif 'mysql' in DB_ENGINE:
@@ -180,6 +189,17 @@ if USE_PROD_DB:
                 'PASSWORD': config('DB_PASSWORD', default='Nchsm@Kikuyu2025'),
                 'HOST': config('DB_HOST', default='localhost'),
                 'PORT': config('DB_PORT', default='3306'),
+                'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+                }
+            },
+            'helasabili': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': config('HELASABILI_DB_NAME', default='Helasabili'),
+                'USER': config('HELASABILI_DB_USER', default='postgres'),
+                'PASSWORD': config('HELASABILI_DB_PASSWORD', default='Chis6658'),
+                'HOST': config('HELASABILI_DB_HOST', default='localhost'),
+                'PORT': config('HELASABILI_DB_PORT', default='3306'),
                 'OPTIONS': {
                     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
                 }
@@ -200,6 +220,18 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    # Add helasabili database for local development using PostgreSQL
+    DATABASES['helasabili'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('HELASABILI_DB_NAME', default='Helasabili'),
+        'USER': config('HELASABILI_DB_USER', default='postgres'),
+        'PASSWORD': config('HELASABILI_DB_PASSWORD', default='Chris6658'),
+        'HOST': config('HELASABILI_DB_HOST', default='localhost'),
+        'PORT': config('HELASABILI_DB_PORT', default='5432'),
+    }
+
+# Database router for read-only helasabili database
+DATABASE_ROUTERS = ['nchskikuyu.routers.HelasabiliRouter']
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

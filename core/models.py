@@ -19,21 +19,16 @@ class TimeStampedModel(models.Model):
 
 
 class Course(TimeStampedModel):
-    """Course model for various programs offered"""
-    INTAKE_CHOICES = [
-        ('january', 'January'),
-        ('april', 'April'),
-        ('july', 'July'),
-        ('september', 'September'),
-    ]
-    
+    """Course model repurposed for property listings"""
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
-    duration = models.CharField(max_length=50, help_text="e.g., 2 Years, 3 Months")
-    intake_period = models.CharField(max_length=20, choices=INTAKE_CHOICES)
     fees = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     featured_image = models.ImageField(upload_to='courses/', null=True, blank=True)
+    # Fields for property listings
+    location = models.CharField(max_length=300, blank=True, help_text='Location or nearest town')
+    plot_size = models.CharField(max_length=50, default='50 x 100')
+    extra_details = models.TextField(blank=True, help_text='Additional listing details (e.g., landmarks, access roads)')
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0)
 
@@ -60,6 +55,36 @@ class Course(TimeStampedModel):
         if os.path.exists(image_path):
             img = Image.open(image_path)
             if img.height > 300 or img.width > 400:
+                img.thumbnail(size, Image.Resampling.LANCZOS)
+                img.save(image_path, quality=85, optimize=True)
+
+
+class CourseImage(TimeStampedModel):
+    """Additional photos for a land listing with captions."""
+    course = models.ForeignKey(Course, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='courses/gallery/', null=True, blank=True)
+    caption = models.CharField(max_length=200, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Course Image'
+        verbose_name_plural = 'Course Images'
+
+    def __str__(self):
+        return self.caption or f"{self.course.title} image {self.id}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            self.optimize_image(self.image.path)
+
+    @staticmethod
+    def optimize_image(image_path, size=(1200, 900)):
+        if os.path.exists(image_path):
+            img = Image.open(image_path)
+            if img.height > 900 or img.width > 1200:
                 img.thumbnail(size, Image.Resampling.LANCZOS)
                 img.save(image_path, quality=85, optimize=True)
 
@@ -143,11 +168,12 @@ class Testimonial(TimeStampedModel):
 class GalleryImage(TimeStampedModel):
     """Gallery images model"""
     CATEGORY_CHOICES = [
-        ('classroom', 'Classroom'),
-        ('event', 'Event'),
-        ('graduation', 'Graduation'),
-        ('lab', 'Lab'),
-        ('campus', 'Campus Life'),
+        ('main-view', 'Main View'),
+        ('frontage', 'Frontage'),
+        ('road-access', 'Road Access'),
+        ('plot-layout', 'Plot Layout'),
+        ('surroundings', 'Surroundings'),
+        ('title-documents', 'Title Documents'),
         ('other', 'Other'),
     ]
     
@@ -170,6 +196,42 @@ class GalleryImage(TimeStampedModel):
         super().save(*args, **kwargs)
         if self.image:
             self.optimize_image(self.image.path)
+
+
+class Video(TimeStampedModel):
+    """YouTube video links for embedding on the site."""
+    title = models.CharField(max_length=250)
+    youtube_url = models.URLField(help_text='Full YouTube URL (https://www.youtube.com/watch?v=...)')
+    description = models.TextField(blank=True)
+    thumbnail = models.URLField(blank=True, help_text='Optional thumbnail URL (auto-extracted if left blank)')
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = 'Video'
+        verbose_name_plural = 'Videos'
+
+    def __str__(self):
+        return self.title
+
+    def youtube_id(self):
+        """Extract the video id from a YouTube URL."""
+        import re
+        m = re.search(r'(?:v=|youtu\.be/)([A-Za-z0-9_-]{6,})', self.youtube_url or '')
+        return m.group(1) if m else None
+
+    def embed_url(self):
+        vid = self.youtube_id()
+        return f'https://www.youtube.com/embed/{vid}' if vid else ''
+
+    def save(self, *args, **kwargs):
+        # Auto-populate thumbnail if missing (YouTube default thumbnail)
+        if not self.thumbnail:
+            vid = self.youtube_id()
+            if vid:
+                self.thumbnail = f'https://img.youtube.com/vi/{vid}/hqdefault.jpg'
+        super().save(*args, **kwargs)
 
     @staticmethod
     def optimize_image(image_path, size=(800, 600)):
@@ -447,3 +509,46 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.subject or 'Message'} from {self.email or 'anonymous'}"
+
+
+class Conversation(TimeStampedModel):
+    """A conversation record for admin review and follow-up."""
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    ]
+
+    listing = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, related_name='conversations')
+    name = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(blank=True)
+    subject = models.CharField(max_length=255, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+
+    class Meta:
+        verbose_name = 'Conversation'
+        verbose_name_plural = 'Conversations'
+
+    def __str__(self):
+        return f"Conversation {self.pk} - {self.subject or 'No subject'}"
+
+
+class ConversationMessage(TimeStampedModel):
+    """Individual messages in a conversation."""
+    SENDER_CHOICES = [
+        ('visitor', 'Visitor'),
+        ('agent', 'Agent'),
+        ('system', 'System'),
+    ]
+
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    sender = models.CharField(max_length=20, choices=SENDER_CHOICES, default='visitor')
+    text = models.TextField()
+
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = 'Conversation Message'
+        verbose_name_plural = 'Conversation Messages'
+
+    def __str__(self):
+        return f"{self.get_sender_display()} @ {self.created_at}: {self.text[:50]}"

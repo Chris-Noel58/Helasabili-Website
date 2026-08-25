@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <!-- Logo/Brand -->
         <a class="navbar-brand fw-bold" href="{% url 'website:home' %}">
-            <i class="fas fa-graduation-cap" style="color: #6366f1;"></i> NCHSM
+            <i class="fas fa-building" style="color: #63c132;"></i> Helasabili
         </a>
         
         <!-- Hamburger Menu -->
@@ -24,18 +24,20 @@
                        href="{% url 'website:about' %}">About</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="academicsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Academics
+                    <a class="nav-link dropdown-toggle" href="#" id="propertiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Properties
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="academicsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'website:courses_list' %}">Courses</a></li>
-                        <li><a class="dropdown-item" href="{% url 'website:student_portal' %}" target="_blank" rel="noopener">Students Portal</a></li>
-                        <li><a class="dropdown-item" href="{% url 'website:apply' %}">Apply Now</a></li>
+                    <ul class="dropdown-menu" aria-labelledby="propertiesDropdown">
+                        <li><a class="dropdown-item" href="{% url 'website:courses_list' %}">Listings</a></li>
+                        <li><a class="dropdown-item" href="{% url 'website:apply' %}">Book Now</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" 
                        href="{% url 'website:blog_list' %}">News & Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'videos' %}active{% endif %}" href="{% url 'website:videos' %}">Videos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" 

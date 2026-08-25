@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="SL3SpDTqrvRRA5CQmzmFpCIJNnZ4KFnpxLNYbjz1CQc" />
-    <meta name="description" content= "Nakuru College of Health Sciences and Management - Kikuyu Campus">
-    <title>{% block title %}NCHSM - Kikuyu Campus{% endblock %}</title>
+    <meta name="description" content= "Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki">
+    <title>{% block title %}Helasabili Mobile Capital Ltd{% endblock %}</title>
     
     <!-- Favicon: use uploaded site logo when available, otherwise fall back to static/favicon -->
     {% if site_settings and site_settings.logo %}
@@ -26,6 +26,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -59,8 +60,12 @@
     
     <!-- Custom JS -->
     <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/chat_widget.js' %}"></script>
     
     {% block extra_js %}{% endblock %}
+
+    {# Chat widget include #}
+    {% include 'includes/chat_widget.html' %}
 
     {# If a site logo is uploaded, replace the navbar-brand content with the image so the logo appears across pages #}
     {% if site_settings and site_settings.logo %}
@@ -74,12 +79,12 @@
 
                 var img = document.createElement('img');
                 img.src = "{{ site_settings.logo.url }}";
-                img.alt = "{{ site_settings.site_name|default:'NCHSM' }}";
+                img.alt = "{{ site_settings.site_name|default:'Helasabili' }}";
                 img.className = 'site-logo';
 
                 var span = document.createElement('span');
                 span.className = 'brand-text';
-                span.textContent = '{{ site_settings.site_name|default:"NCHSM" }}';
+                span.textContent = '{{ site_settings.site_name|default:"Helasabili Mobile Capital Ltd" }}';
 
                 navBrand.appendChild(img);
                 navBrand.appendChild(span);

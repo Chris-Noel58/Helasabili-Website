@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ course.title }} - NCHSM Kikuyu Campus{% endblock %}
+{% block title %}{{ course.title }} - Helasabili Mobile Capital Ltd{% endblock %}
 
 {% block content %}
 
 <!-- Page Header -->
-<div class="page-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0;">
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
     <div class="container">
         <h1 class="display-4 fw-bold mb-2">{{ course.title }}</h1>
-        <p class="lead"  style="color: #ffffff; opacity: 1;">Nakuru College of Health Sciences and Management - Kikuyu Campus</p>
+        <p class="lead"  style="color: #ffffff; opacity: 1;">{{ course.location|default:'Listing Location' }}</p>
     </div>
 </div>
 
@@ -20,20 +20,92 @@
             <!-- Main Content -->
             <div class="col-lg-8">
                 {% if course.featured_image %}
-                <img src="{{ course.featured_image.url }}" class="img-fluid rounded-3 shadow-sm mb-5" alt="{{ course.title }}">
+                <img src="{{ course.featured_image.url }}" class="img-fluid rounded-3 shadow-sm mb-4 w-100" alt="{{ course.title }}" style="height: 420px; object-fit: cover;">
+                {% endif %}
+
+                {% if gallery_images %}
+                <div class="card border-0 shadow-sm overflow-hidden mb-4 position-relative">
+                    <div id="landPreviewCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-wrap="true">
+                        <div class="carousel-inner">
+                            {% for image in gallery_images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <button type="button" class="btn p-0 border-0 bg-transparent w-100 text-start" data-bs-toggle="modal" data-bs-target="#landGalleryModal" aria-label="Open land gallery">
+                                    <img src="{{ image.image.url }}" class="img-fluid w-100" alt="{{ image.caption|default:course.title }}" style="height: 300px; object-fit: cover; cursor: pointer;">
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-body p-2 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small fw-semibold">{{ gallery_images.count }} Photos</span>
+                        <span class="badge bg-dark bg-opacity-75 rounded-pill">
+                            <i class="fas fa-images me-1"></i> View
+                        </span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center my-4">
+                    <div class="flex-grow-1 border-top border-secondary-subtle"></div>
+                    <span class="mx-3 text-uppercase text-muted small fw-bold">Images</span>
+                    <div class="flex-grow-1 border-top border-secondary-subtle"></div>
+                </div>
+
+                <div class="modal fade" id="landGalleryModal" tabindex="-1" aria-labelledby="landGalleryModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content bg-dark border-0">
+                            <div class="modal-header border-0 text-white">
+                                <h5 class="modal-title" id="landGalleryModalLabel">{{ course.title }}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-0">
+                                <div id="landGalleryCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+                                    <div class="carousel-inner">
+                                        {% for image in gallery_images %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            {% if image.image %}
+                                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption|default:course.title }}" style="max-height: 80vh; object-fit: contain; background: #000;">
+                                            {% endif %}
+                                            {% if image.caption %}
+                                            <div class="carousel-caption bg-dark bg-opacity-50 rounded-pill px-3 py-2 d-none d-md-block">
+                                                <p class="mb-0">{{ image.caption }}</p>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#landGalleryCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#landGalleryCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+
+                                    <div class="carousel-indicators">
+                                        {% for image in gallery_images %}
+                                        <button type="button" data-bs-target="#landGalleryCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endif %}
                 
-                <h2 class="fw-bold mb-3">Course Overview</h2>
+                <h2 class="fw-bold mb-3">Listing Overview</h2>
                 <p class="lead">{{ course.description }}</p>
-                
+
                 <div class="row mt-5">
                     <div class="col-md-6 mb-4">
                         <div class="card border-0 bg-light">
                             <div class="card-body">
                                 <h6 class="fw-bold mb-3">
-                                    <i class="fas fa-clock text-primary"></i> Duration
+                                    <i class="fas fa-map-marker-alt" style="color:#63c132"></i> Location
                                 </h6>
-                                <p class="mb-0">{{ course.duration }}</p>
+                                <p class="mb-0">{{ course.location|default:'-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -41,20 +113,27 @@
                         <div class="card border-0 bg-light">
                             <div class="card-body">
                                 <h6 class="fw-bold mb-3">
-                                    <i class="fas fa-calendar text-primary"></i> Intake Period
+                                    <i class="fas fa-ruler-combined" style="color:#63c132"></i> Plot Size
                                 </h6>
-                                <p class="mb-0">{{ course.get_intake_period_display }}</p>
+                                <p class="mb-0">{{ course.plot_size }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 {% if course.fees %}
                 <div class="alert alert-info mt-4">
                     <h6 class="fw-bold mb-2">
-                        <i class="fas fa-money-bill"></i> Course Fees
+                        <i class="fas fa-money-bill"></i> Price
                     </h6>
                     <p class="mb-0">KES {{ course.fees|floatformat:0 }}</p>
+                </div>
+                {% endif %}
+
+                {% if course.extra_details %}
+                <div class="mt-4">
+                    <h5 class="fw-bold">Additional Details</h5>
+                    <p>{{ course.extra_details|linebreaksbr }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -64,26 +143,26 @@
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
                         <h5 class="fw-bold mb-4">Quick Info</h5>
-                        
+
                         <div class="mb-4">
-                            <label class="text-muted small">Duration</label>
-                            <p class="fw-bold">{{ course.duration }}</p>
+                            <label class="text-muted small">Location</label>
+                            <p class="fw-bold">{{ course.location|default:'-' }}</p>
                         </div>
-                        
+
                         <div class="mb-4">
-                            <label class="text-muted small">Intake Period</label>
-                            <p class="fw-bold">{{ course.get_intake_period_display }}</p>
+                            <label class="text-muted small">Plot Size</label>
+                            <p class="fw-bold">{{ course.plot_size }}</p>
                         </div>
-                        
+
                         {% if course.fees %}
                         <div class="mb-4">
-                            <label class="text-muted small">Fees</label>
+                            <label class="text-muted small">Price</label>
                             <p class="fw-bold">KES {{ course.fees|floatformat:0 }}</p>
                         </div>
                         {% endif %}
-                        
-                        <a href="{% url 'website:apply' %}" class="btn btn-primary w-100">
-                            <i class="fas fa-paper-plane"></i> Apply Now
+
+                        <a href="{% url 'website:contact' %}?listing={{ course.id }}" class="btn btn-primary w-100">
+                            <i class="fas fa-phone"></i> Contact Sales
                         </a>
                     </div>
                 </div>
@@ -102,11 +181,11 @@
     </div>
 </section>
 
-<!-- Related Courses -->
+<!-- Related Properties -->
 {% if related_courses %}
 <section class="py-5 bg-light">
     <div class="container">
-        <h2 class="fw-bold mb-5 text-center">Related Courses</h2>
+        <h2 class="fw-bold mb-5 text-center">Related Properties</h2>
         
         <div class="row g-4">
             {% for related_course in related_courses %}
@@ -115,7 +194,7 @@
                     {% if related_course.featured_image %}
                     <img src="{{ related_course.featured_image.url }}" class="card-img-top" alt="{{ related_course.title }}" style="height: 200px; object-fit: cover;">
                     {% else %}
-                    <div class="bg-primary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <div class="d-flex align-items-center justify-content-center" style="height: 200px; background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color:#fff;">
                         <i class="fas fa-book fa-3x"></i>
                     </div>
                     {% endif %}
@@ -123,7 +202,7 @@
                         <h5 class="card-title fw-bold">{{ related_course.title }}</h5>
                         <p class="card-text text-muted">{{ related_course.description|truncatewords:15 }}</p>
                         <a href="{% url 'website:courses_detail' related_course.id %}" class="btn btn-sm btn-outline-primary">
-                            View Course
+                            View Lands
                         </a>
                     </div>
                 </div>
@@ -135,12 +214,12 @@
 {% endif %}
 
 <!-- CTA Section -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
     <div class="container text-center">
-        <h2 class="fw-bold mb-3">Ready to Apply?</h2>
-        <p class="lead mb-4">Start your journey in {{ course.title }} today</p>
-        <a href="{% url 'website:apply' %}" class="btn btn-light btn-lg">
-            <i class="fas fa-paper-plane"></i> Apply Now
+        <h2 class="fw-bold mb-3">Ready to Book?</h2>
+        <p class="lead mb-4">Request a site visit or booking for {{ course.title }}</p>
+        <a href="{% url 'website:apply' %}?listing={{ course.id }}" class="btn btn-light btn-lg">
+            <i class="fas fa-calendar-check"></i> Book Now
         </a>
     </div>
 </section>

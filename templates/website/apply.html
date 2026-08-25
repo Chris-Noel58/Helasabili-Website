@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Apply Now - NCHSM Kikuyu Campus{% endblock %}
+{% block title %}Book Now - Helasabili{% endblock %}
 
 {% block content %}
 
 <!-- Page Header -->
-<div class="page-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0;">
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-2">Apply Now</h1>
-        <p class="lead" style="color: #ffffff; opacity: 1;">Join Nakuru College of Health Sciences and Management</p>
+        <h1 class="display-4 fw-bold mb-2">Book Now</h1>
+        <p class="lead" style="color: #ffffff; opacity: 1;">Request a site visit or booking for this listing</p>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
             <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-5">
-                        <h3 class="fw-bold mb-4">Application Form</h3>
+                        <h3 class="fw-bold mb-4">Booking Request</h3>
                         
                         <form method="POST" data-validate="true">
                             {% csrf_token %}
@@ -57,7 +57,7 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Course of Interest *</label>
+                                <label class="form-label">Listing *</label>
                                 {{ form.course }}
                                 {% if form.course.errors %}
                                 <div class="alert alert-danger small mt-1">{{ form.course.errors }}</div>
@@ -65,7 +65,7 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Message (Optional)</label>
+                                <label class="form-label">Booking Notes (Optional)</label>
                                 {{ form.message }}
                                 {% if form.message.errors %}
                                 <div class="alert alert-danger small mt-1">{{ form.message.errors }}</div>
@@ -73,7 +73,7 @@
                             </div>
                             
                             <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-paper-plane"></i> Submit Application
+                                <i class="fas fa-calendar-check"></i> Request Booking
                             </button>
                         </form>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
                         <h5 class="fw-bold mb-3">
-                            <i class="fas fa-info-circle text-primary"></i> Application Info
+                            <i class="fas fa-info-circle" style="color:#63c132"></i> Application Info
                         </h5>
                         <ul class="list-unstyled">
                             <li class="mb-2">

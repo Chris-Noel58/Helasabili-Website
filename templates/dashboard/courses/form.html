@@ -29,30 +29,30 @@
                     </div>
                     
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Description *</label>
+                        <label class="form-label fw-bold">Listing Description *</label>
                         {{ form.description }}
                         {% if form.description.errors %}
                         <div class="alert alert-danger small mt-1">{{ form.description.errors }}</div>
                         {% endif %}
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold">Duration *</label>
-                            {{ form.duration }}
-                            {% if form.duration.errors %}
-                            <div class="alert alert-danger small mt-1">{{ form.duration.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold">Intake Period *</label>
-                            {{ form.intake_period }}
-                            {% if form.intake_period.errors %}
-                            <div class="alert alert-danger small mt-1">{{ form.intake_period.errors }}</div>
-                            {% endif %}
-                        </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Location</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                        <div class="alert alert-danger small mt-1">{{ form.location.errors }}</div>
+                        {% endif %}
                     </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Plot Size</label>
+                        {{ form.plot_size }}
+                        {% if form.plot_size.errors %}
+                        <div class="alert alert-danger small mt-1">{{ form.plot_size.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    {# duration and intake removed for listings #}
                     
                     <div class="row">
                         <div class="col-md-6 mb-4">
@@ -78,6 +78,69 @@
                         {% if form.featured_image.errors %}
                         <div class="alert alert-danger small mt-1">{{ form.featured_image.errors }}</div>
                         {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Additional Details</label>
+                        {{ form.extra_details }}
+                        {% if form.extra_details.errors %}
+                        <div class="alert alert-danger small mt-1">{{ form.extra_details.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold mb-0">Additional Land Photos</label>
+                            <small class="text-muted">Upload multiple photos with captions</small>
+                        </div>
+                        {{ image_formset.management_form }}
+                        {% if image_formset.non_form_errors %}
+                        <div class="alert alert-danger small mt-1">{{ image_formset.non_form_errors }}</div>
+                        {% endif %}
+
+                        {% for image_form in image_formset %}
+                        <div class="border rounded p-3 mb-3 {% if image_form.instance.pk %}bg-light{% endif %}">
+                            {{ image_form.id }}
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label small">Photo</label>
+                                    {{ image_form.image }}
+                                    {% if image_form.instance.image and image_form.instance.image.url %}
+                                    <img src="{{ image_form.instance.image.url }}" alt="" class="img-fluid rounded mt-2" style="max-height: 120px; object-fit: cover;">
+                                    {% endif %}
+                                    {% if image_form.image.errors %}
+                                    <div class="alert alert-danger small mt-1">{{ image_form.image.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Picture description</label>
+                                    {{ image_form.caption }}
+                                    {% if image_form.caption.errors %}
+                                    <div class="alert alert-danger small mt-1">{{ image_form.caption.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small">Order</label>
+                                    {{ image_form.order }}
+                                    {% if image_form.order.errors %}
+                                    <div class="alert alert-danger small mt-1">{{ image_form.order.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <div class="form-check mt-4">
+                                        {{ image_form.is_active }}
+                                        <label class="form-check-label small">Visible</label>
+                                    </div>
+                                    {% if image_form.DELETE %}
+                                    <div class="form-check mt-3">
+                                        {{ image_form.DELETE }}
+                                        <label class="form-check-label small">Delete</label>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                     
                     <div class="form-check mb-4">

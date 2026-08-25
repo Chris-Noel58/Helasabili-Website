@@ -9,14 +9,16 @@
 }
 
 :root {
-    --primary-blue: #003366; /* deep blue */
-    --accent-red: #cc0000;  /* bright red */
+    /* Brand colors taken from Helasabili logo: deep blue and vibrant green */
+    --primary-blue: #0b3b8c; /* deep logo blue */
+    --brand-green: #63c132;  /* vibrant logo green */
+    --accent-red: #cc0000;  /* kept for alerts */
     --white: #ffffff;
     --muted: #6b7280;
     --light: #f8fafc;
     --shadow: rgba(0,0,0,0.08);
     --primary: var(--primary-blue);
-    --secondary: #05509e;
+    --secondary: var(--brand-green);
     --dark: #0f172a;
     --success: #10b981;
     --danger: #ef4444;
@@ -72,8 +74,8 @@ a {
 }
 
 .btn-primary:hover {
-    background: var(--accent-red);
-    border-color: var(--accent-red);
+    background: var(--brand-green);
+    border-color: var(--brand-green);
 }
 
 .btn-secondary {
@@ -112,7 +114,7 @@ a {
    ======================================== */
 
 .navbar {
-    background: linear-gradient(90deg, var(--primary-blue), #05509e);
+    background: linear-gradient(90deg, var(--primary-blue), var(--brand-green));
     padding: 15px 0;
 }
 
@@ -159,7 +161,7 @@ a {
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--accent-red) !important;
+    color: var(--brand-green) !important;
 }
 
 /* Ensure navbar aligns items centrally when logo present */
@@ -173,7 +175,7 @@ a {
    ======================================== */
 
 .hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);
     min-height: 600px;
     display: flex;
     align-items: center;
@@ -320,7 +322,7 @@ footer a {
 }
 
 footer a:hover {
-    color: var(--accent-red) !important;
+    color: var(--brand-green) !important;
 }
 
 .social-links a {
@@ -338,7 +340,7 @@ footer a:hover {
 }
 
 .social-links a:hover {
-    background: var(--primary-blue) !important;
+    background: var(--brand-green) !important;
     color: #fff !important;
     transform: translateY(-3px);
 }
@@ -382,7 +384,7 @@ footer hr {
 /* Additional CSS variables and transition used elsewhere */
 :root {
     --primary: var(--primary-blue);
-    --secondary: #05509e;
+    --secondary: var(--brand-green);
     --dark: #0f172a;
     --success: #10b981;
     --danger: #ef4444;
@@ -400,7 +402,7 @@ footer hr {
     right: 20px;
     width: 60px;
     height: 60px;
-    background: #25d366;
+    background: #63c132;
     border-radius: 50%;
     display: flex;
     align-items: center;

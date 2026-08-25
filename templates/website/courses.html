@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Courses - NCHSM Kikuyu Campus{% endblock %}
+{% block title %}Listings - Helasabili Mobile Capital Ltd{% endblock %}
 
 {% block content %}
 
 <!-- Page Header -->
-<div class="page-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0;">
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-2">Our Courses</h1>
-        <p class="lead"  style="color: #ffffff; opacity: 1;">Explore our comprehensive range of health sciences and management programs</p>
+        <h1 class="display-4 fw-bold mb-2">Property Listings</h1>
+        <p class="lead"  style="color: #ffffff; opacity: 1;">Browse verified 50x100 plots and land investment opportunities</p>
     </div>
 </div>
 
@@ -18,8 +18,8 @@
     <div class="container">
         <form method="GET" class="d-flex gap-2" data-validate="true">
             <div class="flex-grow-1">
-                <input type="text" name="search" class="form-control form-control-lg" 
-                       placeholder="Search courses..." value="{{ search_query }}">
+                  <input type="text" name="search" class="form-control form-control-lg" 
+                      placeholder="Search listings (location, name)..." value="{{ search_query }}">
             </div>
             <button type="submit" class="btn btn-primary btn-lg">
                 <i class="fas fa-search"></i> Search
@@ -37,50 +37,49 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-0 shadow-sm hover-lift">
                     {% if course.featured_image %}
-                        {# Prefer the storage-provided URL if available #}
                         {% if course.featured_image.url %}
-                        <img src="{{ course.featured_image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 200px; object-fit: cover;">
+                        <img src="{{ course.featured_image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
                         {% elif course.featured_image.name and MEDIA_URL %}
-                        <img src="{{ MEDIA_URL }}{{ course.featured_image.name }}" class="card-img-top" alt="{{ course.title }}" style="height: 200px; object-fit: cover;">
+                        <img src="{{ MEDIA_URL }}{{ course.featured_image.name }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
                         {% else %}
-                        {# final fallback to a bundled static image #}
-                        <img src="{% static 'images/default-course.jpg' %}" class="card-img-top" alt="{{ course.title }}" style="height: 200px; object-fit: cover;">
+                        <img src="{% static 'images/default-course.jpg' %}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
                         {% endif %}
                     {% else %}
-                    <div class="bg-primary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="fas fa-book fa-4x"></i>
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 220px;">
+                        <i class="fas fa-image fa-4x"></i>
                     </div>
                     {% endif %}
-                    
+
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ course.title }}</h5>
-                        <p class="card-text text-muted">{{ course.description|truncatewords:25 }}</p>
-                        
-                        <div class="small text-muted mb-3">
-                            <div class="mb-2">
-                                <i class="fas fa-clock text-primary"></i>
-                                <strong>Duration:</strong> {{ course.duration }}
-                            </div>
-                            <div class="mb-2">
-                                <i class="fas fa-calendar text-primary"></i>
-                                <strong>Intake:</strong> {{ course.get_intake_period_display }}
-                            </div>
-                            {% if course.fees %}
-                            <div>
-                                <i class="fas fa-dollar-sign text-primary"></i>
-                                <strong>Fees:</strong> KES {{ course.fees|floatformat:0 }}
-                            </div>
+                        <p class="text-muted mb-2">
+                            {% if course.location %}
+                                {{ course.location }}
+                            {% else %}
+                                {{ course.description|truncatewords:10 }}
                             {% endif %}
+                        </p>
+                        <div class="d-flex align-items-center justify-content-between mt-3">
+                            <div class="text-muted small">
+                                <i class="fas fa-ruler-combined"></i> 50 x 100
+                            </div>
+                            <div class="fw-bold" style="font-size:1.1rem; color:#63c132;">
+                                {% if course.fees %}
+                                    KSH. {{ course.fees|floatformat:0 }}
+                                {% else %}
+                                    Contact for price
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-footer bg-white border-top">
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-outline-primary">
-                                View Details
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-outline-primary flex-grow-1">
+                                View Lands
                             </a>
-                            <a href="{% url 'website:apply' %}?course={{ course.id }}" class="btn btn-sm btn-primary">
-                                <i class="fas fa-paper-plane"></i> Apply Now
+                            <a href="{% url 'website:contact' %}?listing={{ course.id }}" class="btn btn-sm btn-primary">
+                                Contact Sales
                             </a>
                         </div>
                     </div>
@@ -148,8 +147,8 @@
 <!-- Call to Action -->
 <section class="py-5 bg-light">
     <div class="container text-center">
-        <h2 class="fw-bold mb-3">Didn't find what you're looking for?</h2>
-        <p class="text-muted mb-4">Contact our admissions office for more information about our programs</p>
+        <h2 class="fw-bold mb-3">Need help finding the right plot?</h2>
+        <p class="text-muted mb-4">Talk to our land sales team for more information about available plots, pricing, and secure investments.</p>
         <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
             <i class="fas fa-envelope"></i> Contact Us
         </a>

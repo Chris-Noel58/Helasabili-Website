@@ -30,8 +30,8 @@ def site_context(request):
     return {
         'contact_info': contact_info,
         'about_page': about_page,
-        'site_name': 'Nakuru College of Health Sciences and Management',
-        'site_tagline': 'Kikuyu Campus',
+        'site_name': 'Helasabili Mobile Capital Ltd',
+        'site_tagline': 'Verified land plots & affordable housing — Nakuru & Nanyuki',
         'site_settings': site_settings,
         'team_members': team_members,
     }

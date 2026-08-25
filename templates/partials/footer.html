@@ -6,9 +6,9 @@
             <!-- About Section -->
             <div class="col-md-3 mb-4">
                 <h5 class="fw-bold mb-3">
-                    <i class="fas fa-graduation-cap" style="color: #6366f1;"></i> NCHSM
+                    <i class="fas fa-building" style="color: #63c132;"></i> Helasabili
                 </h5>
-                <p class="text-dark">Nakuru College of Health Sciences and Management - Kikuyu Campus</p>
+                <p class="text-dark">Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki</p>
                 <div class="social-links">
                     {% if contact_info.facebook %}
                     <a href="{{ contact_info.facebook }}" target="_blank" class="me-2">
@@ -39,8 +39,8 @@
                 <ul class="list-unstyled">
                     <li><a href="{% url 'website:home' %}" class="text-dark text-decoration-none">Home</a></li>
                     <li><a href="{% url 'website:about' %}" class="text-dark text-decoration-none">About Us</a></li>
-                    <li><a href="{% url 'website:courses_list' %}" class="text-dark text-decoration-none">Courses</a></li>
-                    <li><a href="{% url 'website:apply' %}" class="text-dark text-decoration-none">Apply Now</a></li>
+                    <li><a href="{% url 'website:courses_list' %}" class="text-dark text-decoration-none">Listings</a></li>
+                    <li><a href="{% url 'website:apply' %}" class="text-dark text-decoration-none">Book Now</a></li>
                     <li><a href="{% url 'website:blog_list' %}" class="text-dark text-decoration-none">News & Updates</a></li>
                 </ul>
             </div>
@@ -50,19 +50,19 @@
                 <h5 class="fw-bold mb-3">Contact Us</h5>
                 {% if contact_info %}
                 <div class="mb-2">
-                    <i class="fas fa-phone text-primary"></i>
+                    <i class="fas fa-phone" style="color:#63c132"></i>
                     <a href="tel:{{ contact_info.phone_primary }}" class="text-dark text-decoration-none">
                         {{ contact_info.phone_primary }}
                     </a>
                 </div>
                 <div class="mb-2">
-                    <i class="fas fa-envelope text-primary"></i>
+                    <i class="fas fa-envelope" style="color:#63c132"></i>
                     <a href="mailto:{{ contact_info.email }}" class="text-dark text-decoration-none">
                         {{ contact_info.email }}
                     </a>
                 </div>
                 <div>
-                    <i class="fas fa-map-marker-alt text-primary"></i>
+                    <i class="fas fa-map-marker-alt" style="color:#63c132"></i>
                     <span class="text-dark">{{ contact_info.city }}, {{ contact_info.country }}</span>
                 </div>
                 {% endif %}
@@ -88,7 +88,7 @@
         <div class="row">
             <div class="col-md-6">
                 <p class="text-dark small mb-0">
-                    &copy; 2026 Nakuru College of Health Sciences and Management. All rights reserved.
+                    &copy; 2026 Helasabili Mobile Capital Ltd. All rights reserved.
                 </p>
             </div>
             <div class="col-md-6 text-md-end">

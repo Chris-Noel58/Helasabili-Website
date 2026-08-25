@@ -1,8 +1,8 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 
-{% block title %}Application Detail - Dashboard{% endblock %}
-{% block page_title %}Application Detail{% endblock %}
+{% block title %}Booking Detail - Dashboard{% endblock %}
+{% block page_title %}Booking Detail{% endblock %}
 
 {% block content %}
 
@@ -49,7 +49,7 @@
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="text-muted small">Application Date</label>
+                        <label class="text-muted small">Booking Date</label>
                         <p class="fw-bold">{{ application.created_at|date:"F d, Y H:i" }}</p>
                     </div>
                     <div class="col-md-6">
@@ -115,17 +115,17 @@
         
         <div class="card border-0 shadow-sm mt-4">
             <div class="card-body p-4">
-                <h6 class="fw-bold mb-3">Course Information</h6>
+                <h6 class="fw-bold mb-3">Listing Information</h6>
                 <p>
                     <strong>Title:</strong> {{ application.course.title }}<br>
-                    <strong>Duration:</strong> {{ application.course.duration }}<br>
-                    <strong>Intake:</strong> {{ application.course.get_intake_period_display }}<br>
+                    <strong>Location:</strong> {{ application.course.location|default:'-' }}<br>
+                    <strong>Plot Size:</strong> {{ application.course.plot_size }}<br>
                     {% if application.course.fees %}
-                    <strong>Fees:</strong> KES {{ application.course.fees|floatformat:0 }}<br>
+                    <strong>Price:</strong> KES {{ application.course.fees|floatformat:0 }}<br>
                     {% endif %}
                 </p>
                 <a href="{% url 'website:courses_detail' application.course.id %}" target="_blank" class="btn btn-sm btn-outline-primary w-100">
-                    View Course Page
+                    View Listing Page
                 </a>
             </div>
         </div>
@@ -134,7 +134,7 @@
 
 <div class="mt-4">
     <a href="{% url 'dashboard:applications_list' %}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left"></i> Back to Applications
+        <i class="fas fa-arrow-left"></i> Back to Bookings
     </a>
 </div>
 

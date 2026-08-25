@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container py-5">
-  <h1 class="mb-4">Edit About Page</h1>
+  <h1 class="mb-4">Edit About Page — Helasabili</h1>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.non_field_errors }}
@@ -20,22 +20,22 @@
 
     <!-- added file inputs for images and videos -->
     <div class="mb-3">
-      <label for="id_images" class="form-label">Images</label>
+      <label for="id_images" class="form-label">Images (Property & About)</label>
       <input type="file" name="images" id="id_images" accept="image/*" multiple class="form-control">
-      <div class="form-text text-muted">You can upload multiple images (JPEG, PNG, GIF).</div>
+      <div class="form-text text-muted">Upload images used on the About and Gallery sections (JPEG, PNG, GIF).</div>
     </div>
 
     <div class="mb-3">
-      <label for="id_videos" class="form-label">Videos</label>
+      <label for="id_videos" class="form-label">Videos (Optional)</label>
       <input type="file" name="videos" id="id_videos" accept="video/*" multiple class="form-control">
-      <div class="form-text text-muted">You can upload multiple videos (MP4, WebM).</div>
+      <div class="form-text text-muted">Optional: upload short video tours or property walkthroughs (MP4, WebM).</div>
     </div>
 
     <!-- show existing media if provided in context -->
     <div id="existing-media" class="mb-3">
       {% if about.images.all %}
         <div class="mb-2 d-flex justify-content-between align-items-center">
-          <strong>Existing images:</strong>
+          <strong>Existing About / Property images:</strong>
           <small class="text-muted">Select checkbox to delete</small>
         </div>
         <div class="row">

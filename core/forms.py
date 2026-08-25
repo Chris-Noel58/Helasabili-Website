@@ -1,11 +1,28 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML
 from core.models import (
-    Course, BlogPost, Testimonial, GalleryImage, 
+    Course, CourseImage, BlogPost, Testimonial, GalleryImage, 
     Application, AboutPage, ContactInfo, AdminProfile
 )
+from core.models import Video
+
+
+class VideoForm(forms.ModelForm):
+    """Form for creating/editing YouTube video links"""
+    class Meta:
+        model = Video
+        fields = ['title', 'youtube_url', 'description', 'thumbnail', 'is_active', 'order']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Video title'}),
+            'youtube_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Full YouTube URL'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Optional description'}),
+            'thumbnail': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Optional thumbnail URL'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
 
 
 class ApplicationForm(forms.ModelForm):
@@ -35,7 +52,7 @@ class ApplicationForm(forms.ModelForm):
             }),
             'message': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Tell us why you want to join this course (optional)',
+                'placeholder': 'Optional: include preferred visit dates, budget, or questions about the listing',
                 'rows': 4
             }),
         }
@@ -43,6 +60,8 @@ class ApplicationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['course'].queryset = Course.objects.filter(is_active=True)
+        self.fields['course'].label = 'Listing'
+        self.fields['course'].widget.attrs.update({'placeholder': 'Select a listing'})
         self.fields['message'].required = False
 
 
@@ -62,7 +81,7 @@ class CourseForm(forms.ModelForm):
     """Course management form for admin"""
     class Meta:
         model = Course
-        fields = ['title', 'description', 'duration', 'intake_period', 'fees', 'featured_image', 'is_active', 'order']
+        fields = ['title', 'description', 'location', 'plot_size', 'fees', 'featured_image', 'extra_details', 'is_active', 'order']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -71,21 +90,27 @@ class CourseForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 5,
-                'placeholder': 'Course Description'
+                'placeholder': 'Listing Description'
             }),
-            'duration': forms.TextInput(attrs={
+            'location': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'e.g., 2 Years'
+                'placeholder': 'Location or nearest town'
             }),
-            'intake_period': forms.Select(attrs={
-                'class': 'form-control'
+            'plot_size': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Plot size (e.g., 50 x 100)'
             }),
             'fees': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Fees (optional)'
+                'placeholder': 'Price (optional)'
             }),
             'featured_image': forms.FileInput(attrs={
                 'class': 'form-control'
+            }),
+            'extra_details': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Additional listing details (optional)'
             }),
             'is_active': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
@@ -94,6 +119,28 @@ class CourseForm(forms.ModelForm):
                 'class': 'form-control'
             }),
         }
+
+
+class CourseImageForm(forms.ModelForm):
+    class Meta:
+        model = CourseImage
+        fields = ['image', 'caption', 'order', 'is_active']
+        widgets = {
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'caption': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Picture description'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+CourseImageFormSet = inlineformset_factory(
+    Course,
+    CourseImage,
+    form=CourseImageForm,
+    fields=['image', 'caption', 'order', 'is_active'],
+    extra=3,
+    can_delete=True,
+)
 
 
 class BlogPostForm(forms.ModelForm):
@@ -202,6 +249,12 @@ class AboutPageForm(forms.ModelForm):
         model = AboutPage
         fields = ['title', 'history', 'mission', 'vision', 'values', 'principal_message', 
                   'principal_name', 'principal_image', 'campus_description', 'location', 'established_year']
+        labels = {
+            'principal_message': 'Director message',
+            'principal_name': 'Director name',
+            'principal_image': 'Director image',
+            'campus_description': 'Company Description',
+        }
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control'
@@ -229,11 +282,11 @@ class AboutPageForm(forms.ModelForm):
             'principal_message': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 5,
-                'placeholder': 'Principal\'s Message'
+                'placeholder': 'Director\'s Message'
             }),
             'principal_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Principal Name'
+                'placeholder': 'Director Name'
             }),
             'principal_image': forms.FileInput(attrs={
                 'class': 'form-control'
@@ -241,7 +294,7 @@ class AboutPageForm(forms.ModelForm):
             'campus_description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 5,
-                'placeholder': 'Kikuyu Campus Description'
+                'placeholder': 'Company Description'
             }),
             'location': forms.TextInput(attrs={
                 'class': 'form-control',

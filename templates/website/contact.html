@@ -8,7 +8,25 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="fw-bold">Contact Us</h2>
-      <p class="text-muted">Reach out for admissions, courses and general inquiries.</p>
+      <p class="text-muted">Reach out for enquiries about land listings, bookings, payments, and site visits.</p>
+
+      {% if listing %}
+      <div class="card mb-3">
+        {% if listing.featured_image %}
+        <img src="{{ listing.featured_image.url }}" class="card-img-top" alt="{{ listing.title }}">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ listing.title }}</h5>
+          <p class="card-text"><strong>Location:</strong> {{ listing.location }}</p>
+          <p class="card-text"><strong>Price:</strong> {% if listing.fees %}KES {{ listing.fees }}{% else %}Contact for price{% endif %}</p>
+          {% if listing.extra_details %}
+          <p class="card-text">{{ listing.extra_details|truncatechars:200 }}</p>
+          {% endif %}
+          <a href="/course/{{ listing.pk }}/" class="btn btn-outline-primary btn-sm">View listing</a>
+          <a href="/apply/?listing={{ listing.pk }}" class="btn btn-success btn-sm ms-2">Book / Reserve</a>
+        </div>
+      </div>
+      {% endif %}
 
       {% if contact_info %}
       <ul class="list-unstyled">
@@ -25,6 +43,9 @@
       <h3 class="fw-bold">Send a Message</h3>
       <form method="post" action="{% url 'website:contact' %}">
         {% csrf_token %}
+        {% if listing %}
+        <input type="hidden" name="listing" value="{{ listing.pk }}" />
+        {% endif %}
         {{ form.non_field_errors }}
         <div class="mb-3">
           {{ form.name.label_tag }}

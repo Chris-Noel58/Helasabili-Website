@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home - NCHSM Kikuyu Campus{% endblock %}
+{% block title %}Home - Helasabili Mobile Capital Ltd{% endblock %}
 
 {% block content %}
 
@@ -38,13 +38,27 @@
             }
 
             /* Make typed text and cursor clearly visible */
+            .typed-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 2.8rem;
+                margin-top: 0.25rem;
+                margin-bottom: 0.75rem;
+            }
             .typed-container,
             .typed-container .typed-text,
             .typed-container .typed-cursor {
                 color: #fff !important;
                 opacity: 1 !important;
             }
-            .typed-container .typed-text { font-weight: 500; }
+            .typed-container .typed-text {
+                font-weight: 600;
+                font-size: clamp(1.1rem, 2.5vw, 2rem);
+                line-height: 1.3;
+                letter-spacing: 0.02em;
+                text-shadow: 0 3px 12px rgba(0,0,0,0.35);
+            }
 
             /* Ensure hero background doesn't show page background through gaps */
             .hero { background-color: transparent; }
@@ -61,20 +75,20 @@
         </div>
 
         <div class="container hero-content text-center">
-            <h1 class="display-1 fw-bold">Welcome to NCHSM — Kikuyu Campus</h1>
+            <h1 class="display-1 fw-bold">Welcome to Helasabili Mobile Capital Ltd</h1>
 
             <!-- Typed animated phrases inserted below -->
             <div class="typed-container">
                 <span class="typed-text" aria-hidden="true"></span>
             </div>
 
-            <p class="lead text-muted mt-3">Nakuru College of Health Sciences &amp; Management — Kikuyu Campus</p>
+            <p class="lead text-muted mt-3">Secure, affordable housing solutions and verified 50x100 plots in Nakuru and Nanyuki. Transparent transactions and rapid title delivery.</p>
             <div class="d-flex gap-3 justify-content-center">
-                <a href="{% url 'website:apply' %}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-paper-plane"></i> Apply Now
+                <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone"></i> Contact Sales
                 </a>
-                <a href="{% url 'website:courses_list' %}" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-book"></i> Explore Courses
+                <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-map-marker-alt"></i> View Lands
                 </a>
             </div>
         </div>
@@ -85,37 +99,37 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Why Choose NCHSM?</h2>
-            <p class="text-muted">Excellence in Health Sciences and Management Education</p>
+            <h2 class="fw-bold mb-2">Why Choose Helasabili?</h2>
+            <p class="text-muted">Verified plots, transparent transactions, and fast title delivery for confident land investment.</p>
         </div>
         
         <div class="row g-4">
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-chalkboard-user fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Expert Faculty</h5>
-                    <p class="text-muted">Experienced instructors dedicated to your success</p>
+                    <i class="fas fa-map-marker-alt fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Verified 50x100 Plots</h5>
+                    <p class="text-muted">Each plot is surveyed and title-verified before listing.</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-microscope fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Modern Facilities</h5>
-                    <p class="text-muted">State-of-the-art labs and learning resources</p>
+                    <i class="fas fa-handshake fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Transparent Transactions</h5>
+                    <p class="text-muted">Clear pricing, documented processes, and dedicated sales support.</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-briefcase fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Career Support</h5>
-                    <p class="text-muted">Job placement assistance and career guidance</p>
+                    <i class="fas fa-file-contract fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Fast Title Delivery</h5>
+                    <p class="text-muted">We prioritise rapid title processing and secure handover to buyers.</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-globe fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold">Global Standards</h5>
-                    <p class="text-muted">Education that meets international benchmarks</p>
+                    <i class="fas fa-city fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Prime Locations</h5>
+                    <p class="text-muted">Plots in Nakuru, Nanyuki, and other high-growth areas.</p>
                 </div>
             </div>
         </div>
@@ -126,27 +140,27 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Featured Courses</h2>
-            <p class="text-muted">Explore our range of health sciences and management programs</p>
+            <h2 class="fw-bold mb-2">Featured Land Listings</h2>
+            <p class="text-muted">Browse verified 50x100 plot opportunities in growing areas</p>
         </div>
         
         <div class="row g-4">
             {% for course in courses %}
             <div class="col-md-4 mb-3 course-card d-none">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
-                    {% if course.featured_image %}
-                    <img src="{{ course.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ course.title }}">
-                    {% else %}
-                    <div class="bg-primary text-white d-flex align-items-center justify-content-center img-fixed-height">
-                        <i class="fas fa-book fa-3x"></i>
-                    </div>
+                        {% if course.featured_image %}
+                        <img src="{{ course.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ course.title }}">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center img-fixed-height" style="background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color: #fff;">
+                            <i class="fas fa-book fa-3x"></i>
+                        </div>
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ course.title }}</h5>
                         <p class="card-text text-muted">{{ course.description|truncatewords:20 }}</p>
                         <div class="small text-muted mb-3">
-                            <i class="fas fa-clock"></i> {{ course.duration }} | 
-                            <i class="fas fa-calendar"></i> {{ course.get_intake_period_display }}
+                            <i class="fas fa-map-marker-alt"></i> {{ course.location|default:'-' }} | 
+                            <span class="fw-bold" style="color:var(--brand-green)">{% if course.fees %}KSH. {{ course.fees|floatformat:0 }}{% else %}Contact for price{% endif %}</span>
                         </div>
                         <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-primary w-100">
                             Learn More
@@ -162,7 +176,7 @@
         </div>
         
         <div class="text-center mt-4">
-            <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary">View All Courses</a>
+            <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary">View All Listings</a>
         </div>
     </div>
 </section>
@@ -171,8 +185,8 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Student Testimonials</h2>
-            <p class="text-muted">Hear from our successful alumni</p>
+            <h2 class="fw-bold mb-2">Client Testimonials</h2>
+            <p class="text-muted">Hear from our satisfied buyers</p>
         </div>
         
         <div class="row g-4">
@@ -194,7 +208,7 @@
                             {% if testimonial.photo %}
                             <img src="{{ testimonial.photo.url }}" class="rounded-circle me-3" width="50" height="50" alt="{{ testimonial.name }}" style="object-fit: cover;">
                             {% else %}
-                            <div class="rounded-circle me-3 bg-primary text-white d-flex align-items-center justify-content-center" width="50" height="50" style="width: 50px; height: 50px;">
+                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" width="50" height="50" style="width: 50px; height: 50px; background:var(--primary-blue); color:#fff;">
                                 <i class="fas fa-user"></i>
                             </div>
                             {% endif %}
@@ -224,7 +238,7 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold mb-2">Latest News & Updates</h2>
-            <p class="text-muted">Stay informed with our latest announcements and articles</p>
+            <p class="text-muted">Market updates, land release announcements and company news</p>
         </div>
         
         <div class="row g-4">
@@ -278,8 +292,8 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Campus Gallery</h2>
-            <p class="text-muted">Life at NCHSM Kikuyu Campus</p>
+            <h2 class="fw-bold mb-2">Property Gallery</h2>
+            <p class="text-muted">Photos and maps of our latest land listings</p>
         </div>
         
         <div class="row g-3">
@@ -308,13 +322,50 @@
     </div>
 </section>
 
+<!-- Videos Preview Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Latest Videos</h2>
+            <p class="text-muted">Quick video walkthroughs and property highlights</p>
+        </div>
+
+        <div class="row g-4">
+            {% for video in videos %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="video-thumb" data-video-id="{{ video.youtube_id }}" data-embed-url="{{ video.embed_url }}" data-origin="{{ request.scheme }}://{{ request.get_host }}" style="position:relative; padding-top:56.25%; background-color:#000;">
+                        <img src="{{ video.thumbnail }}" alt="{{ video.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy">
+                        <button class="play-btn" aria-label="Play {{ video.title }}" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); background:transparent; border:0; cursor:pointer;">
+                            <svg width="72" height="72" viewBox="0 0 68 48" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M.66 0C.3 0 0 .27 0 .6v46.8c0 .33.3.6.66.6h66.68c.36 0 .66-.27.66-.6V.6c0-.33-.3-.6-.66-.6H.66z" fill="#f00"></path>
+                                <path d="M45 24L27 35V13z" fill="#fff"></path>
+                            </svg>
+                        </button>
+                        <a href="{% url 'website:videos' %}" class="watch-link" style="position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,0.6); color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none; font-size:14px;">View More</a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">{{ video.title }}</h6>
+                        <p class="text-muted small">{{ video.description|truncatechars:80 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'website:videos' %}" class="btn btn-outline-primary">View All Videos</a>
+        </div>
+    </div>
+</section>
+
 <!-- Call to Action Section -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
     <div class="container text-center">
-        <h2 class="fw-bold mb-3">Ready to Join Us?</h2>
-        <p class="lead mb-4">Start your journey in health sciences and management education</p>
-        <a href="{% url 'website:apply' %}" class="btn btn-light btn-lg">
-            <i class="fas fa-paper-plane"></i> Apply Now
+        <h2 class="fw-bold mb-3">Ready to Invest?</h2>
+        <p class="lead mb-4">Secure your plot today — contact our sales team for verified options and fast title transfer.</p>
+        <a href="{% url 'website:contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-phone"></i> Contact Sales
         </a>
     </div>
 </section>
@@ -453,5 +504,64 @@ if (document.readyState === 'loading') {
 } else {
     showRandomCourses(6);
 }
+</script>
+<script>
+// Click-to-load YouTube players for homepage video thumbnails
+(function(){
+    function loadYouTubeAPI(callback) {
+        if (window.YT && window.YT.Player) { callback(); return; }
+        var tag = document.createElement('script'); tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var interval = setInterval(function(){ if (window.YT && window.YT.Player) { clearInterval(interval); callback(); } }, 100);
+        setTimeout(function(){ clearInterval(interval); callback(); }, 5000);
+    }
+
+    function createPlayer(elementId, videoId, origin) {
+        try {
+            return new YT.Player(elementId, {
+                videoId: videoId,
+                playerVars: {autoplay:1, rel:0, origin: origin},
+                events: {
+                    onReady: function(e){ e.target.playVideo(); },
+                    onError: function(e){
+                        var el = document.getElementById(elementId);
+                        if (el) {
+                            el.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;padding:10px;text-align:center;"><div><p style="margin:0 0 8px 0;">This video cannot be played here.</p><a href="https://www.youtube.com/watch?v='+videoId+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 12px;background:#ff0000;color:#fff;border-radius:4px;text-decoration:none;">Watch on YouTube</a></div></div>';
+                        }
+                    }
+                }
+            });
+        } catch (err) { return null; }
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+        document.querySelectorAll('.video-thumb').forEach(function(thumb){
+            var btn = thumb.querySelector('.play-btn');
+            if (!btn) return;
+            btn.addEventListener('click', function(e){
+                e.preventDefault();
+                var videoId = thumb.getAttribute('data-video-id');
+                var embedUrl = thumb.getAttribute('data-embed-url');
+                var origin = thumb.getAttribute('data-origin') || window.location.origin;
+                thumb.innerHTML = '';
+                var playerDiv = document.createElement('div');
+                var elemId = 'home-yt-' + videoId + '-' + Math.random().toString(36).substr(2,6);
+                playerDiv.id = elemId;
+                playerDiv.style.position='absolute'; playerDiv.style.top='0'; playerDiv.style.left='0'; playerDiv.style.width='100%'; playerDiv.style.height='100%';
+                thumb.appendChild(playerDiv);
+                loadYouTubeAPI(function(){
+                    if (window.YT && window.YT.Player) createPlayer(elemId, videoId, origin);
+                    else {
+                        var iframe = document.createElement('iframe');
+                        iframe.src = embedUrl + '?rel=0&enablejsapi=1&origin=' + encodeURIComponent(origin) + '&autoplay=1';
+                        iframe.frameBorder = 0; iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; iframe.allowFullscreen = true;
+                        iframe.style.position='absolute'; iframe.style.top='0'; iframe.style.left='0'; iframe.style.width='100%'; iframe.style.height='100%';
+                        playerDiv.appendChild(iframe);
+                    }
+                });
+            });
+        });
+    });
+})();
 </script>
 {% endblock %}

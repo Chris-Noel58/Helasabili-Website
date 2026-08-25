@@ -5,6 +5,8 @@ from core.models import (
     Application, AboutPage, ContactInfo, AdminProfile, SiteSettings, TeamMember, ContactMessage,
     AboutImage, AboutVideo
 )
+from core.models import Conversation, ConversationMessage
+from core.models import Video
 
 
 class AboutImageInline(admin.TabularInline):
@@ -19,16 +21,16 @@ class AboutVideoInline(admin.TabularInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'duration', 'intake_period', 'fees', 'is_active', 'order')
-    list_filter = ('is_active', 'intake_period', 'created_at')
-    search_fields = ('title', 'description')
+    list_display = ('title', 'location', 'plot_size', 'fees', 'is_active', 'order')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('title', 'description', 'location')
     prepopulated_fields = {'slug': ('title',)}
     fieldsets = (
         ('Basic Information', {
             'fields': ('title', 'slug', 'description', 'featured_image')
         }),
         ('Course Details', {
-            'fields': ('duration', 'intake_period', 'fees')
+            'fields': ('location', 'plot_size', 'fees', 'extra_details')
         }),
         ('Display Settings', {
             'fields': ('is_active', 'order')
@@ -151,6 +153,21 @@ class AboutVideoAdmin(admin.ModelAdmin):
     search_fields = ('caption',)
 
 
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'youtube_id_preview', 'is_active', 'order', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('title', 'youtube_url')
+    fields = ('title', 'youtube_url', 'description', 'thumbnail', 'is_active', 'order')
+
+    def youtube_id_preview(self, obj):
+        vid = obj.youtube_id()
+        if vid:
+            return format_html('<img src="https://img.youtube.com/vi/{}/default.jpg" width="120"/>', vid)
+        return '-'
+    youtube_id_preview.short_description = 'Preview'
+
+
 @admin.register(ContactInfo)
 class ContactInfoAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -216,3 +233,22 @@ class ContactMessageAdmin(admin.ModelAdmin):
     readonly_fields = ('name', 'email', 'subject', 'message', 'created', 'attempts', 'last_error')
     list_filter = ('sent',)
     search_fields = ('email', 'subject', 'message')
+
+
+@admin.register(Conversation)
+class ConversationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'subject', 'name', 'email', 'listing', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('subject', 'name', 'email')
+    readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(ConversationMessage)
+class ConversationMessageAdmin(admin.ModelAdmin):
+    list_display = ('conversation', 'sender', 'created_at', 'text_short')
+    readonly_fields = ('created_at', 'updated_at')
+    search_fields = ('text',)
+
+    def text_short(self, obj):
+        return obj.text[:80]
+    text_short.short_description = 'Message'

@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}About Us - NCHSM Kikuyu Campus{% endblock %}
+{% block title %}About Us - Helasabili Mobile Capital Ltd{% endblock %}
 
 {% block content %}
 
 <!-- Page Header -->
-<div class="page-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0;">
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
     <div class="container">
         <h1 class="display-4 fw-bold mb-2">About Us</h1>
-        <p class="lead" style="color: #ffffff; opacity: 1;">Nakuru College of Health Sciences and Management - Kikuyu Campus</p>
+        <p class="lead" style="color: #ffffff; opacity: 1;">Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki</p>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                     <div class="card-body p-4">
-                        <div class="display-4 text-primary mb-3">
+                        <div class="display-4 mb-3" style="color:#63c132;">
                             <i class="fas fa-target"></i>
                         </div>
                         <h5 class="fw-bold mb-3">Our Mission</h5>
@@ -54,7 +54,7 @@
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                     <div class="card-body p-4">
-                        <div class="display-4 text-primary mb-3">
+                        <div class="display-4 mb-3" style="color:#63c132;">
                             <i class="fas fa-eye"></i>
                         </div>
                         <h5 class="fw-bold mb-3">Our Vision</h5>
@@ -67,7 +67,7 @@
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                     <div class="card-body p-4">
-                        <div class="display-4 text-primary mb-3">
+                        <div class="display-4 mb-3" style="color:#63c132;">
                             <i class="fas fa-heart"></i>
                         </div>
                         <h5 class="fw-bold mb-3">Our Values</h5>
@@ -94,7 +94,7 @@
                 <p class="lead">{{ about.principal_message }}</p>
                 {% if about.principal_name %}
                 <p class="fw-bold mt-4">{{ about.principal_name }}<br>
-                <small class="text-muted">Director  , NCHSM Kikuyu Campus</small></p>
+                <small class="text-muted">Managing Director, Helasabili Mobile Capital Ltd</small></p>
                 {% endif %}
             </div>
         </div>
@@ -105,7 +105,7 @@
 <!-- Campus Information -->
 <section class="py-5 bg-light">
     <div class="container">
-        <h2 class="fw-bold mb-5 text-center">Kikuyu Campus</h2>
+        <h2 class="fw-bold mb-5 text-center">Our Locations</h2>
         <div class="row g-4">
             <div class="col-lg-6">
                 <h4 class="fw-bold mb-3">Campus Details</h4>
@@ -182,12 +182,12 @@
 {% include 'includes/team_members.html' %}
 
 <!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
     <div class="container text-center">
         <h2 class="fw-bold mb-3">Ready to Join Our Community?</h2>
-        <p class="lead mb-4">Start your journey in health sciences and management education today</p>
+        <p class="lead mb-4">Request a site visit or booking for our listings today</p>
         <a href="{% url 'website:apply' %}" class="btn btn-light btn-lg">
-            <i class="fas fa-paper-plane"></i> Apply Now
+            <i class="fas fa-calendar-check"></i> Book Now
         </a>
     </div>
 </section>

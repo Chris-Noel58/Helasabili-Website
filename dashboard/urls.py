@@ -45,6 +45,15 @@ urlpatterns = [
     path('applications/', views.applications_list, name='applications_list'),
     path('applications/<int:pk>/', views.application_detail, name='application_detail'),
     path('applications/export/', views.applications_export_csv, name='applications_export_csv'),
+
+    # Enquiries
+    path('enquiries/', views.enquiries_list, name='enquiries_list'),
+    
+    # Videos management
+    path('videos/', views.videos_list, name='videos_list'),
+    path('videos/add/', views.video_create, name='video_create'),
+    path('videos/<int:pk>/edit/', views.video_update, name='video_update'),
+    path('videos/<int:pk>/delete/', views.video_delete, name='video_delete'),
     
     # About & Contact
     path('about/edit/', views.about_page_edit, name='about_page_edit'),
