@@ -58,7 +58,7 @@ if 'runserver' in os.sys.argv or os.environ.get('RUN_MAIN') or os.environ.get('W
 # (kept explicit to avoid accidental developer_override in production)
 
 # Normalize ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS to avoid [''] when empty
-_raw_allowed = config('ALLOWED_HOSTS', default='104.105.8.211,app.helasabili.co.ke,127.0.0.1,localhost', cast=str)
+_raw_allowed = config('ALLOWED_HOSTS', default='139.162.161.28,kikuyu-campus-website.onrender.com,.onrender.com,kikuyu.nakurucollegeofhealth.ac.ke,127.0.0.1,localhost', cast=str)
 if _raw_allowed:
     ALLOWED_HOSTS = [h.strip() for h in _raw_allowed.split(',') if h.strip()]
 else:
@@ -73,7 +73,7 @@ for local_host in ('127.0.0.1', 'localhost'):
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 
-_raw_csrf = config('CSRF_TRUSTED_ORIGINS', default='https://kikuyu-campus-website.onrender.com,https://app.helasabili.co.ke,http://127.0.0.1:8000,http://localhost:8000', cast=str)
+_raw_csrf = config('CSRF_TRUSTED_ORIGINS', default='https://kikuyu-campus-website.onrender.com,https://kikuyu.nakurucollegeofhealth.ac.ke,http://127.0.0.1:8000,http://localhost:8000', cast=str)
 if _raw_csrf:
     CSRF_TRUSTED_ORIGINS = [u.strip() for u in _raw_csrf.split(',') if u.strip()]
 else:
