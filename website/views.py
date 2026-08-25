@@ -321,7 +321,7 @@ def contact(request):
             subject = cm.subject or 'Website contact'
             body = f"From: {cm.name or 'Anonymous'} <{cm.email or 'no-reply'}>\n\n"
             if listing:
-                body += f"Listing: {listing.title} (ID: {listing.pk})\nLocation: {listing.location or 'N/A'}\nPrice: {listing.fees or 'N/A'}\nLink: {request.build_absolute_uri(listing.get_absolute_url() if hasattr(listing, 'get_absolute_url') else f'/course/{listing.pk}/')}\n\n"
+                body += f"Listing: {listing.title} (ID: {listing.pk})\nLocation: {listing.location or 'N/A'}\nPrice: {listing.fees or 'N/A'}\nLink: {request.build_absolute_uri(listing.get_absolute_url() if hasattr(listing, 'get_absolute_url') else f'/listings/{listing.pk}/')}\n\n"
             body += cm.message
 
             try:
@@ -461,7 +461,7 @@ def landai_chat_api(request):
             'fees': str(c.fees) if c.fees is not None else None,
             'image': c.featured_image.url if getattr(c, 'featured_image', None) and hasattr(c.featured_image, 'url') else None,
             'excerpt': (c.extra_details[:200] + '...') if c.extra_details else '',
-            'detail_url': f'/course/{c.pk}/',
+            'detail_url': f'/listings/{c.pk}/',
             'apply_url': f'/apply/?listing={c.pk}',
         }
 

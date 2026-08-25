@@ -22,7 +22,7 @@
           {% if listing.extra_details %}
           <p class="card-text">{{ listing.extra_details|truncatechars:200 }}</p>
           {% endif %}
-          <a href="/course/{{ listing.pk }}/" class="btn btn-outline-primary btn-sm">View listing</a>
+          <a href="/listings/{{ listing.pk }}/" class="btn btn-outline-primary btn-sm">View listing</a>
           <a href="/apply/?listing={{ listing.pk }}" class="btn btn-success btn-sm ms-2">Book / Reserve</a>
         </div>
       </div>
