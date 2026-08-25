@@ -159,9 +159,9 @@ function initLazyLoading() {
 function initTypingAnimation() {
     try {
         const phrases = [
-            'Secure land in trusted locations.',
-            'Verified plots. Transparent deals.',
-            'Your next investment starts here.'
+            'This is where the future is built.',
+            'Learn. Lead. Heal.',
+            'Join a community shaping healthcare leaders.'
         ];
 
         // Try multiple selectors so we work even if hero markup changes

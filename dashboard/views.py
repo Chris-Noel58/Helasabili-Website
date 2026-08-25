@@ -8,19 +8,16 @@ from django.db.models import Count, Q
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.core.paginator import Paginator
-from django.conf import settings
 from core.models import (
     Course, BlogPost, Testimonial, GalleryImage,
-    Application, AboutPage, ContactInfo, AdminProfile, ContactMessage
+    Application, AboutPage, ContactInfo, AdminProfile
 )
 from core.forms import (
-    CourseForm, CourseImageFormSet, BlogPostForm, TestimonialForm, GalleryImageForm,
+    CourseForm, BlogPostForm, TestimonialForm, GalleryImageForm,
     AboutPageForm, ContactInfoForm, AdminLoginForm, ContactForm
 )
 from django.contrib.auth.models import User
 from website.views import get_client_ip
-from core.models import Video
-from core.forms import VideoForm
 import csv
 from datetime import datetime
 from django.template import TemplateDoesNotExist
@@ -95,30 +92,9 @@ def dashboard_home(request):
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 def courses_list(request):
-    """List all courses including Helasabili inventory"""
+    """List all courses"""
     courses = Course.objects.all().order_by('order', 'title')
     search = request.GET.get('search', '')
-    helasabili_items = []
-    
-    # Fetch from Helasabili database (parent lands only, exclude portions)
-    try:
-        from django.db import connections
-        conn = connections['helasabili']
-        conn.ensure_connection()  # Ensure the connection is open
-        
-        with conn.cursor() as cursor:
-            if search:
-                cursor.execute('SELECT "Id", "ProductName" FROM "Inventories" WHERE "ProductName" NOT ILIKE %s AND "ProductName" ILIKE %s ORDER BY "ProductName"', ['%Portion%', f'%{search}%'])
-            else:
-                cursor.execute('SELECT "Id", "ProductName" FROM "Inventories" WHERE "ProductName" NOT ILIKE %s ORDER BY "Id"', ['%Portion%'])
-            helasabili_items = [{'id': row[0], 'title': row[1]} for row in cursor.fetchall()]
-        
-        if settings.DEBUG:
-            print(f"✓ Helasabili: Fetched {len(helasabili_items)} parent lands")
-    except Exception as e:
-        if settings.DEBUG:
-            print(f"✗ Helasabili Error: {str(e)}")
-    
     if search:
         courses = courses.filter(
             Q(title__icontains=search) |
@@ -131,7 +107,6 @@ def courses_list(request):
     
     return render(request, 'dashboard/courses/list.html', {
         'courses': courses,
-        'helasabili_items': helasabili_items,
         'search_query': search
     })
 
@@ -139,27 +114,19 @@ def courses_list(request):
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 def course_create(request):
-    """Create new course, optionally from Helasabili item"""
+    """Create new course"""
     if request.method == 'POST':
         form = CourseForm(request.POST, request.FILES)
-        image_formset = CourseImageFormSet(request.POST, request.FILES)
-        if form.is_valid() and image_formset.is_valid():
-            course = form.save()
-            image_formset.instance = course
-            image_formset.save()
-            messages.success(request, 'Listing created successfully!')
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Course created successfully!')
             return redirect('dashboard:courses_list')
     else:
         form = CourseForm()
-        image_formset = CourseImageFormSet()
-        title = request.GET.get('title', '')
-        if title:
-            form.initial['title'] = title
     
     return render(request, 'dashboard/courses/form.html', {
         'form': form,
-        'image_formset': image_formset,
-        'title': 'Add New Listing'
+        'title': 'Add New Course'
     })
 
 
@@ -170,19 +137,15 @@ def course_update(request, pk):
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         form = CourseForm(request.POST, request.FILES, instance=course)
-        image_formset = CourseImageFormSet(request.POST, request.FILES, instance=course)
-        if form.is_valid() and image_formset.is_valid():
+        if form.is_valid():
             form.save()
-            image_formset.save()
             messages.success(request, 'Course updated successfully!')
             return redirect('dashboard:courses_list')
     else:
         form = CourseForm(instance=course)
-        image_formset = CourseImageFormSet(instance=course)
     
     return render(request, 'dashboard/courses/form.html', {
         'form': form,
-        'image_formset': image_formset,
         'course': course,
         'title': f'Edit - {course.title}'
     })
@@ -512,33 +475,6 @@ def applications_export_csv(request):
     return response
 
 
-# ===================== ENQUIRIES MANAGEMENT =====================
-
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_admin)
-def enquiries_list(request):
-    """List all website enquiries/messages."""
-    messages_qs = ContactMessage.objects.all().order_by('-created')
-    search = request.GET.get('search', '')
-
-    if search:
-        messages_qs = messages_qs.filter(
-            Q(name__icontains=search) |
-            Q(email__icontains=search) |
-            Q(subject__icontains=search) |
-            Q(message__icontains=search)
-        )
-
-    paginator = Paginator(messages_qs, 10)
-    page = request.GET.get('page')
-    enquiries = paginator.get_page(page)
-
-    return render(request, 'dashboard/enquiries/list.html', {
-        'enquiries': enquiries,
-        'search_query': search,
-    })
-
-
 # ===================== ABOUT PAGE MANAGEMENT =====================
 
 @login_required(login_url='dashboard:login')
@@ -701,66 +637,3 @@ def testimonials_delete(request, pk):
     except TemplateDoesNotExist:
         from django.http import HttpResponse
         return HttpResponse('Confirm delete template missing.', status=500)
-
-
-# ===================== VIDEOS MANAGEMENT =====================
-
-
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_admin)
-def videos_list(request):
-    """List all YouTube video links managed by admin"""
-    videos = Video.objects.all().order_by('order', '-created_at')
-    search = request.GET.get('search', '')
-    if search:
-        videos = videos.filter(Q(title__icontains=search) | Q(youtube_url__icontains=search))
-
-    paginator = Paginator(videos, 12)
-    page = request.GET.get('page')
-    videos_page = paginator.get_page(page)
-
-    return render(request, 'dashboard/videos/list.html', {
-        'videos': videos_page,
-        'search_query': search,
-        'is_paginated': videos_page.has_other_pages(),
-        'page_obj': videos_page,
-    })
-
-
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_admin)
-def video_create(request):
-    if request.method == 'POST':
-        form = VideoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Video added successfully!')
-            return redirect('dashboard:videos_list')
-    else:
-        form = VideoForm()
-    return render(request, 'dashboard/videos/form.html', {'form': form, 'title': 'Add New Video'})
-
-
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_admin)
-def video_update(request, pk):
-    obj = get_object_or_404(Video, pk=pk)
-    if request.method == 'POST':
-        form = VideoForm(request.POST, instance=obj)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Video updated successfully!')
-            return redirect('dashboard:videos_list')
-    else:
-        form = VideoForm(instance=obj)
-    return render(request, 'dashboard/videos/form.html', {'form': form, 'video': obj, 'title': f'Edit - {obj.title}'})
-
-
-@login_required(login_url='dashboard:login')
-@user_passes_test(is_admin)
-@require_http_methods(["POST"])
-def video_delete(request, pk):
-    obj = get_object_or_404(Video, pk=pk)
-    obj.delete()
-    messages.success(request, 'Video deleted successfully!')
-    return redirect('dashboard:videos_list')
