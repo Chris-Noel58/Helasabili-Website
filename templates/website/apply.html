@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Now - Helasabili{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-2">Book Now</h1>
+        <p class="lead" style="color: #ffffff; opacity: 1;">Request a site visit or booking for this listing</p>
+    </div>
+</div>
+
+<!-- Application Form Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Form -->
+            <div class="col-lg-7 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <h3 class="fw-bold mb-4">Booking Request</h3>
+                        
+                        <form method="POST" data-validate="true">
+                            {% csrf_token %}
+                            
+                            {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                            {% endif %}
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Full Name *</label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}
+                                <div class="alert alert-danger small mt-1">{{ form.full_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Email Address *</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <div class="alert alert-danger small mt-1">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number *</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                <div class="alert alert-danger small mt-1">{{ form.phone.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Listing *</label>
+                                {{ form.course }}
+                                {% if form.course.errors %}
+                                <div class="alert alert-danger small mt-1">{{ form.course.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Booking Notes (Optional)</label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                <div class="alert alert-danger small mt-1">{{ form.message.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-calendar-check"></i> Request Booking
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Sidebar -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-info-circle" style="color:#63c132"></i> Land Listing Info
+                        </h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <strong>✓</strong> Request a site visit
+                            </li>
+                            <li class="mb-2">
+                                <strong>✓</strong> Get verified listing details
+                            </li>
+                            <li class="mb-2">
+                                <strong>✓</strong> Confirm availability and pricing
+                            </li>
+                            <li>
+                                <strong>✓</strong> Our team will contact you within 24 hours
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                {% if contact_info %}
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-phone text-primary"></i> Contact Us
+                        </h5>
+                        <div class="mb-3">
+                            <strong>Phone:</strong><br>
+                            <a href="tel:{{ contact_info.phone_primary }}" class="text-decoration-none">
+                                {{ contact_info.phone_primary }}
+                            </a>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Email:</strong><br>
+                            <a href="mailto:{{ contact_info.email }}" class="text-decoration-none">
+                                {{ contact_info.email }}
+                            </a>
+                        </div>
+                        <div>
+                            <strong>Hours:</strong><br>
+                            {{ contact_info.opening_hours }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold mb-5 text-center">Frequently Asked Questions</h2>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                What are the admission requirements?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Requirements vary by program. Generally, you need a high school diploma or equivalent qualification. Contact our admissions office for specific requirements for your desired course.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                When are applications open?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Applications are open year-round. We accept applications for our intake periods in January, April, July, and September. Early application is encouraged.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                How long does it take to get an admission decision?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Most decisions are made within 2-3 weeks of submission. You'll receive an email with the decision directly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

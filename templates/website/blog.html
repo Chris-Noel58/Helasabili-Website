@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}News & Blog - NCHSM Kikuyu Campus{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-2">News & Blog</h1>
+        <p class="lead"  style="color: #ffffff; opacity: 1;">Stay updated with our latest announcements and articles</p>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Featured Post -->
+            {% if featured_post %}
+            <div class="col-lg-8 mb-5">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    {% if featured_post.featured_image %}
+                    <img src="{{ featured_post.featured_image.url }}" class="card-img-top" alt="{{ featured_post.title }}" style="height: 400px; object-fit: cover;">
+                    {% endif %}
+                        <div class="card-body p-5">
+                        <span class="badge" style="background:var(--primary-blue); color:#fff;">Featured</span>
+                        <h2 class="fw-bold mb-3">{{ featured_post.title }}</h2>
+                        <div class="text-muted mb-3">
+                            <i class="fas fa-calendar"></i> {{ featured_post.published_date|date:"M d, Y" }} |
+                            <i class="fas fa-user"></i> {{ featured_post.author }} |
+                            <i class="fas fa-eye"></i> {{ featured_post.views }} views
+                        </div>
+                        <p class="lead">{{ featured_post.excerpt|striptags }}</p>
+                        <a href="{% url 'website:blog_detail' featured_post.slug %}" class="btn btn-primary">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4 mb-5">
+                <div class="sticky-top" style="top: 20px;">
+                    <!-- Search -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Search Articles</h6>
+                            <form method="GET" class="d-flex">
+                                <input type="text" name="search" class="form-control" placeholder="Search...">
+                                <button type="submit" class="btn btn-primary ms-2">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Posts -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Recent Posts</h6>
+                            <div class="list-group list-group-flush">
+                                {% for post in posts %}
+                                <a href="{% url 'website:blog_detail' post.slug %}" class="list-group-item list-group-item-action">
+                                    <small class="text-muted">{{ post.published_date|date:"M d, Y" }}</small><br>
+                                    <strong class="text-dark">{{ post.title|truncatewords:6 }}</strong>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- All Posts -->
+        <h3 class="fw-bold mt-5 mb-4">Latest Articles</h3>
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar"></i> {{ post.published_date|date:"M d, Y" }}
+                        </small>
+                        <h5 class="card-title fw-bold mt-2">{{ post.title }}</h5>
+                        <p class="card-text text-muted">{{ post.excerpt|striptags|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">By {{ post.author }}</small>
+                            <a href="{% url 'website:blog_detail' post.slug %}" class="btn btn-sm btn-outline-primary">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> No blog posts available yet.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav class="mt-5" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

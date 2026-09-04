@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Listings - Helasabili Mobile Capital Ltd{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-2">Property Listings</h1>
+        <p class="lead"  style="color: #ffffff; opacity: 1;">Browse verified 50x100 plots and land investment opportunities</p>
+    </div>
+</div>
+
+<!-- Search & Filter -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <form method="GET" class="d-flex gap-2" data-validate="true">
+            <div class="flex-grow-1">
+                  <input type="text" name="search" class="form-control form-control-lg" 
+                      placeholder="Search listings (location, name)..." value="{{ search_query }}">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Courses Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if courses %}
+        <div class="row g-4">
+            {% for course in courses %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    {% if course.featured_image %}
+                        {% if course.featured_image.url %}
+                        <img src="{{ course.featured_image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
+                        {% elif course.featured_image.name and MEDIA_URL %}
+                        <img src="{{ MEDIA_URL }}{{ course.featured_image.name }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'images/default-course.jpg' %}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
+                        {% endif %}
+                    {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 220px;">
+                        <i class="fas fa-image fa-4x"></i>
+                    </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ course.title }}</h5>
+                        <p class="text-muted mb-2">
+                            {% if course.location %}
+                                {{ course.location }}
+                            {% else %}
+                                {{ course.description|truncatewords:10 }}
+                            {% endif %}
+                        </p>
+                        <div class="d-flex align-items-center justify-content-between mt-3">
+                            <div class="text-muted small">
+                                <i class="fas fa-ruler-combined"></i> 50 x 100
+                            </div>
+                            <div class="fw-bold" style="font-size:1.1rem; color:#63c132;">
+                                {% if course.fees %}
+                                    KSH. {{ course.fees|floatformat:0 }}
+                                {% else %}
+                                    Contact for price
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-white border-top">
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-outline-primary flex-grow-1">
+                                View Lands
+                            </a>
+                            <a href="{% url 'website:contact' %}?listing={{ course.id }}" class="btn btn-sm btn-primary">
+                                Contact Sales
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav class="mt-5" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i> First
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        Previous
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        Next
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                        Last <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-info-circle fa-3x mb-3"></i>
+            <h5 class="mt-3">No Listings Found</h5>
+            <p class="mb-0">No listings match your search criteria. Please try again with different keywords.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Need help finding the right plot?</h2>
+        <p class="text-muted mb-4">Talk to our land sales team for more information about available plots, pricing, and secure investments.</p>
+        <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-envelope"></i> Contact Us
+        </a>
+    </div>
+</section>
+
+{% endblock %}

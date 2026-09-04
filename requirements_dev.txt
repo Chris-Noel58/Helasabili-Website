@@ -1,0 +1,20 @@
+Django==6.0.4
+djangorestframework==3.14.0
+django-filter==25.2
+django-cors-headers==4.3.1
+django-crispy-forms==2.1
+crispy-bootstrap5==2024.2
+whitenoise==6.6.0
+gunicorn==21.2.0
+dj-database-url==3.1.2
+psycopg2-binary==2.9.11
+python-decouple==3.8
+pillow==12.2.0
+requests==2.31.0
+sqlparse==0.5.5
+tzdata==2023.3
+
+# Optional / development helpers
+# django-extensions==3.3.2
+# coverage==7.3.2
+# mysqlclient intentionally excluded for Windows development

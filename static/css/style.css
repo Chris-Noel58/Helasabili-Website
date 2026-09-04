@@ -1,0 +1,681 @@
+/* ========================================
+   Custom CSS for NCHSM Website
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Brand colors taken from Helasabili logo: deep blue and vibrant green */
+    --primary-blue: #0b3b8c; /* deep logo blue */
+    --brand-green: #63c132;  /* vibrant logo green */
+    --accent-red: #cc0000;  /* kept for alerts */
+    --white: #ffffff;
+    --muted: #6b7280;
+    --light: #f8fafc;
+    --shadow: rgba(0,0,0,0.08);
+    --primary: var(--primary-blue);
+    --secondary: var(--brand-green);
+    --dark: #0f172a;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --transition: all .2s ease;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #1f2937;
+    background: var(--white);
+    margin: 0;
+}
+
+/* ========================================
+   Typography
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--dark);
+}
+
+p {
+    color: #666;
+}
+
+a {
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
+
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 24px;
+    transition: var(--transition);
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: var(--brand-green);
+    border-color: var(--brand-green);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+}
+
+/* ========================================
+   Cards & Containers
+   ======================================== */
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px var(--shadow);
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card .card-header {
+    background: var(--primary-blue);
+    color: var(--white);
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   Navigation
+   ======================================== */
+
+.navbar {
+    background: linear-gradient(90deg, var(--primary-blue), var(--brand-green));
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    color: var(--white) !important;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px; /* space between logo and text if any */
+    padding: 6px 0;
+}
+
+.navbar-brand .site-logo {
+    height: 40px; /* moderate size */
+    width: auto;
+    margin-right: 10px;
+    object-fit: contain;
+}
+
+.navbar-brand .brand-text {
+    font-weight: 800;
+    color: var(--white);
+    font-size: 20px;
+    letter-spacing: 0.5px;
+}
+
+.navbar-brand img {
+    height: 52px; /* slightly larger logo */
+    max-height: 72px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35)); /* subtle shadow for contrast */
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    margin-left: 10px;
+    margin-right: 10px;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--brand-green) !important;
+}
+
+/* Ensure navbar aligns items centrally when logo present */
+.navbar .container, .navbar .container-fluid {
+    align-items: center;
+    display: flex;
+}
+
+/* ========================================
+   Hero Section
+   ======================================== */
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+    opacity: 0.1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.animate-fade-in {
+    animation: fadeInUp 1s ease-out forwards;
+    opacity: 0;
+}
+
+.animate-fade-in:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.animate-fade-in:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.animate-fade-in:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   Gallery
+   ======================================== */
+
+.gallery-item {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: var(--transition);
+    position: relative;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-overlay {
+    transition: var(--transition);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent) !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end; /* keep caption at bottom */
+    padding: 18px;
+    pointer-events: none; /* allow clicks to pass to image if needed */
+    background: linear-gradient(to top, rgba(0,0,0,0.25), transparent) !important; /* lighter baseline overlay */
+}
+
+.gallery-item:hover .gallery-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.40), transparent) !important; /* slightly stronger on hover but not overpowering */
+}
+
+.gallery-caption {
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 1rem;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+    pointer-events: auto;
+    z-index: 3;
+}
+
+.gallery-caption a {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+/* If captions need a subtle pill background for contrast on very busy images */
+.gallery-caption-bg {
+    background: rgba(0,0,0,0.35);
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* Image Fixed Height */
+.img-fixed-height {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Gallery Item Height */
+.gallery-item-height {
+    height: 250px;
+    cursor: pointer;
+}
+
+/* Image object-fit support */
+img.object-fit-cover {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+
+footer {
+    background: #f3f4f6 !important; /* light gray */
+    color: var(--dark) !important;
+    padding: 2rem 0;
+}
+
+footer a {
+    color: var(--primary-blue) !important;
+    transition: var(--transition);
+}
+
+footer a:hover {
+    color: var(--brand-green) !important;
+}
+
+.social-links a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(3,37,65,0.04) !important; /* subtle light bg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: var(--primary-blue) !important;
+    border: 1px solid rgba(3,37,65,0.06);
+}
+
+.social-links a:hover {
+    background: var(--brand-green) !important;
+    color: #fff !important;
+    transform: translateY(-3px);
+}
+
+/* Override any previous dark footer rules to ensure readability */
+footer, footer p, footer span, footer small {
+    color: rgba(17,24,39,0.95) !important; /* near-black for text */
+}
+
+footer a.text-muted, footer a.text-decoration-none, footer a {
+    color: var(--primary-blue) !important;
+}
+
+footer a.text-muted:hover, footer a:hover {
+    color: var(--accent-red) !important;
+}
+
+/* Ensure icons in footer are visible and match primary color */
+footer i {
+    color: var(--primary-blue) !important;
+    margin-right: 8px;
+}
+
+/* Form controls in footer should be light and readable */
+footer .form-control {
+    background: #fff !important;
+    border: 1px solid #e6e7eb !important;
+    color: var(--dark) !important;
+}
+
+/* Target contact item links specifically to ensure visibility */
+footer .contact-us a, footer .contact-us span, .contact-info a {
+    color: var(--dark) !important;
+}
+
+/* Make the hr subtle on light footer */
+footer hr {
+    border-color: rgba(15,23,42,0.08) !important;
+}
+
+/* Additional CSS variables and transition used elsewhere */
+:root {
+    --primary: var(--primary-blue);
+    --secondary: var(--brand-green);
+    --dark: #0f172a;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --transition: all .2s ease;
+}
+
+/* ========================================
+   Floating Buttons
+   ======================================== */
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #63c132;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: var(--transition);
+    z-index: 999;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: var(--transition);
+    z-index: 998;
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-to-top.show {
+    display: flex;
+}
+
+/* ========================================
+   Forms
+   ======================================== */
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    transition: var(--transition);
+    font-size: 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 4px rgba(0,80,153,0.06);
+    border-color: var(--primary-blue);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+/* ========================================
+   Alerts
+   ======================================== */
+
+.alert {
+    border: none;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background: #ecfdf5;
+    border-left-color: var(--success);
+    color: #065f46;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    border-left-color: var(--danger);
+    color: #7f1d1d;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    border-left-color: var(--warning);
+    color: #78350f;
+}
+
+.alert-info {
+    background: #eff6ff;
+    border-left-color: #3b82f6;
+    color: #1e3a8a;
+}
+
+/* ========================================
+   Badges
+   ======================================== */
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* ========================================
+   Tables
+   ======================================== */
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead {
+    background: var(--light);
+    font-weight: 600;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: var(--transition);
+}
+
+.table tbody tr:hover {
+    background: var(--light);
+}
+
+/* ========================================
+   Pagination
+   ======================================== */
+
+.pagination {
+    margin-top: 30px;
+}
+
+.page-link {
+    color: var(--primary);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin: 0 3px;
+}
+
+.page-link:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.page-item.active .page-link {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 400px;
+    }
+    
+    .hero-section h1 {
+        font-size: 28px;
+    }
+    
+    .navbar-brand {
+        font-size: 20px;
+    }
+    
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .scroll-to-top {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
+/* ========================================
+   Loading Animation
+   ======================================== */
+
+.spinner {
+    border: 3px solid rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid var(--primary);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.transition-all {
+    transition: var(--transition);
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;
+}
+
+.bg-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+}
+
+.text-accent {
+    color: var(--accent-red) !important;
+}
+
+.badge-primary {
+    background: var(--primary-blue);
+    color: var(--white);
+}
+
+/* Typed text styling for hero */
+.typed-container {
+    margin-top: 1rem;
+    text-align: center;
+}
+.typed-text {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--muted, #6b7280);
+}
+.typed-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.2em;
+    background: var(--accent-red, #cc0000);
+    margin-left: 6px;
+    vertical-align: bottom;
+    animation: blink 1s steps(2,start) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}

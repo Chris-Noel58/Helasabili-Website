@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="SL3SpDTqrvRRA5CQmzmFpCIJNnZ4KFnpxLNYbjz1CQc" />
+    <meta name="description" content= "Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki">
+    <title>{% block title %}Helasabili Mobile Capital Ltd{% endblock %}</title>
+    
+    <!-- Favicon: use uploaded site logo when available, otherwise fall back to static/favicon -->
+    {% if site_settings and site_settings.logo %}
+    <link rel="icon" href="{{ site_settings.logo.url }}" type="image/png">
+    {% else %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    {% endif %}
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    {% include 'partials/navbar.html' %}
+    
+    <!-- Page Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+    
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/254724891461" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/chat_widget.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+
+    {# Chat widget include #}
+    {% include 'includes/chat_widget.html' %}
+
+    {# If a site logo is uploaded, replace the navbar-brand content with the image so the logo appears across pages #}
+    {% if site_settings and site_settings.logo %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        try {
+            var navBrand = document.querySelector('.navbar-brand');
+            if(navBrand){
+                // clear existing content
+                navBrand.innerHTML = '';
+
+                var img = document.createElement('img');
+                img.src = "{{ site_settings.logo.url }}";
+                img.alt = "{{ site_settings.site_name|default:'Helasabili' }}";
+                img.className = 'site-logo';
+
+                var span = document.createElement('span');
+                span.className = 'brand-text';
+                span.textContent = '{{ site_settings.site_name|default:"Helasabili Mobile Capital Ltd" }}';
+
+                navBrand.appendChild(img);
+                navBrand.appendChild(span);
+            }
+        } catch(e){
+            console && console.warn('Logo injection failed', e);
+        }
+    });
+    </script>
+    {% endif %}
+</body>
+</html>
