@@ -58,7 +58,7 @@ if 'runserver' in os.sys.argv or os.environ.get('RUN_MAIN') or os.environ.get('W
 # (kept explicit to avoid accidental developer_override in production)
 
 # Normalize ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS to avoid [''] when empty
-_raw_allowed = config('ALLOWED_HOSTS', default='169.58.136.166,kikuyu-campus-website.onrender.com,.onrender.com,helasabili.co.ke,127.0.0.1,localhost', cast=str)
+_raw_allowed = config('ALLOWED_HOSTS', default='104.105.8.211,,app.helasabili.co.ke,127.0.0.1,localhost', cast=str)
 if _raw_allowed:
     ALLOWED_HOSTS = [h.strip() for h in _raw_allowed.split(',') if h.strip()]
 else:
@@ -73,7 +73,7 @@ for local_host in ('127.0.0.1', 'localhost'):
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 
-_raw_csrf = config('CSRF_TRUSTED_ORIGINS', default='https://kikuyu-campus-website.onrender.com,https://helasabili.co.ke,http://127.0.0.1:8000,http://localhost:8000', cast=str)
+_raw_csrf = config('CSRF_TRUSTED_ORIGINS', default='https://kikuyu-campus-website.onrender.com,https://kikuyu.nakurucollegeofhealth.ac.ke,http://127.0.0.1:8000,http://localhost:8000', cast=str)
 if _raw_csrf:
     CSRF_TRUSTED_ORIGINS = [u.strip() for u in _raw_csrf.split(',') if u.strip()]
 else:
@@ -90,7 +90,7 @@ if RENDER_EXTERNAL_HOSTNAME:
         CSRF_TRUSTED_ORIGINS.append(origin)
 
 # Ensure the official production host is allowed
-PRODUCTION_HOST = 'helasabili.co.ke'
+PRODUCTION_HOST = 'kikuyu.nakurucollegeofhealth.ac.ke'
 if PRODUCTION_HOST not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(PRODUCTION_HOST)
 # also add https variant to CSRF trusted origins
@@ -299,8 +299,8 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 
 # Credentials (empty by default)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='helasabilimobilecapital@gmail.com')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='hyhl lggi gowe nrrk')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='nchsmnairobicampus@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='khzy yuqe ohsd rpkq')
 
 # Choose backend: SMTP only when both user and password are provided
 if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
@@ -317,8 +317,8 @@ EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 # Only force HTTPS and secure cookies when the site is running in production (DEBUG=False).
 if not DEBUG:
     SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
 else:
     # Disable these during local development to avoid HTTPS redirects and cookie issues
     SECURE_SSL_REDIRECT = False
@@ -360,4 +360,3 @@ LOGGING = {
         },
     },
 }
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
