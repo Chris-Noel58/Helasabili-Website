@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit About Page{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="mb-4">Edit About Page — Helasabili</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}<div class="form-text text-muted">{{ field.help_text }}</div>{% endif %}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+
+    <!-- added file inputs for images and videos -->
+    <div class="mb-3">
+      <label for="id_images" class="form-label">Images (Property & About)</label>
+      <input type="file" name="images" id="id_images" accept="image/*" multiple class="form-control">
+      <div class="form-text text-muted">Upload images used on the About and Gallery sections (JPEG, PNG, GIF).</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="id_videos" class="form-label">Videos (Optional)</label>
+      <input type="file" name="videos" id="id_videos" accept="video/*" multiple class="form-control">
+      <div class="form-text text-muted">Optional: upload short video tours or property walkthroughs (MP4, WebM).</div>
+    </div>
+
+    <!-- show existing media if provided in context -->
+    <div id="existing-media" class="mb-3">
+      {% if about.images.all %}
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+          <strong>Existing About / Property images:</strong>
+          <small class="text-muted">Select checkbox to delete</small>
+        </div>
+        <div class="row">
+          {% for img in about.images.all %}
+            <div class="col-3 mb-3 text-center">
+              <img src="{{ img.image.url }}" class="img-fluid rounded mb-1" alt="about image">
+              <div>
+                <label class="form-check-label">
+                  <input type="checkbox" name="delete_images" value="{{ img.id }}" class="form-check-input me-1"> Delete
+                </label>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if about.videos.all %}
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+          <strong>Existing videos:</strong>
+          <small class="text-muted">Select checkbox to delete</small>
+        </div>
+        <div class="row">
+          {% for vid in about.videos.all %}
+            <div class="col-6 mb-3 text-center">
+              <video src="{{ vid.file.url }}" controls class="w-100 rounded mb-1"></video>
+              <div>
+                <label class="form-check-label">
+                  <input type="checkbox" name="delete_videos" value="{{ vid.id }}" class="form-check-input me-1"> Delete
+                </label>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div id="media-preview" class="mb-3 row"></div>
+
+    <button class="btn btn-primary">Save</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  function previewFiles(inputEl, containerEl) {
+    containerEl.innerHTML = '';
+    Array.from(inputEl.files).forEach(file => {
+      const col = document.createElement('div');
+      col.className = 'col-3 mb-2';
+      if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.className = 'img-fluid rounded';
+        img.alt = file.name;
+        img.src = URL.createObjectURL(file);
+        col.appendChild(img);
+      } else if (file.type.startsWith('video/')) {
+        const vid = document.createElement('video');
+        vid.className = 'w-100 rounded';
+        vid.controls = true;
+        vid.src = URL.createObjectURL(file);
+        col.className = 'col-6 mb-2';
+        col.appendChild(vid);
+      }
+      containerEl.appendChild(col);
+    });
+  }
+
+  const imagesInput = document.getElementById('id_images');
+  const videosInput = document.getElementById('id_videos');
+  const preview = document.getElementById('media-preview');
+
+  if (imagesInput) {
+    imagesInput.addEventListener('change', function(){ previewFiles(imagesInput, preview); });
+  }
+  if (videosInput) {
+    videosInput.addEventListener('change', function(){ previewFiles(videosInput, preview); });
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Videos - Helasabili{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold mb-2">Videos</h2>
+      <p class="text-muted">Watch informative videos about our plots and processes.</p>
+    </div>
+
+    <div class="row g-4">
+      {% for video in videos %}
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="video-thumb" data-video-id="{{ video.youtube_id }}" data-embed-url="{{ video.embed_url }}" data-origin="{{ request.scheme }}://{{ request.get_host }}" style="position:relative; padding-top:56.25%; background-color:#000;">
+            <img src="{{ video.thumbnail }}" alt="{{ video.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy">
+            <button class="play-btn" aria-label="Play {{ video.title }}" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); background:transparent; border:0; cursor:pointer;">
+              <svg width="84" height="84" viewBox="0 0 68 48" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M.66 0C.3 0 0 .27 0 .6v46.8c0 .33.3.6.66.6h66.68c.36 0 .66-.27.66-.6V.6c0-.33-.3-.6-.66-.6H.66z" fill="#f00"></path>
+                <path d="M45 24L27 35V13z" fill="#fff"></path>
+              </svg>
+            </button>
+            <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" target="_blank" rel="noopener" class="watch-link" style="position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,0.6); color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none; font-size:14px;">Watch on YouTube</a>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ video.title }}</h5>
+            <p class="card-text text-muted">{{ video.description|truncatechars:180 }}</p>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <p class="text-center text-muted">No videos available yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Load YouTube IFrame API if not present
+  function loadYouTubeAPI(callback) {
+    if (window.YT && window.YT.Player) {
+      callback();
+      return;
+    }
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var interval = setInterval(function() {
+      if (window.YT && window.YT.Player) {
+        clearInterval(interval);
+        callback();
+      }
+    }, 100);
+    // Fallback in case API fails to load
+    setTimeout(function() {
+      clearInterval(interval);
+      if (!(window.YT && window.YT.Player)) {
+        callback();
+      }
+    }, 5000);
+  }
+
+  function createPlayer(elementId, videoId, origin) {
+    try {
+      return new YT.Player(elementId, {
+        videoId: videoId,
+        playerVars: {autoplay: 1, rel: 0, origin: origin},
+        events: {
+          onReady: function(event) { event.target.playVideo(); },
+          onError: function(event) {
+            // Error codes 101 and 150 indicate embedding disabled
+            var el = document.getElementById(elementId);
+            if (el) {
+              el.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;padding:10px;text-align:center;"><div><p style="margin:0 0 8px 0;">This video cannot be played here.</p><a href="https://www.youtube.com/watch?v='+videoId+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 12px;background:#ff0000;color:#fff;border-radius:4px;text-decoration:none;">Watch on YouTube</a></div></div>';
+            }
+          }
+        }
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  document.querySelectorAll('.video-thumb').forEach(function (thumb) {
+    var playBtn = thumb.querySelector('.play-btn');
+    playBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var videoId = thumb.getAttribute('data-video-id');
+      var embedUrl = thumb.getAttribute('data-embed-url');
+      var origin = thumb.getAttribute('data-origin') || window.location.origin;
+
+      // clear content and create container for player
+      thumb.innerHTML = '';
+      var playerDiv = document.createElement('div');
+      var elemId = 'yt-player-' + videoId + '-' + Math.random().toString(36).substr(2,6);
+      playerDiv.id = elemId;
+      playerDiv.style.position = 'absolute';
+      playerDiv.style.top = '0';
+      playerDiv.style.left = '0';
+      playerDiv.style.width = '100%';
+      playerDiv.style.height = '100%';
+      thumb.appendChild(playerDiv);
+
+      loadYouTubeAPI(function() {
+        if (window.YT && window.YT.Player) {
+          createPlayer(elemId, videoId, origin);
+        } else {
+          // If API didn't load, fallback to simple iframe
+          var iframe = document.createElement('iframe');
+          iframe.src = embedUrl + '?rel=0&enablejsapi=1&origin=' + encodeURIComponent(origin) + '&autoplay=1';
+          iframe.frameBorder = 0;
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.allowFullscreen = true;
+          iframe.style.position = 'absolute';
+          iframe.style.top = 0;
+          iframe.style.left = 0;
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          playerDiv.appendChild(iframe);
+        }
+      });
+    });
+  });
+});
+</script>
+{% endblock %}

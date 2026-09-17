@@ -1,0 +1,24 @@
+{% load static %}
+<div id="ai-chat-widget" class="ai-chat-closed">
+  <button id="ai-chat-toggle" class="ai-chat-toggle">Chat with AI</button>
+
+  <div id="ai-chat-panel" class="ai-chat-panel" aria-hidden="true">
+    <header class="ai-chat-header">
+      <div class="ai-chat-title">LandAI</div>
+      <button id="ai-chat-close" class="ai-chat-close">×</button>
+    </header>
+
+    <section id="ai-chat-messages" class="ai-chat-messages" role="log" aria-live="polite"></section>
+
+    <div class="ai-chat-suggestions" id="ai-chat-suggestions">
+      <button data-suggestion="Show plots under KES 800,000">Show plots under KES 800,000</button>
+      <button data-suggestion="Land near Nakuru">Land near Nakuru</button>
+      <button data-suggestion="Installment plans">Installment plans</button>
+    </div>
+
+    <footer class="ai-chat-footer">
+      <input id="ai-chat-input" placeholder="Ask me about plots, prices, or booking" autocomplete="off" />
+      <button id="ai-chat-send">Send</button>
+    </footer>
+  </div>
+</div>

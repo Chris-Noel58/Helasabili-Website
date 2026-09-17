@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Portal - NCHSM Kikuyu Campus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card border-0 shadow-sm p-4">
+        <div class="card-body">
+          <h1 class="fw-bold mb-3">Student Portal</h1>
+          <p class="text-muted mb-4">What You Can Access on the Portal</p>
+
+          <ul class="mb-4">
+            <li><strong>Learning Dashboard</strong> – View your courses and academic progress.</li>
+            <li><strong>Assignments and Learning Materials</strong> – Access notes, coursework, and submit assignments online.</li>
+            <li><strong>Exam Results and Academic Records</strong> – Check your performance and download academic reports.</li>
+            <li><strong>Class Timetables</strong> – Stay updated with your class schedules and practical sessions.</li>
+            <li><strong>School Announcements</strong> – Receive important updates from the administration and lecturers.</li>
+            <li><strong>Fee Statements</strong> – View your fee balance and payment history.</li>
+            <li><strong>Student Communication</strong> – Connect with lecturers and receive course updates.</li>
+          </ul>
+
+          <h4 class="fw-bold">Why Use the Student Portal?</h4>
+          <p class="mb-4">The portal helps students manage their studies more efficiently by providing:</p>
+          <ul class="mb-4">
+            <li>24/7 access to academic resources</li>
+            <li>Easy communication with lecturers and administration</li>
+            <li>Real-time updates on academic progress</li>
+            <li>A centralized platform for all learning activities</li>
+          </ul>
+
+          <h4 class="fw-bold">How to Access the Portal</h4>
+          <ol class="mb-4">
+            <li>Click the Student Portal Login button below.</li>
+            <li>Enter your school code (<strong>722</strong>) and admission number (e.g. <strong>10672</strong>). Do not enter the full admission format (e.g. CPOTT/10672/01/26).</li>
+            <li>Enter your Password.</li>
+            <li>Access your dashboard and begin managing your academic activities.</li>
+          </ol>
+
+          <p class="mb-4">In case of any challenge accessing the portal, kindly contact HOD ICT: <strong>+254726638763</strong><br>
+          Email: <a href="mailto:nchsmhodict@gmail.com">nchsmhodict@gmail.com</a></p>
+
+          <div class="text-center">
+            <a href="https://app.cloudschool.co.ke/student/login" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+              Student Portal Login
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

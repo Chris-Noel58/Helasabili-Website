@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard - NCHSM{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%);
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            padding: 20px;
+            color: white;
+            overflow-y: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        .topbar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .btn-sm {
+            border-radius: 6px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                min-height: auto;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+            <div class="mb-4">
+            <h4 class="fw-bold">
+                <i class="fas fa-tachometer-alt"></i> Helasabili Admin
+            </h4>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                   href="{% url 'dashboard:dashboard' %}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'course' in request.resolver_match.url_name %}active{% endif %}" 
+                   href="{% url 'dashboard:courses_list' %}">
+                    <i class="fas fa-building"></i> Listings
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'blog' in request.resolver_match.url_name %}active{% endif %}" 
+                   href="{% url 'dashboard:blog_list' %}">
+                    <i class="fas fa-newspaper"></i> Blog Posts
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'testimonial' in request.resolver_match.url_name %}active{% endif %}" 
+                   href="{% url 'dashboard:testimonials_list' %}">
+                    <i class="fas fa-quote-left"></i> Testimonials
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'gallery' in request.resolver_match.url_name %}active{% endif %}" 
+                   href="{% url 'dashboard:gallery_list' %}">
+                    <i class="fas fa-images"></i> Gallery
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'video' in request.resolver_match.url_name %}active{% endif %}"
+                   href="{% url 'dashboard:videos_list' %}">
+                    <i class="fas fa-video"></i> Videos
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'application' in request.resolver_match.url_name %}active{% endif %}"
+                   href="{% url 'dashboard:applications_list' %}">
+                    <i class="fas fa-users"></i> Bookings
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if 'enquiry' in request.resolver_match.url_name %}active{% endif %}"
+                   href="{% url 'dashboard:enquiries_list' %}">
+                    <i class="fas fa-envelope"></i> Enquiries
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {% if 'about' in request.resolver_match.url_name %}active{% endif %}" 
+                   href="{% url 'dashboard:about_page_edit' %}">
+                    <i class="fas fa-info-circle"></i> About Page
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/core/contactinfo/add/">
+                    <i class="fas fa-phone"></i> Add Contact Info
+                </a>
+            </li>
+            
+            <hr class="text-white">
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'website:home' %}">
+                    <i class="fas fa-globe"></i> View Website
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard:logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="topbar">
+            <h3 class="mb-0">{% block page_title %}Dashboard{% endblock %}</h3>
+            <div>
+                <span class="me-3">Welcome, <strong>{{ user.get_full_name|default:user.username }}</strong></span>
+                <img src="https://via.placeholder.com/40" class="rounded-circle" width="40" height="40">
+            </div>
+        </div>
+        
+        <!-- Messages -->
+        {% if messages %}
+        <div class="alert-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Page Content -->
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
