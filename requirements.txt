@@ -13,7 +13,11 @@ pillow==12.2.0
 requests==2.31.0
 sqlparse==0.5.5
 tzdata==2023.3
+<<<<<<< HEAD
 # mysqlclient==2.1.1  # Not supported for local Windows builds without MySQL C++ toolchain
+=======
+mysqlclient==2.1.1
+>>>>>>> origin/main
 
 # Optional / development helpers
 # django-extensions==3.3.2
