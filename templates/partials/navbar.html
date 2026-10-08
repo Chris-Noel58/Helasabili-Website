@@ -1,6 +1,6 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" id="siteNavbar">
     <div class="container-fluid">
         <!-- Logo/Brand -->
         <a class="navbar-brand fw-bold" href="{% url 'website:home' %}">
@@ -8,12 +8,18 @@
         </a>
         
         <!-- Hamburger Menu -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" id="siteNavToggle" aria-controls="navbarNav" aria-expanded="false" aria-label="Open navigation menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <!-- Navigation Links -->
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-collapse" id="navbarNav">
+            <div class="mobile-nav-heading">
+                <span class="fw-bold">Menu</span>
+                <button class="mobile-nav-close" type="button" aria-label="Close navigation menu">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
@@ -58,3 +64,49 @@
         </div>
     </div>
 </nav>
+<div class="mobile-nav-backdrop" data-close-site-menu></div>
+
+<script>
+    (function () {
+        const navbar = document.getElementById('siteNavbar');
+        const toggle = document.getElementById('siteNavToggle');
+        const menu = document.getElementById('navbarNav');
+        const closeButton = navbar && navbar.querySelector('.mobile-nav-close');
+        const backdrop = document.querySelector('[data-close-site-menu]');
+
+        if (!navbar || !toggle || !menu || !backdrop || !closeButton) return;
+
+        function setMenuOpen(open) {
+            document.body.classList.toggle('site-menu-open', open);
+            menu.classList.toggle('show', open);
+            backdrop.classList.toggle('show', open);
+            menu.style.transform = open ? 'translateX(0)' : 'translateX(-105%)';
+            menu.style.visibility = open ? 'visible' : 'hidden';
+            backdrop.style.opacity = open ? '1' : '0';
+            backdrop.style.visibility = open ? 'visible' : 'hidden';
+            toggle.setAttribute('aria-expanded', String(open));
+            toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+        }
+
+        toggle.addEventListener('click', function () {
+            setMenuOpen(!document.body.classList.contains('site-menu-open'));
+        });
+        closeButton.addEventListener('click', function () {
+            setMenuOpen(false);
+        });
+        backdrop.addEventListener('click', function () {
+            setMenuOpen(false);
+        });
+        menu.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-item').forEach(function (link) {
+            link.addEventListener('click', function () {
+                setMenuOpen(false);
+            });
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') setMenuOpen(false);
+        });
+        window.matchMedia('(min-width: 992px)').addEventListener('change', function (event) {
+            if (event.matches) setMenuOpen(false);
+        });
+    }());
+</script>

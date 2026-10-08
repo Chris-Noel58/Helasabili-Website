@@ -149,13 +149,8 @@ server {
     access_log /var/log/nginx/nchsm_access.log;
     error_log /var/log/nginx/nchsm_error.log;
     
-<<<<<<< HEAD
     # Maximum upload size. This must be inside the active HTTPS server block.
     client_max_body_size 50M;
-=======
-    # Maximum upload size
-    client_max_body_size 20M;
->>>>>>> origin/main
     
     # Proxy settings
     location / {
@@ -184,7 +179,6 @@ Enable site:
 ```bash
 sudo ln -s /etc/nginx/sites-available/nchsm /etc/nginx/sites-enabled/
 sudo nginx -t
-<<<<<<< HEAD
 sudo systemctl reload nginx
 ```
 
@@ -203,11 +197,6 @@ oversized upload before it reaches Django. Django stores larger uploads in
 temporary files, so the reverse-proxy limit is the setting that controls this
 production error.
 
-=======
-sudo systemctl restart nginx
-```
-
->>>>>>> origin/main
 ### 8. Install SSL Certificate
 ```bash
 sudo apt install certbot python3-certbot-nginx

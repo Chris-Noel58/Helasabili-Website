@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initFormValidation();
     initNavbar();
     initTypingAnimation();
-    initHeroSlideshow();
 });
 
 // ========================================
@@ -234,66 +233,6 @@ function initTypingAnimation() {
     } catch (err) {
         // Fail silently to avoid breaking other scripts
         console.error('Typing animation error:', err);
-    }
-}
-
-// ========================================
-// Hero background slideshow (robust with DOM fallback)
-// ========================================
-function initHeroSlideshow() {
-    try {
-        const hero = document.querySelector('.hero');
-        if (!hero) return;
-
-        // read images from data attribute (JSON array) or fallback to empty
-        let images = [];
-        try {
-            const raw = hero.getAttribute('data-bg-images');
-            images = raw ? JSON.parse(raw) : [];
-        } catch (e) {
-            images = [];
-        }
-
-        // If no images from data attribute, try to collect from gallery section in the page
-        if (!images.length) {
-            const galleryImgs = Array.from(document.querySelectorAll('.gallery-item img, .gallery img, .gallery-image img'))
-                .map(img => img.dataset.src || img.getAttribute('src'))
-                .filter(Boolean);
-            // remove duplicates and limit to 8
-            images = [...new Set(galleryImgs)].slice(0, 8);
-        }
-
-        if (!images.length) return;
-
-        const layers = Array.from(hero.querySelectorAll('.hero-bg-layer'));
-        if (layers.length < 2) return;
-
-        // preload images
-        images.forEach(src => { const img = new Image(); img.src = src; });
-
-        let current = 0;
-        const interval = parseInt(hero.getAttribute('data-bg-interval')) || 6000;
-
-        // initialize first layer
-        layers.forEach((layer, i) => {
-            layer.style.backgroundImage = `url('${images[i % images.length]}')`;
-            layer.classList.toggle('visible', i === 0);
-        });
-
-        setInterval(() => {
-            const nextIndex = (current + 1) % images.length;
-            const topLayerIndex = (current + 1) % layers.length;
-            const topLayer = layers[topLayerIndex];
-
-            topLayer.style.backgroundImage = `url('${images[nextIndex]}')`;
-
-            // set visible only for the top layer
-            layers.forEach((l, idx) => l.classList.toggle('visible', idx === topLayerIndex));
-
-            current = nextIndex;
-        }, interval);
-    } catch (err) {
-        console.error('Hero slideshow error:', err);
     }
 }
 

@@ -24,9 +24,9 @@
             </div>
             <div class="col-lg-6">
                 {% if about.history_image %}
-                <img src="{{ about.history_image.url }}" class="img-fluid rounded-3 shadow" alt="College History">
+                <img src="{{ about.history_image.url }}" class="img-fluid rounded-3 shadow" alt="Company history" fetchpriority="high" decoding="async">
                 {% else %}
-                <img src="{% static 'images/history.jpg' %}" class="img-fluid rounded-3 shadow" alt="College History">
+                <img src="{% static 'images/history.jpg' %}" class="img-fluid rounded-3 shadow" alt="Company history" fetchpriority="high" decoding="async">
                 {% endif %}
             </div>
         </div>
@@ -86,7 +86,7 @@
         <div class="row align-items-center g-5">
             {% if about.principal_image %}
             <div class="col-lg-4">
-                <img src="{{ about.principal_image.url }}" class="img-fluid rounded-3 shadow" alt="{{ about.principal_name }}">
+                <img src="{{ about.principal_image.url }}" class="img-fluid rounded-3 shadow" alt="{{ about.principal_name }}" loading="lazy" decoding="async">
             </div>
             {% endif %}
             <div class="col-lg-8">
@@ -102,27 +102,30 @@
 </section>
 {% endif %}
 
-<!-- Campus Information -->
+<!-- Company Information -->
 <section class="py-5 bg-light">
     <div class="container">
-        <h2 class="fw-bold mb-5 text-center">Our Locations</h2>
+        <h2 class="fw-bold mb-5 text-center">Where We Operate</h2>
         <div class="row g-4">
             <div class="col-lg-6">
-                <h4 class="fw-bold mb-3">Campus Details</h4>
+                <h4 class="fw-bold mb-3">Company Details</h4>
                 <p>{{ about.campus_description }}</p>
                 <div class="mt-4">
                     <p class="mb-2">
-                        <strong>Location:</strong> {{ about.location }}<br>
-                        <strong>Established:</strong> {{ about.established_year }}<br>
-                        <strong>Facilities:</strong> Modern classrooms, laboratories, library, and student amenities
+                        <strong>Service area:</strong> {{ about.location }}<br>
+                        <strong>Serving clients since:</strong> {{ about.established_year }}<br>
+                        <strong>Our services:</strong> Verified land plots and secure property investments
                     </p>
                 </div>
             </div>
             <div class="col-lg-6">
                 {% if about.campus_image %}
-                <img src="{{ about.campus_image.url }}" class="img-fluid rounded-3 shadow" alt="Campus">
+                <img src="{{ about.campus_image.url }}" class="img-fluid rounded-3 shadow" alt="Helasabili office or property location" loading="lazy" decoding="async">
                 {% else %}
-                <img src="{% static 'images/campus.jpg' %}" class="img-fluid rounded-3 shadow" alt="Campus">
+                <div class="company-location-placeholder rounded-3 shadow-sm" role="img" aria-label="Helasabili serves {{ about.location }}">
+                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                    <span>Serving {{ about.location }}</span>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -139,15 +142,15 @@
             <div class="col-sm-6 col-md-4 col-lg-3">
                 {% if img.image %}
                 <a href="{{ img.image.url }}" target="_blank">
-                    <img src="{{ img.image.url }}" class="img-fluid rounded shadow-sm" alt="About image">
+                    <img src="{{ img.image.url }}" class="img-fluid rounded shadow-sm" alt="About image" loading="lazy" decoding="async">
                 </a>
                 {% elif img.file %}
                 <a href="{{ img.file.url }}" target="_blank">
-                    <img src="{{ img.file.url }}" class="img-fluid rounded shadow-sm" alt="About image">
+                    <img src="{{ img.file.url }}" class="img-fluid rounded shadow-sm" alt="About image" loading="lazy" decoding="async">
                 </a>
                 {% else %}
                 <a href="{{ img }}" target="_blank">
-                    <img src="{{ img }}" class="img-fluid rounded shadow-sm" alt="About image">
+                    <img src="{{ img }}" class="img-fluid rounded shadow-sm" alt="About image" loading="lazy" decoding="async">
                 </a>
                 {% endif %}
             </div>
@@ -182,7 +185,7 @@
 {% include 'includes/team_members.html' %}
 
 <!-- Call to Action -->
-<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
+<section class="about-cta py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);">
     <div class="container text-center">
         <h2 class="fw-bold mb-3">Ready to Join Our Community?</h2>
         <p class="lead mb-4">Request a site visit or booking for our listings today</p>

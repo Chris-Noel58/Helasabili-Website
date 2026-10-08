@@ -41,7 +41,7 @@
         <div class="row">
           {% for img in about.images.all %}
             <div class="col-3 mb-3 text-center">
-              <img src="{{ img.image.url }}" class="img-fluid rounded mb-1" alt="about image">
+              <img src="{{ img.image.url }}" class="img-fluid rounded mb-1" alt="About image" loading="lazy" decoding="async">
               <div>
                 <label class="form-check-label">
                   <input type="checkbox" name="delete_images" value="{{ img.id }}" class="form-check-input me-1"> Delete

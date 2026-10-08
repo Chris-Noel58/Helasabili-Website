@@ -33,9 +33,9 @@
                         <label class="form-label">Current Image</label>
                         <div>
                             {% if form.instance.image %}
-                                <img src="{{ form.instance.image.url }}" alt="preview" style="max-width:100%; height:auto; max-height:300px; border-radius:6px;"/>
+                                <img src="{{ form.instance.image.url }}" alt="preview" style="max-width:100%; height:auto; max-height:300px; border-radius:6px;" decoding="async">
                             {% elif form.instance.photo %}
-                                <img src="{{ form.instance.photo.url }}" alt="preview" style="max-width:100%; height:auto; max-height:300px; border-radius:6px;"/>
+                                <img src="{{ form.instance.photo.url }}" alt="preview" style="max-width:100%; height:auto; max-height:300px; border-radius:6px;" decoding="async">
                             {% endif %}
                         </div>
                     </div>

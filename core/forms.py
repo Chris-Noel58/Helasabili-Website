@@ -5,7 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML
 from core.models import (
     Course, CourseImage, BlogPost, Testimonial, GalleryImage, 
-    Application, AboutPage, ContactInfo, AdminProfile
+    Application, AboutPage, ContactInfo, AdminProfile, TeamMember
 )
 from core.models import Video
 
@@ -243,17 +243,60 @@ class GalleryImageForm(forms.ModelForm):
         }
 
 
+class TeamMemberForm(forms.ModelForm):
+    """Team member management form for the dashboard."""
+    class Meta:
+        model = TeamMember
+        fields = ['name', 'title', 'bio', 'photo', 'order', 'is_active']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Team member name',
+            }),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Role or title',
+            }),
+            'bio': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Optional short biography',
+            }),
+            'photo': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*',
+            }),
+            'order': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+        }
+        help_texts = {
+            'photo': 'Use a high-resolution portrait or team photo for the clearest display.',
+            'order': 'Lower numbers appear first on the website.',
+        }
+
+
 class AboutPageForm(forms.ModelForm):
     """About page management form for admin"""
     class Meta:
         model = AboutPage
-        fields = ['title', 'history', 'mission', 'vision', 'values', 'principal_message', 
-                  'principal_name', 'principal_image', 'campus_description', 'location', 'established_year']
+        fields = ['title', 'history', 'mission', 'vision', 'values', 'principal_message',
+                  'principal_name', 'principal_image', 'campus_description', 'campus_image',
+                  'location', 'established_year']
         labels = {
-            'principal_message': 'Director message',
-            'principal_name': 'Director name',
-            'principal_image': 'Director image',
+            'history': 'Company history',
+            'values': 'Company values',
+            'principal_message': 'Managing Director message',
+            'principal_name': 'Managing Director name',
+            'principal_image': 'Managing Director photo',
             'campus_description': 'Company Description',
+            'campus_image': 'Company or property image',
+            'location': 'Primary service area',
+            'established_year': 'Year established',
         }
         widgets = {
             'title': forms.TextInput(attrs={
@@ -262,7 +305,7 @@ class AboutPageForm(forms.ModelForm):
             'history': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 5,
-                'placeholder': 'College History'
+                'placeholder': 'Company history'
             }),
             'mission': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -277,7 +320,7 @@ class AboutPageForm(forms.ModelForm):
             'values': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4,
-                'placeholder': 'College Values'
+                'placeholder': 'Company values'
             }),
             'principal_message': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -296,9 +339,13 @@ class AboutPageForm(forms.ModelForm):
                 'rows': 5,
                 'placeholder': 'Company Description'
             }),
+            'campus_image': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*',
+            }),
             'location': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Campus Location'
+                'placeholder': 'Primary service area (e.g., Nakuru and Nanyuki)'
             }),
             'established_year': forms.NumberInput(attrs={
                 'class': 'form-control'

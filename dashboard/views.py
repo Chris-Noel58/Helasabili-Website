@@ -11,11 +11,11 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from core.models import (
     Course, BlogPost, Testimonial, GalleryImage,
-    Application, AboutPage, ContactInfo, AdminProfile, ContactMessage
+    Application, AboutPage, ContactInfo, AdminProfile, ContactMessage, TeamMember
 )
 from core.forms import (
     CourseForm, CourseImageFormSet, BlogPostForm, TestimonialForm, GalleryImageForm,
-    AboutPageForm, ContactInfoForm, AdminLoginForm, ContactForm
+    AboutPageForm, ContactInfoForm, AdminLoginForm, ContactForm, TeamMemberForm
 )
 from django.contrib.auth.models import User
 from website.views import get_client_ip
@@ -355,6 +355,86 @@ def testimonial_delete(request, pk):
     testimonial.delete()
     messages.success(request, 'Testimonial deleted successfully!')
     return redirect('dashboard:testimonials_list')
+
+
+# ===================== TEAM MEMBERS MANAGEMENT =====================
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+def team_members_list(request):
+    """List and search all team members."""
+    team_members = TeamMember.objects.all()
+    search = request.GET.get('search', '').strip()
+    status = request.GET.get('status', '')
+
+    if search:
+        team_members = team_members.filter(
+            Q(name__icontains=search) |
+            Q(title__icontains=search) |
+            Q(bio__icontains=search)
+        )
+    if status in {'active', 'inactive'}:
+        team_members = team_members.filter(is_active=(status == 'active'))
+
+    team_members = Paginator(team_members.order_by('order', 'name'), 12).get_page(
+        request.GET.get('page')
+    )
+    return render(request, 'dashboard/team/list.html', {
+        'team_members': team_members,
+        'search_query': search,
+        'filter_status': status,
+    })
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+def team_member_create(request):
+    """Add a team member."""
+    if request.method == 'POST':
+        form = TeamMemberForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Team member added successfully!')
+            return redirect('dashboard:team_members_list')
+    else:
+        form = TeamMemberForm()
+
+    return render(request, 'dashboard/team/form.html', {
+        'form': form,
+        'title': 'Add Team Member',
+    })
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+def team_member_update(request, pk):
+    """Edit an existing team member."""
+    team_member = get_object_or_404(TeamMember, pk=pk)
+    if request.method == 'POST':
+        form = TeamMemberForm(request.POST, request.FILES, instance=team_member)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Team member updated successfully!')
+            return redirect('dashboard:team_members_list')
+    else:
+        form = TeamMemberForm(instance=team_member)
+
+    return render(request, 'dashboard/team/form.html', {
+        'form': form,
+        'team_member': team_member,
+        'title': f'Edit - {team_member.name}',
+    })
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+@require_http_methods(["POST"])
+def team_member_delete(request, pk):
+    """Delete a team member."""
+    team_member = get_object_or_404(TeamMember, pk=pk)
+    team_member.delete()
+    messages.success(request, 'Team member deleted successfully!')
+    return redirect('dashboard:team_members_list')
 
 
 # ===================== GALLERY MANAGEMENT =====================

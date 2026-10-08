@@ -92,7 +92,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
     def image_preview(self, obj):
         if obj.image:
             return format_html(
-                '<img src="{}" width="100" height="100" />',
+                '<img src="{}" style="width:100px;height:100px;object-fit:contain;background:#f1f5f9;" />',
                 obj.image.url
             )
         return 'No image'

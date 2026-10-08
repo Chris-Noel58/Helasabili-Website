@@ -106,7 +106,7 @@
                                     <label class="form-label small">Photo</label>
                                     {{ image_form.image }}
                                     {% if image_form.instance.image and image_form.instance.image.url %}
-                                    <img src="{{ image_form.instance.image.url }}" alt="" class="img-fluid rounded mt-2" style="max-height: 120px; object-fit: cover;">
+                                    <img src="{{ image_form.instance.image.url }}" alt="Current listing photo" class="img-fluid rounded mt-2" style="max-height: 120px; object-fit: cover;" loading="lazy" decoding="async">
                                     {% endif %}
                                     {% if image_form.image.errors %}
                                     <div class="alert alert-danger small mt-1">{{ image_form.image.errors }}</div>

@@ -13,7 +13,7 @@
       {% if listing %}
       <div class="card mb-3">
         {% if listing.featured_image %}
-        <img src="{{ listing.featured_image.url }}" class="card-img-top" alt="{{ listing.title }}">
+        <img src="{{ listing.featured_image.url }}" class="card-img-top" alt="{{ listing.title }}" decoding="async">
         {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ listing.title }}</h5>

@@ -20,7 +20,7 @@
             <!-- Main Content -->
             <div class="col-lg-8">
                 {% if course.featured_image %}
-                <img src="{{ course.featured_image.url }}" class="img-fluid rounded-3 shadow-sm mb-4 w-100" alt="{{ course.title }}" style="height: 420px; object-fit: cover;">
+                <img src="{{ course.featured_image.url }}" class="img-fluid rounded-3 shadow-sm mb-4 w-100" alt="{{ course.title }}" style="height: 420px; object-fit: cover;" fetchpriority="high" decoding="async">
                 {% endif %}
 
                 {% if gallery_images %}
@@ -30,7 +30,7 @@
                             {% for image in gallery_images %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
                                 <button type="button" class="btn p-0 border-0 bg-transparent w-100 text-start" data-bs-toggle="modal" data-bs-target="#landGalleryModal" aria-label="Open land gallery">
-                                    <img src="{{ image.image.url }}" class="img-fluid w-100" alt="{{ image.caption|default:course.title }}" style="height: 300px; object-fit: cover; cursor: pointer;">
+                                    <img src="{{ image.image.url }}" class="img-fluid w-100" alt="{{ image.caption|default:course.title }}" style="height: 300px; object-fit: cover; cursor: pointer;" loading="lazy" decoding="async">
                                 </button>
                             </div>
                             {% endfor %}
@@ -63,7 +63,7 @@
                                         {% for image in gallery_images %}
                                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
                                             {% if image.image %}
-                                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption|default:course.title }}" style="max-height: 80vh; object-fit: contain; background: #000;">
+                                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption|default:course.title }}" style="max-height: 80vh; object-fit: contain; background: #000;" loading="lazy" decoding="async">
                                             {% endif %}
                                             {% if image.caption %}
                                             <div class="carousel-caption bg-dark bg-opacity-50 rounded-pill px-3 py-2 d-none d-md-block">
@@ -192,7 +192,7 @@
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                     {% if related_course.featured_image %}
-                    <img src="{{ related_course.featured_image.url }}" class="card-img-top" alt="{{ related_course.title }}" style="height: 200px; object-fit: cover;">
+                    <img src="{{ related_course.featured_image.url }}" class="card-img-top" alt="{{ related_course.title }}" style="height: 200px; object-fit: cover;" loading="lazy" decoding="async">
                     {% else %}
                     <div class="d-flex align-items-center justify-content-center" style="height: 200px; background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color:#fff;">
                         <i class="fas fa-book fa-3x"></i>

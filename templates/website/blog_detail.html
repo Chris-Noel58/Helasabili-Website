@@ -32,11 +32,11 @@
         </header>
 
         {% if post and post.featured_image %}
-        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="img-fluid mb-4">
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="img-fluid mb-4" fetchpriority="high" decoding="async">
         {% elif object and object.featured_image %}
-        <img src="{{ object.featured_image.url }}" alt="{{ object.title }}" class="img-fluid mb-4">
+        <img src="{{ object.featured_image.url }}" alt="{{ object.title }}" class="img-fluid mb-4" fetchpriority="high" decoding="async">
         {% elif blog and blog.featured_image %}
-        <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" class="img-fluid mb-4">
+        <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" class="img-fluid mb-4" fetchpriority="high" decoding="async">
         {% endif %}
 
         <div class="content">

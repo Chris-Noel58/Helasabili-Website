@@ -21,7 +21,7 @@
             <div class="col-lg-8 mb-5">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                     {% if featured_post.featured_image %}
-                    <img src="{{ featured_post.featured_image.url }}" class="card-img-top" alt="{{ featured_post.title }}" style="height: 400px; object-fit: cover;">
+                    <img src="{{ featured_post.featured_image.url }}" class="card-img-top" alt="{{ featured_post.title }}" style="height: 400px; object-fit: cover;" fetchpriority="high" decoding="async">
                     {% endif %}
                         <div class="card-body p-5">
                         <span class="badge" style="background:var(--primary-blue); color:#fff;">Featured</span>
@@ -81,7 +81,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                     {% if post.featured_image %}
-                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;" loading="lazy" decoding="async">
                     {% endif %}
                     <div class="card-body">
                         <small class="text-muted">

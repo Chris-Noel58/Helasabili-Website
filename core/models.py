@@ -1,12 +1,59 @@
 from django.db import models
 from django.core.validators import URLValidator, EmailValidator
 from django.utils.text import slugify
-from PIL import Image
+from PIL import Image, ImageOps
 import os
 from django.utils import timezone
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from django.core.files.storage import default_storage
+
+
+def _stored_image_name(instance, field_name):
+    if not instance.pk:
+        return None
+    return type(instance).objects.filter(pk=instance.pk).values_list(field_name, flat=True).first()
+
+
+def _optimize_image(image_field, previous_name, max_size):
+    if not image_field or image_field.name == previous_name:
+        return
+
+    _normalize_image_file(image_field, max_size)
+
+
+def _normalize_image_file(image_field, max_size):
+    """Apply EXIF rotation and size limits to an image stored on local disk."""
+    image_path = image_field.path
+    if not os.path.exists(image_path):
+        return False
+
+    with Image.open(image_path) as source:
+        image_format = source.format
+        orientation = source.getexif().get(274, 1)
+        image = ImageOps.exif_transpose(source).copy()
+        icc_profile = source.info.get('icc_profile')
+
+    if image_format not in {'JPEG', 'PNG', 'WEBP'}:
+        return False
+
+    if image.width <= max_size[0] and image.height <= max_size[1] and orientation not in range(2, 9):
+        return False
+
+    image.thumbnail(max_size, Image.Resampling.LANCZOS)
+    save_options = {}
+    if icc_profile:
+        save_options['icc_profile'] = icc_profile
+    if image_format == 'JPEG':
+        if image.mode not in {'RGB', 'L', 'CMYK'}:
+            image = image.convert('RGB')
+        save_options.update(quality=92, optimize=True, progressive=True)
+    elif image_format == 'WEBP':
+        save_options.update(quality=92, method=6)
+    else:
+        save_options.update(optimize=True)
+    image.save(image_path, format=image_format, **save_options)
+    return True
 
 
 class TimeStampedModel(models.Model):
@@ -41,22 +88,11 @@ class Course(TimeStampedModel):
         return self.title
 
     def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'featured_image')
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-        
-        # Optimize image on save
-        if self.featured_image:
-            self.optimize_image(self.featured_image.path)
-
-    @staticmethod
-    def optimize_image(image_path, size=(400, 300)):
-        """Optimize image size"""
-        if os.path.exists(image_path):
-            img = Image.open(image_path)
-            if img.height > 300 or img.width > 400:
-                img.thumbnail(size, Image.Resampling.LANCZOS)
-                img.save(image_path, quality=85, optimize=True)
+        _optimize_image(self.featured_image, previous_image, (2400, 1800))
 
 
 class CourseImage(TimeStampedModel):
@@ -76,17 +112,9 @@ class CourseImage(TimeStampedModel):
         return self.caption or f"{self.course.title} image {self.id}"
 
     def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'image')
         super().save(*args, **kwargs)
-        if self.image:
-            self.optimize_image(self.image.path)
-
-    @staticmethod
-    def optimize_image(image_path, size=(1200, 900)):
-        if os.path.exists(image_path):
-            img = Image.open(image_path)
-            if img.height > 900 or img.width > 1200:
-                img.thumbnail(size, Image.Resampling.LANCZOS)
-                img.save(image_path, quality=85, optimize=True)
+        _optimize_image(self.image, previous_image, (2400, 1800))
 
 
 class BlogPost(TimeStampedModel):
@@ -117,20 +145,11 @@ class BlogPost(TimeStampedModel):
         return self.title
 
     def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'featured_image')
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-        
-        if self.featured_image:
-            self.optimize_image(self.featured_image.path)
-
-    @staticmethod
-    def optimize_image(image_path, size=(600, 400)):
-        if os.path.exists(image_path):
-            img = Image.open(image_path)
-            if img.height > 400 or img.width > 600:
-                img.thumbnail(size, Image.Resampling.LANCZOS)
-                img.save(image_path, quality=85, optimize=True)
+        _optimize_image(self.featured_image, previous_image, (2000, 1500))
 
 
 class Testimonial(TimeStampedModel):
@@ -152,17 +171,9 @@ class Testimonial(TimeStampedModel):
         return f"{self.name} - {self.course}"
 
     def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'photo')
         super().save(*args, **kwargs)
-        if self.photo:
-            self.optimize_image(self.photo.path)
-
-    @staticmethod
-    def optimize_image(image_path, size=(150, 150)):
-        if os.path.exists(image_path):
-            img = Image.open(image_path)
-            if img.height > 150 or img.width > 150:
-                img.thumbnail(size, Image.Resampling.LANCZOS)
-                img.save(image_path, quality=85, optimize=True)
+        _optimize_image(self.photo, previous_image, (800, 800))
 
 
 class GalleryImage(TimeStampedModel):
@@ -193,17 +204,9 @@ class GalleryImage(TimeStampedModel):
         return f"{self.title} - {self.get_category_display()}"
 
     def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'image')
         super().save(*args, **kwargs)
-        if self.image:
-            self.optimize_image(self.image.path)
-
-    @staticmethod
-    def optimize_image(image_path, size=(1200, 800)):
-        if os.path.exists(image_path):
-            img = Image.open(image_path)
-            if img.height > 800 or img.width > 1200:
-                img.thumbnail(size, Image.Resampling.LANCZOS)
-                img.save(image_path, quality=85, optimize=True)
+        _optimize_image(self.image, previous_image, (2400, 1600))
 
 
 class Video(TimeStampedModel):
@@ -301,6 +304,16 @@ class AboutPage(models.Model):
     def __str__(self):
         return "About Page"
 
+    def save(self, *args, **kwargs):
+        image_fields = ('principal_image', 'history_image', 'campus_image')
+        previous_images = {
+            field_name: _stored_image_name(self, field_name)
+            for field_name in image_fields
+        }
+        super().save(*args, **kwargs)
+        for field_name in image_fields:
+            _optimize_image(getattr(self, field_name), previous_images[field_name], (2400, 1800))
+
 
 class AboutImage(models.Model):
     """Additional images for the About page"""
@@ -320,17 +333,9 @@ class AboutImage(models.Model):
         return f"AboutImage {self.pk} ({self.about})"
 
     def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'image')
         super().save(*args, **kwargs)
-        # Optimize saved image
-        if self.image and default_storage.exists(self.image.name):
-            try:
-                img = Image.open(self.image.path)
-                max_size = (1200, 900)
-                if img.height > max_size[1] or img.width > max_size[0]:
-                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
-                    img.save(self.image.path, quality=85, optimize=True)
-            except Exception:
-                pass
+        _optimize_image(self.image, previous_image, (2400, 1800))
 
     def delete(self, *args, **kwargs):
         # remove file from storage
@@ -465,6 +470,11 @@ class AdminProfile(models.Model):
     def __str__(self):
         return f"Admin Profile - {self.user.username}"
 
+    def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'avatar')
+        super().save(*args, **kwargs)
+        _optimize_image(self.avatar, previous_image, (800, 800))
+
 
 class SiteSettings(models.Model):
     """Singleton model to store site-wide settings like logo."""
@@ -478,6 +488,11 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return self.site_name or 'Site Settings'
+
+    def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'logo')
+        super().save(*args, **kwargs)
+        _optimize_image(self.logo, previous_image, (1200, 1200))
 
     def logo_url(self):
         if self.logo:
@@ -499,6 +514,11 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        previous_image = _stored_image_name(self, 'photo')
+        super().save(*args, **kwargs)
+        _optimize_image(self.photo, previous_image, (1000, 1000))
 
 class ContactMessage(models.Model):
     name = models.CharField(max_length=200, blank=True)

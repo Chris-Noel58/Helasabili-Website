@@ -35,6 +35,12 @@ urlpatterns = [
     # plural alias for templates that use 'testimonials_delete'
     path('testimonials/<int:pk>/delete/', views.testimonial_delete, name='testimonials_delete'),
 
+    # Team members
+    path('team/', views.team_members_list, name='team_members_list'),
+    path('team/add/', views.team_member_create, name='team_member_create'),
+    path('team/<int:pk>/edit/', views.team_member_update, name='team_member_update'),
+    path('team/<int:pk>/delete/', views.team_member_delete, name='team_member_delete'),
+
     # Gallery
     path('gallery/', views.gallery_list, name='gallery_list'),
     path('gallery/add/', views.gallery_upload, name='gallery_upload'),

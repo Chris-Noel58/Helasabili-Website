@@ -38,11 +38,11 @@
                 <div class="card h-100 border-0 shadow-sm hover-lift">
                     {% if course.featured_image %}
                         {% if course.featured_image.url %}
-                        <img src="{{ course.featured_image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
+                        <img src="{{ course.featured_image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;" loading="lazy" decoding="async">
                         {% elif course.featured_image.name and MEDIA_URL %}
-                        <img src="{{ MEDIA_URL }}{{ course.featured_image.name }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
+                        <img src="{{ MEDIA_URL }}{{ course.featured_image.name }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;" loading="lazy" decoding="async">
                         {% else %}
-                        <img src="{% static 'images/default-course.jpg' %}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;">
+                        <img src="{% static 'images/default-course.jpg' %}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;" loading="lazy" decoding="async">
                         {% endif %}
                     {% else %}
                     <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 220px;">

@@ -16,7 +16,7 @@
       <div class="col-md-6">
         <div class="card border-0 shadow-sm h-100">
           <div class="video-thumb" data-video-id="{{ video.youtube_id }}" data-embed-url="{{ video.embed_url }}" data-origin="{{ request.scheme }}://{{ request.get_host }}" style="position:relative; padding-top:56.25%; background-color:#000;">
-            <img src="{{ video.thumbnail }}" alt="{{ video.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy">
+            <img src="{{ video.thumbnail }}" alt="{{ video.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">
             <button class="play-btn" aria-label="Play {{ video.title }}" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); background:transparent; border:0; cursor:pointer;">
               <svg width="84" height="84" viewBox="0 0 68 48" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <path d="M.66 0C.3 0 0 .27 0 .6v46.8c0 .33.3.6.66.6h66.68c.36 0 .66-.27.66-.6V.6c0-.33-.3-.6-.66-.6H.66z" fill="#f00"></path>
