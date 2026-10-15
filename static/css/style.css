@@ -171,7 +171,7 @@ a {
 
 .navbar {
     background: linear-gradient(90deg, var(--primary-blue), var(--brand-green));
-    padding: 15px 0;
+    padding: 8px 0;
 }
 
 .navbar-brand {
@@ -181,7 +181,7 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 12px; /* space between logo and text if any */
-    padding: 6px 0;
+    padding: 0;
 }
 
 .navbar-brand .site-logo {
@@ -199,12 +199,12 @@ a {
 }
 
 .navbar-brand img {
-    height: 52px; /* slightly larger logo */
-    max-height: 72px;
+    height: 40px;
+    max-height: 40px;
     width: auto;
     object-fit: contain;
     display: block;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35)); /* subtle shadow for contrast */
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
 }
 
 .nav-link {
@@ -875,4 +875,210 @@ footer hr {
 
 @keyframes blink {
     50% { opacity: 0; }
+}
+
+/* Shared responsive safeguards for public pages */
+main,
+main .row > *,
+.card,
+.card-body {
+    min-width: 0;
+}
+
+main img,
+main video,
+main iframe {
+    max-width: 100%;
+}
+
+.page-header {
+    padding: 60px 0;
+    padding: clamp(32px, 7vw, 60px) 0;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary-blue), var(--brand-green));
+}
+
+.page-header h1 {
+    font-size: 3.5rem;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    overflow-wrap: anywhere;
+}
+
+.page-header .lead {
+    max-width: 70ch;
+    color: #fff;
+    opacity: 1;
+}
+
+.card-title,
+.card-text,
+.page-header,
+main p,
+footer a,
+footer p {
+    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.hero-actions .btn {
+    flex: 0 1 220px;
+}
+
+.navbar-brand {
+    min-width: 0;
+}
+
+.navbar-brand .brand-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.navbar-toggler,
+.mobile-nav-close {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.pagination {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+}
+
+.scroll-to-top {
+    bottom: 156px;
+    right: 16px;
+    right: max(16px, env(safe-area-inset-right));
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .navbar-brand {
+        font-size: 20px;
+    }
+
+    .navbar .nav-link {
+        margin-right: 5px;
+        margin-left: 5px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        width: 78vw;
+        max-width: 300px;
+        width: min(300px, 82vw);
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+
+    .navbar-collapse .nav-link {
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    body.home-hero-actions-visible .whatsapp-float,
+    body.home-hero-actions-visible .scroll-to-top,
+    body.home-hero-actions-visible #ai-chat-widget {
+        display: none;
+        pointer-events: none;
+    }
+
+    .page-header {
+        padding: 36px 0;
+    }
+
+    .hero .hero-content {
+        padding: 2rem 0.75rem;
+    }
+
+    .hero-actions {
+        align-items: stretch;
+    }
+
+    .hero-actions .btn {
+        flex-basis: 100%;
+        max-width: 280px;
+        flex-basis: min(100%, 280px);
+        align-self: center;
+    }
+
+    .scroll-to-top {
+        bottom: 136px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .listing-search-form {
+        flex-direction: column;
+    }
+
+    .listing-search-form .btn {
+        width: 100%;
+    }
+
+    .navbar {
+        padding: 8px 0;
+    }
+
+    .navbar-brand {
+        gap: 8px;
+        font-size: 18px;
+    }
+
+    .navbar-brand img,
+    .navbar-brand .site-logo {
+        width: auto;
+        height: 40px;
+        max-width: 48px;
+    }
+
+    .navbar-brand .brand-text {
+        font-size: 16px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .page-header .lead {
+        font-size: 1rem;
+    }
+
+    .card-body.p-5 {
+        padding: 1.25rem !important;
+    }
+
+    .whatsapp-float {
+        right: 16px;
+        right: max(16px, env(safe-area-inset-right));
+        bottom: 80px;
+        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+        width: 52px;
+        height: 52px;
+    }
+
+    .scroll-to-top {
+        right: 16px;
+        right: max(16px, env(safe-area-inset-right));
+        bottom: 140px;
+        bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

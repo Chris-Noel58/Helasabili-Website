@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block title %}
-{% if post %}{{ post.title }}{% elif object %}{{ object.title }}{% elif blog %}{{ blog.title }}{% else %}News & Blog{% endif %}
+{% if post %}{{ post.title }}{% elif object %}{{ object.title }}{% elif blog %}{{ blog.title }}{% else %}News & Blog{% endif %} - Helasabili Mobile Capital Ltd
+{% endblock %}
+{% block meta_description %}
+{% if post and post.excerpt %}{{ post.excerpt|striptags|truncatechars:155 }}{% elif object and object.excerpt %}{{ object.excerpt|striptags|truncatechars:155 }}{% elif blog and blog.excerpt %}{{ blog.excerpt|striptags|truncatechars:155 }}{% else %}Read property news and updates from Helasabili Mobile Capital Ltd.{% endif %}
 {% endblock %}
 
 {% block content %}

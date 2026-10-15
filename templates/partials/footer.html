@@ -103,11 +103,11 @@
 
 {% comment %} WhatsApp floating button: use school's primary number or fallback {% endcomment %}
 {% if contact_info and contact_info.phone_primary %}
-<a id="whatsapp-float" class="whatsapp-float" href="#" target="_blank" aria-label="Chat on WhatsApp" data-phone="{{ contact_info.phone_primary }}">
+<a id="whatsapp-float" class="whatsapp-float" href="#" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" data-phone="{{ contact_info.phone_primary }}">
     <i class="fab fa-whatsapp"></i>
 </a>
 {% else %}
-<a id="whatsapp-float" class="whatsapp-float" href="#" target="_blank" aria-label="Chat on WhatsApp" data-phone="0724891461">
+<a id="whatsapp-float" class="whatsapp-float" href="#" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" data-phone="0724891461">
     <i class="fab fa-whatsapp"></i>
 </a>
 {% endif %}

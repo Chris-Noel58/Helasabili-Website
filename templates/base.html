@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="SL3SpDTqrvRRA5CQmzmFpCIJNnZ4KFnpxLNYbjz1CQc" />
-    <meta name="description" content= "Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki">
+    <meta name="description" content="{% block meta_description %}Helasabili Mobile Capital Ltd offers verified land plots and secure property investments in Nakuru and Nanyuki.{% endblock %}">
     <title>{% block title %}Helasabili Mobile Capital Ltd{% endblock %}</title>
     
     <!-- Favicon: use uploaded site logo when available, otherwise fall back to static/favicon -->
@@ -25,8 +25,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
-    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}?v=3">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -42,13 +42,8 @@
     <!-- Footer -->
     {% include 'partials/footer.html' %}
     
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/254759873793" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-    
     <!-- Scroll to Top Button -->
-    <button id="scrollTopBtn" class="scroll-to-top">
+    <button id="scrollTopBtn" class="scroll-to-top" type="button" aria-label="Scroll to top">
         <i class="fas fa-arrow-up"></i>
     </button>
     

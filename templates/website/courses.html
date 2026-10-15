@@ -2,21 +2,22 @@
 {% load static %}
 
 {% block title %}Listings - Helasabili Mobile Capital Ltd{% endblock %}
+{% block meta_description %}Browse verified 50x100 land plots and property investment opportunities in Nakuru, Nanyuki, and nearby areas.{% endblock %}
 
 {% block content %}
 
 <!-- Page Header -->
-<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
+<div class="page-header">
     <div class="container">
         <h1 class="display-4 fw-bold mb-2">Property Listings</h1>
-        <p class="lead"  style="color: #ffffff; opacity: 1;">Browse verified 50x100 plots and land investment opportunities</p>
+        <p class="lead">Browse verified 50x100 plots and land investment opportunities</p>
     </div>
 </div>
 
 <!-- Search & Filter -->
 <section class="py-4 bg-light border-bottom">
     <div class="container">
-        <form method="GET" class="d-flex gap-2" data-validate="true">
+        <form method="GET" class="listing-search-form d-flex gap-2" data-validate="true">
             <div class="flex-grow-1">
                   <input type="text" name="search" class="form-control form-control-lg" 
                       placeholder="Search listings (location, name)..." value="{{ search_query }}">

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block title %}Home - Helasabili Mobile Capital Ltd{% endblock %}
+{% block meta_description %}Find verified 50x100 land plots in Nakuru and Nanyuki with transparent pricing, secure transactions, and fast title delivery from Helasabili Mobile Capital Ltd.{% endblock %}
 
 {% block content %}
 
@@ -9,26 +10,28 @@
 <section class="hero-section">
     <div class="hero" data-bg-interval="6000" data-bg-images='[{% for img in gallery_images|slice:":6" %}"{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}]'>
         <style>
-            /* Keep the complete photo crisp while using a softened fill behind it. */
+            /* Full-bleed photo with a bottom-aligned overlay, matching the supplied reference. */
             .hero-section { min-height: 0; padding: 0; }
-            .hero { position: relative; overflow: hidden; padding: 0; min-height: min(75vh, 760px); width: 100%; display:flex; align-items:center; justify-content:center; }
+            .hero { position: relative; overflow: hidden; padding: 0; min-height: 680px; min-height: min(82vh, 820px); width: 100%; display:flex; align-items:flex-end; justify-content:center; }
             .hero-bg, .hero-bg-layer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
             .hero-bg-layer { overflow: hidden; opacity: 0; will-change: opacity; background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); }
             .hero-bg-layer.visible { opacity: 1; }
             .hero-bg-fill, .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; }
-            .hero-bg-fill { object-fit: cover; filter: blur(14px) brightness(.62); transform: scale(1.06); }
-            .hero-image { object-fit: cover; object-position: center top; }
+            .hero-bg-fill { object-fit: cover; filter: blur(10px) brightness(.78); transform: scale(1.04); }
+            .hero-image { object-fit: cover; object-position: center 42%; }
 
-            .hero-content { position: relative; z-index: 6; width: 100%; padding: 3rem 1rem; }
+            .hero-content { position: relative; z-index: 6; width: 100%; padding: clamp(2.5rem, 7vw, 5rem) 1rem; text-align: left !important; }
 
-            /* Slight overlay for text contrast without hiding image details */
-            .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.14)); pointer-events: none; z-index:3; }
+            /* Keep the photo bright above the copy and deepen only the lower text area. */
+            .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,12,24,0.04) 0%, rgba(3,12,24,0.12) 48%, rgba(3,12,24,0.72) 100%); pointer-events: none; z-index:3; }
 
-            /* Keep content readable and centered without constraining the background */
+            /* Keep the existing hero copy readable and anchored to the lower left. */
             .hero .container { max-width: 1100px; position: relative; z-index: 7; }
-            .hero h1 { color: #fff; text-shadow: 0 4px 18px rgba(0,0,0,0.65); font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; margin-bottom: 0.5rem; }
-            .hero .lead { color: rgba(255,255,255,0.98); font-size: 1.05rem; margin-top: 0.5rem; }
+            .hero h1 { max-width: 900px; color: #a3e635; text-shadow: 0 3px 14px rgba(0,0,0,0.38); font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; margin-bottom: 0.5rem; }
+            .hero .lead { max-width: 760px; color: rgba(255,255,255,0.98); font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.6; margin-top: 0.5rem; }
             .hero .btn { min-width: 160px; }
+            .hero .typed-container { max-width: 100%; }
+            .hero .typed-text { overflow-wrap: anywhere; }
 
             /* Make any muted/grey text inside the hero clearly visible (override bootstrap .text-muted) */
             .hero .text-muted,
@@ -43,7 +46,7 @@
             /* Make typed text and cursor clearly visible */
             .typed-container {
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
                 align-items: center;
                 min-height: 2.8rem;
                 margin-top: 0.25rem;
@@ -62,13 +65,66 @@
                 letter-spacing: 0.02em;
                 text-shadow: 0 3px 12px rgba(0,0,0,0.35);
             }
+            .hero-actions { justify-content: flex-start !important; }
 
             /* Ensure hero background doesn't show page background through gaps */
             .hero { background-color: transparent; }
 
             @media (max-width: 768px) {
-                .hero { min-height: max(420px, 68vh); }
-                .hero-content { padding: 2rem 0.75rem; }
+                .hero {
+                    min-height: 508px;
+                    min-height: max(508px, 86vh);
+                    min-height: max(508px, 86svh);
+                }
+                .hero::after {
+                    background: linear-gradient(180deg, rgba(3,12,24,0.02) 0%, rgba(3,12,24,0.08) 24%, rgba(3,12,24,0.52) 48%, rgba(3,12,24,0.88) 76%, rgba(3,12,24,0.94) 100%);
+                }
+                .hero-content {
+                    padding: 2rem 1.25rem max(2rem, env(safe-area-inset-bottom));
+                }
+                .hero h1 {
+                    max-width: 15ch;
+                    font-size: clamp(1.85rem, 7.3vw, 2.5rem);
+                    line-height: 1.08;
+                    text-wrap: balance;
+                }
+                .hero .typed-container {
+                    justify-content: flex-start;
+                    flex-wrap: wrap;
+                    gap: 4px;
+                    min-height: 0;
+                    margin: 0.2rem 0 0.35rem;
+                }
+                .hero .typed-text {
+                    font-size: clamp(1rem, 4.6vw, 1.2rem);
+                    line-height: 1.4;
+                    letter-spacing: 0;
+                    overflow-wrap: anywhere;
+                }
+                .hero .lead {
+                    max-width: 38rem;
+                    margin-top: 0.35rem !important;
+                    margin-bottom: 1.1rem;
+                    font-size: clamp(0.98rem, 4vw, 1.08rem);
+                    line-height: 1.55;
+                }
+                .hero-actions {
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    align-items: center;
+                    gap: 0.5rem !important;
+                }
+                .hero-actions .btn {
+                    width: auto;
+                    max-width: 180px;
+                    min-width: 0;
+                    min-height: 44px;
+                    padding: 0.55rem 0.45rem;
+                    font-size: clamp(0.78rem, 3.5vw, 0.95rem);
+                    flex: 1 1 0;
+                    align-self: auto;
+                    white-space: nowrap;
+                }
             }
         </style>
 
@@ -93,7 +149,7 @@
             </div>
 
             <p class="lead text-muted mt-3">Secure, affordable housing solutions and verified 50x100 plots in Nakuru and Nanyuki. Transparent transactions and rapid title delivery.</p>
-            <div class="d-flex gap-3 justify-content-center">
+            <div class="hero-actions d-flex flex-wrap gap-3 justify-content-center">
                 <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
                     <i class="fas fa-phone"></i> Contact Sales
                 </a>
@@ -384,6 +440,38 @@
 
 {% block extra_js %}
 <script>
+(function () {
+    const heroActions = document.querySelector('.hero-actions');
+    if (!heroActions || !('IntersectionObserver' in window)) return;
+
+    const mobileQuery = window.matchMedia('(max-width: 767.98px)');
+    let actionsVisible = false;
+
+    function updateFloatingControls() {
+        const actionsRect = heroActions.getBoundingClientRect();
+        actionsVisible = actionsRect.bottom > 0 && actionsRect.top < window.innerHeight;
+        document.body.classList.toggle(
+            'home-hero-actions-visible',
+            mobileQuery.matches && actionsVisible
+        );
+    }
+
+    const observer = new IntersectionObserver(function (entries) {
+        actionsVisible = entries[0].isIntersecting;
+        updateFloatingControls();
+    });
+    observer.observe(heroActions);
+    updateFloatingControls();
+    window.addEventListener('scroll', updateFloatingControls, { passive: true });
+    window.addEventListener('resize', updateFloatingControls);
+
+    if (mobileQuery.addEventListener) {
+        mobileQuery.addEventListener('change', updateFloatingControls);
+    } else if (mobileQuery.addListener) {
+        mobileQuery.addListener(updateFloatingControls);
+    }
+}());
+
 function showGalleryImage(url, title) {
     document.getElementById('galleryImage').src = url;
     document.getElementById('galleryTitle').textContent = title;

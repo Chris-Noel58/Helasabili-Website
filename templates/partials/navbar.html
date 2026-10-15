@@ -105,8 +105,14 @@
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') setMenuOpen(false);
         });
-        window.matchMedia('(min-width: 992px)').addEventListener('change', function (event) {
+        const desktopQuery = window.matchMedia('(min-width: 992px)');
+        const closeMenuOnDesktop = function (event) {
             if (event.matches) setMenuOpen(false);
-        });
+        };
+        if (desktopQuery.addEventListener) {
+            desktopQuery.addEventListener('change', closeMenuOnDesktop);
+        } else if (desktopQuery.addListener) {
+            desktopQuery.addListener(closeMenuOnDesktop);
+        }
     }());
 </script>
