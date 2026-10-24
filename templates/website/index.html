@@ -7,159 +7,106 @@
 {% block content %}
 
 <!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero" data-bg-interval="6000" data-bg-images='[{% for img in gallery_images|slice:":6" %}"{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}]'>
-        <style>
-            /* Full-bleed photo with a bottom-aligned overlay, matching the supplied reference. */
-            .hero-section { min-height: 0; padding: 0; }
-            .hero { position: relative; overflow: hidden; padding: 0; min-height: 680px; min-height: min(82vh, 820px); width: 100%; display:flex; align-items:flex-end; justify-content:center; }
-            .hero-bg, .hero-bg-layer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
-            .hero-bg-layer { overflow: hidden; opacity: 0; will-change: opacity; background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); }
-            .hero-bg-layer.visible { opacity: 1; }
-            .hero-bg-fill, .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; }
-            .hero-bg-fill { object-fit: cover; filter: blur(10px) brightness(.78); transform: scale(1.04); }
-            .hero-image { object-fit: cover; object-position: center 42%; }
-
-            .hero-content { position: relative; z-index: 6; width: 100%; padding: clamp(2.5rem, 7vw, 5rem) 1rem; text-align: left !important; }
-
-            /* Keep the photo bright above the copy and deepen only the lower text area. */
-            .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,12,24,0.04) 0%, rgba(3,12,24,0.12) 48%, rgba(3,12,24,0.72) 100%); pointer-events: none; z-index:3; }
-
-            /* Keep the existing hero copy readable and anchored to the lower left. */
-            .hero .container { max-width: 1100px; position: relative; z-index: 7; }
-            .hero h1 { max-width: 900px; color: #a3e635; text-shadow: 0 3px 14px rgba(0,0,0,0.38); font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; margin-bottom: 0.5rem; }
-            .hero .lead { max-width: 760px; color: rgba(255,255,255,0.98); font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.6; margin-top: 0.5rem; }
-            .hero .btn { min-width: 160px; }
-            .hero .typed-container { max-width: 100%; }
-            .hero .typed-text { overflow-wrap: anywhere; }
-
-            /* Make any muted/grey text inside the hero clearly visible (override bootstrap .text-muted) */
-            .hero .text-muted,
-            .hero .lead.text-muted,
-            .hero small,
-            .hero p.text-muted,
-            .hero .small {
-                color: rgba(255,255,255,0.95) !important;
-                opacity: 1 !important;
-            }
-
-            /* Make typed text and cursor clearly visible */
-            .typed-container {
-                display: flex;
-                justify-content: flex-start;
-                align-items: center;
-                min-height: 2.8rem;
-                margin-top: 0.25rem;
-                margin-bottom: 0.75rem;
-            }
-            .typed-container,
-            .typed-container .typed-text,
-            .typed-container .typed-cursor {
-                color: #fff !important;
-                opacity: 1 !important;
-            }
-            .typed-container .typed-text {
-                font-weight: 600;
-                font-size: clamp(1.1rem, 2.5vw, 2rem);
-                line-height: 1.3;
-                letter-spacing: 0.02em;
-                text-shadow: 0 3px 12px rgba(0,0,0,0.35);
-            }
-            .hero-actions { justify-content: flex-start !important; }
-
-            /* Ensure hero background doesn't show page background through gaps */
-            .hero { background-color: transparent; }
-
-            @media (max-width: 768px) {
-                .hero {
-                    min-height: 508px;
-                    min-height: max(508px, 86vh);
-                    min-height: max(508px, 86svh);
-                }
-                .hero::after {
-                    background: linear-gradient(180deg, rgba(3,12,24,0.02) 0%, rgba(3,12,24,0.08) 24%, rgba(3,12,24,0.52) 48%, rgba(3,12,24,0.88) 76%, rgba(3,12,24,0.94) 100%);
-                }
-                .hero-content {
-                    padding: 2rem 1.25rem max(2rem, env(safe-area-inset-bottom));
-                }
-                .hero h1 {
-                    max-width: 15ch;
-                    font-size: clamp(1.85rem, 7.3vw, 2.5rem);
-                    line-height: 1.08;
-                    text-wrap: balance;
-                }
-                .hero .typed-container {
-                    justify-content: flex-start;
-                    flex-wrap: wrap;
-                    gap: 4px;
-                    min-height: 0;
-                    margin: 0.2rem 0 0.35rem;
-                }
-                .hero .typed-text {
-                    font-size: clamp(1rem, 4.6vw, 1.2rem);
-                    line-height: 1.4;
-                    letter-spacing: 0;
-                    overflow-wrap: anywhere;
-                }
-                .hero .lead {
-                    max-width: 38rem;
-                    margin-top: 0.35rem !important;
-                    margin-bottom: 1.1rem;
-                    font-size: clamp(0.98rem, 4vw, 1.08rem);
-                    line-height: 1.55;
-                }
-                .hero-actions {
-                    flex-direction: row;
-                    flex-wrap: nowrap;
-                    align-items: center;
-                    gap: 0.5rem !important;
-                }
-                .hero-actions .btn {
-                    width: auto;
-                    max-width: 180px;
-                    min-width: 0;
-                    min-height: 44px;
-                    padding: 0.55rem 0.45rem;
-                    font-size: clamp(0.78rem, 3.5vw, 0.95rem);
-                    flex: 1 1 0;
-                    align-self: auto;
-                    white-space: nowrap;
-                }
-            }
-        </style>
-
-        <!-- Background layers will be managed by JS -->
-        <div class="hero-bg">
-            <div class="hero-bg-layer" aria-hidden="true">
-                <img class="hero-bg-fill" alt="" aria-hidden="true">
-                <img class="hero-image" alt="" aria-hidden="true">
+<section class="home-hero-section" aria-labelledby="home-hero-title">
+    <div class="home-hero">
+        <div class="home-hero-photo" data-bg-interval="6000" data-bg-images='[{% for img in hero_gallery_images %}{% if not forloop.first %},{% endif %}"{{ img.image.url }}"{% endfor %}]'>
+            <div class="home-hero-photo-layer visible">
+                <img src="{% if hero_gallery_images %}{{ hero_gallery_images.0.image.url }}{% else %}{% get_media_prefix %}gallery/_R6A0311.jpg.jpeg{% endif %}"
+                     alt=""
+                     aria-hidden="true"
+                     fetchpriority="high">
             </div>
-            <div class="hero-bg-layer" aria-hidden="true">
-                <img class="hero-bg-fill" alt="" aria-hidden="true">
-                <img class="hero-image" alt="" aria-hidden="true">
+            <div class="home-hero-photo-layer" aria-hidden="true">
+                <img alt="" aria-hidden="true">
             </div>
         </div>
 
-        <div class="container hero-content text-center">
-            <h1 class="display-1 fw-bold">Welcome to Helasabili Mobile Capital Ltd</h1>
-
-            <!-- Typed animated phrases inserted below -->
-            <div class="typed-container">
-                <span class="typed-text" aria-hidden="true"></span>
+        <div class="home-hero-panel">
+            <div class="home-hero-copy">
+                <p class="home-hero-badge">
+                    <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                    Trusted Land Investment
+                </p>
+                <h1 id="home-hero-title">Find Your Place.<br>Build Your <span>Future.</span></h1>
+                <div class="typed-container home-hero-typed">
+                    <span class="typed-text" aria-hidden="true"></span>
+                </div>
+                <p class="home-hero-description">
+                    Verified plots and affordable housing solutions in Nakuru and Nanyuki, with secure transactions and reliable title delivery.
+                </p>
+                <div class="home-hero-actions">
+                    <a href="{% url 'website:courses_list' %}" class="home-hero-button home-hero-button-primary">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        View Available Lands
+                    </a>
+                    <a href="{% url 'website:contact' %}" class="home-hero-button home-hero-button-secondary">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        Contact Sales
+                    </a>
+                </div>
             </div>
 
-            <p class="lead text-muted mt-3">Secure, affordable housing solutions and verified 50x100 plots in Nakuru and Nanyuki. Transparent transactions and rapid title delivery.</p>
-            <div class="hero-actions d-flex flex-wrap gap-3 justify-content-center">
-                <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-phone"></i> Contact Sales
-                </a>
-                <a href="{% url 'website:courses_list' %}" class="btn btn-success btn-lg">
-                    <i class="fas fa-map-marker-alt"></i> View Lands
-                </a>
-            </div>
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    const photo = document.querySelector('.home-hero-photo');
+    if (!photo) return;
+
+    const layers = Array.from(photo.querySelectorAll('.home-hero-photo-layer'));
+    const interval = Number.parseInt(photo.dataset.bgInterval, 10) || 6000;
+    let images;
+
+    try {
+        images = JSON.parse(photo.dataset.bgImages || '[]');
+    } catch (error) {
+        console.error('Hero slideshow image list could not be parsed.', error);
+        return;
+    }
+
+    if (!Array.isArray(images) || layers.length < 2) return;
+    images = [...new Set(images.filter((src) => typeof src === 'string' && src))];
+    if (images.length < 2) return;
+
+    let currentLayer = 0;
+    let imageIndex = 1;
+    let timer;
+
+    function showNextImage() {
+        if (document.hidden) return;
+
+        const nextLayer = (currentLayer + 1) % layers.length;
+        const nextImage = layers[nextLayer].querySelector('img');
+        const nextSrc = images[imageIndex];
+        const preload = new Image();
+        preload.onload = function () {
+            if (document.hidden) return;
+            nextImage.src = nextSrc;
+            layers[nextLayer].setAttribute('aria-hidden', 'false');
+            layers[nextLayer].classList.add('visible');
+            layers[currentLayer].setAttribute('aria-hidden', 'true');
+            layers[currentLayer].classList.remove('visible');
+            currentLayer = nextLayer;
+            imageIndex = (imageIndex + 1) % images.length;
+        };
+        preload.onerror = function () {
+            console.error('Hero slideshow image failed to load:', nextSrc);
+            imageIndex = (imageIndex + 1) % images.length;
+        };
+        preload.src = nextSrc;
+    }
+
+    function startSlideshow() {
+        window.clearInterval(timer);
+        if (!document.hidden) timer = window.setInterval(showNextImage, interval);
+    }
+
+    document.addEventListener('visibilitychange', startSlideshow);
+    startSlideshow();
+}());
+</script>
 
 <!-- Why Choose Us Section -->
 <section class="py-5 bg-light">
@@ -441,7 +388,7 @@
 {% block extra_js %}
 <script>
 (function () {
-    const heroActions = document.querySelector('.hero-actions');
+    const heroActions = document.querySelector('.home-hero-actions');
     if (!heroActions || !('IntersectionObserver' in window)) return;
 
     const mobileQuery = window.matchMedia('(max-width: 767.98px)');
@@ -476,110 +423,6 @@ function showGalleryImage(url, title) {
     document.getElementById('galleryImage').src = url;
     document.getElementById('galleryTitle').textContent = title;
 }
-
-(function(){
-    // Hero slideshow: shuffle, preload, and crossfade gallery images automatically (background-only)
-    function initHeroSlideshow() {
-        const hero = document.querySelector('.hero');
-        if (!hero) return;
-
-        const imagesAttr = hero.getAttribute('data-bg-images');
-        if (!imagesAttr) return;
-
-        let images = [];
-        try { images = JSON.parse(imagesAttr); } catch (e) { return; }
-        if (!Array.isArray(images) || images.length === 0) return;
-
-        // Fisher-Yates shuffle for a random order each page load
-        for (let i = images.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [images[i], images[j]] = [images[j], images[i]];
-        }
-
-        const interval = parseInt(hero.getAttribute('data-bg-interval')) || 6000;
-        const layers = Array.from(hero.querySelectorAll('.hero-bg-layer'));
-        if (layers.length < 1) return;
-
-        // Preload images
-        images.forEach(src => { const img = new Image(); img.src = src; });
-
-        const setLayerImage = (layer, src) => {
-            layer.querySelector('.hero-bg-fill').src = src;
-            layer.querySelector('.hero-image').src = src;
-        };
-
-        // Ensure both layers exist (create if missing)
-        if (layers.length === 1) {
-            const extra = document.createElement('div');
-            extra.className = 'hero-bg-layer';
-            extra.setAttribute('aria-hidden', 'true');
-            extra.innerHTML = '<img class="hero-bg-fill" alt="" aria-hidden="true"><img class="hero-image" alt="" aria-hidden="true">';
-            hero.querySelector('.hero-bg').appendChild(extra);
-            layers.push(extra);
-        }
-
-        // Handle single image case
-        if (images.length === 1) {
-            setLayerImage(layers[0], images[0]);
-            layers[0].classList.add('visible');
-            layers[0].setAttribute('aria-hidden', 'false');
-            return;
-        }
-
-        // Initialize backgrounds
-        setLayerImage(layers[0], images[0]);
-        layers[0].classList.add('visible');
-        layers[0].setAttribute('aria-hidden', 'false');
-
-        setLayerImage(layers[1], images[1]);
-        layers[1].setAttribute('aria-hidden', 'true');
-
-        let currentLayer = 0;
-        let imgIndex = 2 % images.length;
-
-        // Swap function with crossfade
-        const tick = () => {
-            const nextLayer = (currentLayer + 1) % layers.length;
-
-            layers.forEach(layer => {
-                layer.style.transition = 'opacity 1s ease-in-out';
-            });
-            setLayerImage(layers[nextLayer], images[imgIndex]);
-            // Force reflow to ensure transition triggers reliably
-            // eslint-disable-next-line no-unused-expressions
-            layers[nextLayer].offsetHeight;
-
-            layers[nextLayer].classList.add('visible');
-            layers[nextLayer].setAttribute('aria-hidden', 'false');
-            layers[currentLayer].classList.remove('visible');
-            layers[currentLayer].setAttribute('aria-hidden', 'true');
-
-            currentLayer = nextLayer;
-            imgIndex = (imgIndex + 1) % images.length;
-        };
-
-        // Start the interval
-        let timer = setInterval(tick, interval);
-
-        // Pause when the page is not visible to save CPU/battery
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                clearInterval(timer);
-            } else {
-                // restart
-                timer = setInterval(tick, interval);
-            }
-        });
-
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initHeroSlideshow);
-    } else {
-        initHeroSlideshow();
-    }
-})();
-// Hero slideshow is handled here (background-only crisp full-bleed)
 
 // Reveal 6 random course cards on each page load
 function showRandomCourses(limit = 6) {

@@ -9,7 +9,7 @@ from django.test.utils import override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
-from core.models import AboutPage, ContactMessage, TeamMember
+from core.models import AboutPage, ContactMessage, GalleryImage, TeamMember
 
 
 class DashboardEnquiriesViewTests(TestCase):
@@ -36,6 +36,54 @@ class DashboardEnquiriesViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Enquiries')
         self.assertContains(response, 'Jane Doe')
+
+    def test_gallery_image_can_be_selected_for_homepage_hero(self):
+        self.client.login(username='adminuser', password='StrongPass123')
+        image = GalleryImage.objects.create(
+            title='Hero background',
+            image='gallery/hero-background.jpg',
+            category='other',
+        )
+
+        gallery_response = self.client.get('/dashboard/gallery/')
+        self.assertContains(gallery_response, 'Show in hero')
+
+        response = self.client.post(
+            f'/dashboard/gallery/{image.pk}/hero/',
+            {'show_in_home_hero': '1'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        image.refresh_from_db()
+        self.assertTrue(image.show_in_home_hero)
+
+        homepage_response = self.client.get('/')
+        self.assertContains(homepage_response, 'gallery/hero-background.jpg')
+
+        response = self.client.post(
+            f'/dashboard/gallery/{image.pk}/hero/',
+            {'show_in_home_hero': '0'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        image.refresh_from_db()
+        self.assertFalse(image.show_in_home_hero)
+
+    def test_inactive_gallery_image_cannot_be_added_to_homepage_hero(self):
+        self.client.login(username='adminuser', password='StrongPass123')
+        image = GalleryImage.objects.create(
+            title='Inactive image',
+            image='gallery/inactive.jpg',
+            category='other',
+            is_active=False,
+        )
+
+        response = self.client.post(
+            f'/dashboard/gallery/{image.pk}/hero/',
+            {'show_in_home_hero': '1'},
+        )
+
+        self.assertRedirects(response, '/dashboard/gallery/')
+        image.refresh_from_db()
+        self.assertFalse(image.show_in_home_hero)
 
     def test_team_member_can_be_added_with_clear_photo_then_edited(self):
         self.client.login(username='adminuser', password='StrongPass123')

@@ -194,6 +194,10 @@ class GalleryImage(TimeStampedModel):
     description = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    show_in_home_hero = models.BooleanField(
+        default=False,
+        verbose_name='Show in homepage hero',
+    )
 
     class Meta:
         ordering = ['category', 'order']

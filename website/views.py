@@ -35,13 +35,17 @@ def home(request):
     courses = Course.objects.filter(is_active=True).order_by('order')[:3]
     testimonials = Testimonial.objects.filter(is_active=True).order_by('order')[:3]
     blog_posts = BlogPost.objects.filter(status='published').order_by('-published_date')[:3]
-    gallery_images = GalleryImage.objects.filter(is_active=True).order_by('order')[:6]
+    gallery_images = GalleryImage.objects.filter(is_active=True).order_by('order', 'id')
+    hero_gallery_images = gallery_images.filter(show_in_home_hero=True)
+    if not hero_gallery_images.exists():
+        hero_gallery_images = gallery_images[:1]
     
     context = {
         'courses': courses,
         'testimonials': testimonials,
         'blog_posts': blog_posts,
         'gallery_images': gallery_images,
+        'hero_gallery_images': hero_gallery_images,
         'videos': Video.objects.filter(is_active=True).order_by('-created_at')[:6],
     }
     return render(request, 'website/index.html', context)

@@ -469,6 +469,27 @@ def gallery_list(request):
 
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
+@require_http_methods(["POST"])
+def gallery_hero_toggle(request, pk):
+    """Include or remove an active gallery image from the homepage hero."""
+    image = get_object_or_404(GalleryImage, pk=pk)
+    selected = request.POST.get('show_in_home_hero')
+    if selected not in {'0', '1'}:
+        messages.error(request, 'Choose whether to show this image in the homepage hero.')
+    elif selected == '1' and not image.is_active:
+        messages.error(request, 'Activate this image before adding it to the homepage hero.')
+    else:
+        image.show_in_home_hero = selected == '1'
+        image.save(update_fields=['show_in_home_hero'])
+        if image.show_in_home_hero:
+            messages.success(request, f'"{image.title}" will appear in the homepage hero photo area.')
+        else:
+            messages.success(request, f'"{image.title}" was removed from the homepage hero.')
+    return redirect('dashboard:gallery_list')
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
 def gallery_upload(request):
     """Upload new gallery image"""
     if request.method == 'POST':

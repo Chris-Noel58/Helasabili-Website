@@ -13,6 +13,10 @@
     </a>
 </div>
 
+<div class="alert alert-info">
+    Select images for the clear photo area on the left side of the homepage hero. Multiple selections cross-fade; one selection stays still. The wording panel on the right uses a blue-green gradient for readability.
+</div>
+
 <!-- Search & Filter -->
 <div class="card p-3 mb-4 border-0 shadow-sm">
     <form method="GET" class="row g-3">
@@ -52,6 +56,9 @@
                         {% if image.is_active %}Active{% else %}Inactive{% endif %}
                     </span>
                 </small>
+                {% if image.show_in_home_hero %}
+                <span class="badge bg-primary mt-2">Homepage hero</span>
+                {% endif %}
                 {% if image.description %}
                 <p class="small mt-2">{{ image.description|truncatewords:10 }}</p>
                 {% endif %}
@@ -60,6 +67,20 @@
                 <a href="{% url 'dashboard:gallery_update' image.id %}" class="btn btn-sm btn-outline-primary">
                     <i class="fas fa-edit"></i> Edit
                 </a>
+                <form method="POST" action="{% url 'dashboard:gallery_hero_toggle' image.id %}" class="d-inline">
+                    {% csrf_token %}
+                    {% if image.show_in_home_hero %}
+                    <input type="hidden" name="show_in_home_hero" value="0">
+                    <button type="submit" class="btn btn-sm btn-outline-success">
+                        <i class="fas fa-check"></i> Selected for hero
+                    </button>
+                    {% else %}
+                    <input type="hidden" name="show_in_home_hero" value="1">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary" {% if not image.is_active %}disabled title="Activate this image first"{% endif %}>
+                        <i class="fas fa-images"></i> Show in hero
+                    </button>
+                    {% endif %}
+                </form>
                 <form method="POST" action="{% url 'dashboard:gallery_delete' image.id %}" style="display:inline;" 
                       onsubmit="return confirm('Delete this image?')">
                     {% csrf_token %}
