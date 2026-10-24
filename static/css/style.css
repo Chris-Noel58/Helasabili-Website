@@ -40,6 +40,7 @@ body {
 img {
     max-width: 100%;
     image-rendering: auto;
+    image-orientation: from-image;
 }
 
 .card-img-top {
