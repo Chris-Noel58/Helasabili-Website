@@ -171,13 +171,13 @@ a {
    ======================================== */
 
 .navbar {
-    background: linear-gradient(90deg, var(--primary-blue), var(--brand-green));
+    background: transparent;
     padding: 8px 0;
 }
 
 .navbar-brand {
     font-size: 24px;
-    color: var(--white) !important;
+    color: var(--primary-blue) !important;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
@@ -194,7 +194,7 @@ a {
 
 .navbar-brand .brand-text {
     font-weight: 800;
-    color: var(--white);
+    color: var(--primary-blue);
     font-size: 20px;
     letter-spacing: 0.5px;
 }
@@ -209,7 +209,7 @@ a {
 }
 
 .nav-link {
-    color: rgba(255,255,255,0.9) !important;
+    color: var(--primary-blue) !important;
     margin-left: 10px;
     margin-right: 10px;
     transition: var(--transition);
@@ -218,7 +218,7 @@ a {
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--brand-green) !important;
+    color: #267a2b !important;
 }
 
 /* Ensure navbar aligns items centrally when logo present */
@@ -463,6 +463,75 @@ a {
 .home-hero-button-secondary:hover {
     background: #f2f7fb;
     color: #0b3768;
+}
+
+.why-choose-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 64px 0;
+    background: #f1f5f9;
+}
+
+.why-choose-section.has-background {
+    background: #123a4b;
+}
+
+.why-choose-background {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    transform: scale(1.02);
+}
+
+.why-choose-section.has-background::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(7, 34, 51, 0.84), rgba(10, 54, 62, 0.68));
+    content: "";
+}
+
+.why-choose-content {
+    position: relative;
+    z-index: 1;
+}
+
+.why-choose-heading h2 {
+    color: #102a43;
+    font-size: clamp(2rem, 3vw, 2.6rem);
+}
+
+.why-choose-heading p {
+    margin-bottom: 0;
+    color: #526579;
+    font-size: 1.05rem;
+}
+
+.why-choose-section.has-background .why-choose-heading h2,
+.why-choose-section.has-background .why-choose-heading p {
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
+}
+
+.why-choose-card {
+    min-height: 230px;
+    padding: 32px 24px !important;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 12px 30px rgba(8, 30, 45, 0.14);
+    backdrop-filter: blur(8px);
+}
+
+.why-choose-card h5 {
+    color: #102a43;
+}
+
+.why-choose-card p {
+    margin-bottom: 0;
+    color: #526579;
 }
 
 @media (max-width: 991.98px) {
@@ -929,6 +998,7 @@ footer hr {
     }
 
     .navbar-collapse .nav-link {
+        color: rgba(255, 255, 255, 0.94) !important;
         margin: 2px 0;
         padding: 10px 12px;
         border-radius: 8px;

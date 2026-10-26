@@ -85,6 +85,70 @@ class DashboardEnquiriesViewTests(TestCase):
         image.refresh_from_db()
         self.assertFalse(image.show_in_home_hero)
 
+    def test_gallery_image_can_be_selected_as_why_choose_background(self):
+        self.client.login(username='adminuser', password='StrongPass123')
+        first_image = GalleryImage.objects.create(
+            title='First background',
+            image='gallery/first-background.jpg',
+            category='other',
+        )
+        second_image = GalleryImage.objects.create(
+            title='Second background',
+            image='gallery/second-background.jpg',
+            category='other',
+        )
+
+        gallery_response = self.client.get('/dashboard/gallery/')
+        self.assertContains(gallery_response, 'Use for Why Choose')
+
+        response = self.client.post(
+            f'/dashboard/gallery/{first_image.pk}/why-choose/',
+            {'show_in_why_section': '1'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        first_image.refresh_from_db()
+        self.assertTrue(first_image.show_in_why_section)
+
+        response = self.client.post(
+            f'/dashboard/gallery/{second_image.pk}/why-choose/',
+            {'show_in_why_section': '1'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        first_image.refresh_from_db()
+        second_image.refresh_from_db()
+        self.assertFalse(first_image.show_in_why_section)
+        self.assertTrue(second_image.show_in_why_section)
+
+        homepage_response = self.client.get('/')
+        self.assertContains(homepage_response, 'gallery/second-background.jpg')
+        self.assertContains(homepage_response, 'why-choose-background')
+
+        response = self.client.post(
+            f'/dashboard/gallery/{second_image.pk}/why-choose/',
+            {'show_in_why_section': '0'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        second_image.refresh_from_db()
+        self.assertFalse(second_image.show_in_why_section)
+
+    def test_inactive_gallery_image_cannot_be_why_choose_background(self):
+        self.client.login(username='adminuser', password='StrongPass123')
+        image = GalleryImage.objects.create(
+            title='Inactive background',
+            image='gallery/inactive-background.jpg',
+            category='other',
+            is_active=False,
+        )
+
+        response = self.client.post(
+            f'/dashboard/gallery/{image.pk}/why-choose/',
+            {'show_in_why_section': '1'},
+        )
+
+        self.assertRedirects(response, '/dashboard/gallery/')
+        image.refresh_from_db()
+        self.assertFalse(image.show_in_why_section)
+
     def test_team_member_can_be_added_with_clear_photo_then_edited(self):
         self.client.login(username='adminuser', password='StrongPass123')
         image_buffer = BytesIO()

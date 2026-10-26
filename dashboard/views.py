@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.db.models import Count, Q
+from django.db import transaction
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.core.paginator import Paginator
@@ -485,6 +486,32 @@ def gallery_hero_toggle(request, pk):
             messages.success(request, f'"{image.title}" will appear in the homepage hero photo area.')
         else:
             messages.success(request, f'"{image.title}" was removed from the homepage hero.')
+    return redirect('dashboard:gallery_list')
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+@require_http_methods(["POST"])
+def gallery_why_toggle(request, pk):
+    """Select one active gallery image as the Why Choose section background."""
+    image = get_object_or_404(GalleryImage, pk=pk)
+    selected = request.POST.get('show_in_why_section')
+    if selected not in {'0', '1'}:
+        messages.error(request, 'Choose whether to use this image as the Why Choose background.')
+    elif selected == '1' and not image.is_active:
+        messages.error(request, 'Activate this image before using it as the Why Choose background.')
+    else:
+        with transaction.atomic():
+            if selected == '1':
+                GalleryImage.objects.filter(show_in_why_section=True).exclude(pk=image.pk).update(
+                    show_in_why_section=False
+                )
+            image.show_in_why_section = selected == '1'
+            image.save(update_fields=['show_in_why_section'])
+        if image.show_in_why_section:
+            messages.success(request, f'"{image.title}" will be used behind the Why Choose section.')
+        else:
+            messages.success(request, f'"{image.title}" was removed as the Why Choose background.')
     return redirect('dashboard:gallery_list')
 
 

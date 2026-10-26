@@ -39,6 +39,7 @@ def home(request):
     hero_gallery_images = gallery_images.filter(show_in_home_hero=True)
     if not hero_gallery_images.exists():
         hero_gallery_images = gallery_images[:1]
+    why_choose_background = gallery_images.filter(show_in_why_section=True).first()
     
     context = {
         'courses': courses,
@@ -46,6 +47,7 @@ def home(request):
         'blog_posts': blog_posts,
         'gallery_images': gallery_images,
         'hero_gallery_images': hero_gallery_images,
+        'why_choose_background': why_choose_background,
         'videos': Video.objects.filter(is_active=True).order_by('-created_at')[:6],
     }
     return render(request, 'website/index.html', context)

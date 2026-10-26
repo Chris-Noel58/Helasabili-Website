@@ -198,6 +198,10 @@ class GalleryImage(TimeStampedModel):
         default=False,
         verbose_name='Show in homepage hero',
     )
+    show_in_why_section = models.BooleanField(
+        default=False,
+        verbose_name='Use as Why Choose background',
+    )
 
     class Meta:
         ordering = ['category', 'order']

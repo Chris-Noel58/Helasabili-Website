@@ -109,37 +109,40 @@
 </script>
 
 <!-- Why Choose Us Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
+<section class="why-choose-section{% if why_choose_background %} has-background{% endif %}">
+    {% if why_choose_background %}
+    <div class="why-choose-background" style="background-image: url('{{ why_choose_background.image.url }}');" aria-hidden="true"></div>
+    {% endif %}
+    <div class="container why-choose-content">
+        <div class="text-center mb-5 why-choose-heading">
             <h2 class="fw-bold mb-2">Why Choose Helasabili?</h2>
-            <p class="text-muted">Verified plots, transparent transactions, and fast title delivery for confident land investment.</p>
+            <p>Verified plots, transparent transactions, and fast title delivery for confident land investment.</p>
         </div>
         
         <div class="row g-4">
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
                     <i class="fas fa-map-marker-alt fa-3x mb-3" style="color:var(--brand-green)"></i>
                     <h5 class="fw-bold">Verified 50x100 Plots</h5>
                     <p class="text-muted">Each plot is surveyed and title-verified before listing.</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
                     <i class="fas fa-handshake fa-3x mb-3" style="color:var(--brand-green)"></i>
                     <h5 class="fw-bold">Transparent Transactions</h5>
                     <p class="text-muted">Clear pricing, documented processes, and dedicated sales support.</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
                     <i class="fas fa-file-contract fa-3x mb-3" style="color:var(--brand-green)"></i>
                     <h5 class="fw-bold">Fast Title Delivery</h5>
                     <p class="text-muted">We prioritise rapid title processing and secure handover to buyers.</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
                     <i class="fas fa-city fa-3x mb-3" style="color:var(--brand-green)"></i>
                     <h5 class="fw-bold">Prime Locations</h5>
                     <p class="text-muted">Plots in Nakuru, Nanyuki, and other high-growth areas.</p>
