@@ -277,9 +277,12 @@ a {
     max-width: 1600px;
     margin: 0 auto;
     overflow: hidden;
-    border-radius: 36px;
     background: #104c68;
     box-shadow: 0 18px 34px rgba(15, 39, 61, 0.14);
+}
+
+main:has(.home-hero-section) p:not(.text-center) {
+    text-align: justify;
 }
 
 .home-hero-photo {
@@ -1278,7 +1281,6 @@ footer p {
 
     .home-hero {
         grid-template-columns: minmax(0, 1fr);
-        border-radius: 25px;
     }
 
     .home-hero-photo {
@@ -1329,6 +1331,21 @@ footer p {
 }
 
 @media (max-width: 575.98px) {
+    .home-hero-photo-layer img {
+        object-fit: contain;
+        object-position: center;
+        animation: home-hero-photo-fit-zoom 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes home-hero-photo-fit-zoom {
+        from {
+            transform: scale(0.9);
+        }
+        to {
+            transform: scale(1);
+        }
+    }
+
     .home-hero-panel {
         padding: 26px 20px 20px;
     }
