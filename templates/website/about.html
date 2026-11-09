@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load rich_text %}
+
+{% block title %}About Us - Helasabili Mobile Capital Ltd{% endblock %}
+{% block meta_description %}Learn about Helasabili Mobile Capital Ltd, our commitment to verified property, transparent land investment, and service in Nakuru and Nanyuki.{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-2">About Us</h1>
+        <p class="lead">Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki</p>
+    </div>
+</div>
+
+{% if about %}
+<!-- History Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">Our History</h2>
+                <div class="about-rich-text">{{ about.history|rich_text }}</div>
+            </div>
+            <div class="col-lg-6">
+                {% if about.history_image %}
+                <img src="{{ about.history_image.url }}" class="img-fluid rounded-3 shadow" alt="Company history" fetchpriority="high" decoding="async">
+                {% else %}
+                <img src="{% static 'images/history.jpg' %}" class="img-fluid rounded-3 shadow" alt="Company history" fetchpriority="high" decoding="async">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission, Vision, Values Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Mission -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4">
+                        <div class="display-4 mb-3" style="color:#63c132;">
+                            <i class="fas fa-target"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Our Mission</h5>
+                        <div class="about-rich-text">{{ about.mission|rich_text }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vision -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4">
+                        <div class="display-4 mb-3" style="color:#63c132;">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Our Vision</h5>
+                        <div class="about-rich-text">{{ about.vision|rich_text }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Values -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4">
+                        <div class="display-4 mb-3" style="color:#63c132;">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Our Values</h5>
+                        <div class="about-rich-text">{{ about.values|rich_text }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Principal's Message Section -->
+{% if about.principal_message %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            {% if about.principal_image %}
+            <div class="col-lg-4">
+                <img src="{{ about.principal_image.url }}" class="img-fluid rounded-3 shadow" alt="{{ about.principal_name }}" loading="lazy" decoding="async">
+            </div>
+            {% endif %}
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">A Message from Our Director</h3>
+                <div class="lead about-rich-text">{{ about.principal_message|rich_text }}</div>
+                {% if about.principal_name %}
+                <p class="fw-bold mt-4">{{ about.principal_name }}<br>
+                <small class="text-muted">Managing Director, Helasabili Mobile Capital Ltd</small></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Company Information -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold mb-5 text-center">Where We Operate</h2>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <h4 class="fw-bold mb-3">Company Details</h4>
+                <div class="about-rich-text">{{ about.campus_description|rich_text }}</div>
+                <div class="mt-4">
+                    <p class="mb-2">
+                        <strong>Service area:</strong> {{ about.location }}<br>
+                        <strong>Serving clients since:</strong> {{ about.established_year }}<br>
+                        <strong>Our services:</strong> Verified land plots and secure property investments
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                {% if about.campus_image %}
+                <img src="{{ about.campus_image.url }}" class="img-fluid rounded-3 shadow" alt="Helasabili office or property location" loading="lazy" decoding="async">
+                {% else %}
+                <div class="company-location-placeholder rounded-3 shadow-sm" role="img" aria-label="Helasabili serves {{ about.location }}">
+                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                    <span>Serving {{ about.location }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Media Gallery: show uploaded images and videos (use safe context variables) -->
+<section class="py-5">
+    <div class="container">
+        {% if about_images %}
+        <h3 class="fw-bold mb-4">Gallery</h3>
+        <div class="row g-3">
+            {% for img in about_images %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                {% if img.image %}
+                <a href="{{ img.image.url }}" target="_blank">
+                    <img src="{{ img.image.url }}" class="img-fluid rounded shadow-sm" alt="About image" loading="lazy" decoding="async">
+                </a>
+                {% elif img.file %}
+                <a href="{{ img.file.url }}" target="_blank">
+                    <img src="{{ img.file.url }}" class="img-fluid rounded shadow-sm" alt="About image" loading="lazy" decoding="async">
+                </a>
+                {% else %}
+                <a href="{{ img }}" target="_blank">
+                    <img src="{{ img }}" class="img-fluid rounded shadow-sm" alt="About image" loading="lazy" decoding="async">
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if about_videos %}
+        <h3 class="fw-bold mt-5 mb-4">Videos</h3>
+        <div class="row g-3">
+            {% for vid in about_videos %}
+            <div class="col-12 col-md-6">
+                <div class="ratio ratio-16x9">
+                    {% if vid.file %}
+                    <video src="{{ vid.file.url }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% elif vid.video %}
+                    <video src="{{ vid.video.url }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% elif vid.url %}
+                    <video src="{{ vid.url }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% else %}
+                    <video src="{{ vid }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Team/Staff Section -->
+{% include 'includes/team_members.html' %}
+
+<!-- Call to Action -->
+<section class="about-cta py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%);">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Ready to Join Our Community?</h2>
+        <p class="lead mb-4">Request a site visit or booking for our listings today</p>
+        <a href="{% url 'website:apply' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-calendar-check"></i> Book Now
+        </a>
+    </div>
+</section>
+
+{% endif %}
+{% endblock %}

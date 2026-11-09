@@ -1,0 +1,120 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Gallery Management - Dashboard{% endblock %}
+{% block page_title %}Manage Gallery{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Gallery Images</h3>
+    <a href="{% url 'dashboard:gallery_upload' %}" class="btn btn-primary">
+        <i class="fas fa-upload"></i> Upload Image
+    </a>
+</div>
+
+<!-- Search & Filter -->
+<div class="card p-3 mb-4 border-0 shadow-sm">
+    <form method="GET" class="row g-3">
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" placeholder="Search images..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for cat_val, cat_label in categories %}
+                <option value="{{ cat_val }}" {% if selected_category == cat_val %}selected{% endif %}>
+                    {{ cat_label }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Images Grid -->
+<div class="row g-3">
+    {% for image in images %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.title }}" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+                <h6 class="fw-bold">{{ image.title }}</h6>
+                <small class="text-muted">
+                    <strong>Category:</strong> {{ image.get_category_display }}<br>
+                    <strong>Status:</strong> 
+                    <span class="badge bg-{% if image.is_active %}success{% else %}secondary{% endif %}">
+                        {% if image.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </small>
+                {% if image.description %}
+                <p class="small mt-2">{{ image.description|truncatewords:10 }}</p>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-white border-top">
+                <a href="{% url 'dashboard:gallery_update' image.id %}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <form method="POST" action="{% url 'dashboard:gallery_delete' image.id %}" style="display:inline;" 
+                      onsubmit="return confirm('Delete this image?')">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-images fa-2x mb-3"></i>
+            <p>No images uploaded yet</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav class="mt-5" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

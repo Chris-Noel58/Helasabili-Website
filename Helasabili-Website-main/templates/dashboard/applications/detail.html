@@ -1,0 +1,141 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Booking Detail - Dashboard{% endblock %}
+{% block page_title %}Booking Detail{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-5">
+                <h4 class="fw-bold mb-4">Applicant Information</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Full Name</label>
+                        <h6 class="fw-bold">{{ application.full_name }}</h6>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Email</label>
+                        <h6 class="fw-bold">
+                            <a href="mailto:{{ application.email }}">{{ application.email }}</a>
+                        </h6>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Phone Number</label>
+                        <h6 class="fw-bold">
+                            <a href="tel:{{ application.phone }}">{{ application.phone }}</a>
+                        </h6>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Course Applied For</label>
+                        <h6 class="fw-bold">{{ application.course.title }}</h6>
+                    </div>
+                </div>
+                
+                {% if application.message %}
+                <div class="mb-4">
+                    <label class="text-muted small">Message</label>
+                    <p>{{ application.message }}</p>
+                </div>
+                {% endif %}
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="text-muted small">Booking Date</label>
+                        <p class="fw-bold">{{ application.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">IP Address</label>
+                        <p class="fw-bold text-monospace">{{ application.ip_address }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Status Update -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4">Update Status</h5>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Current Status</label>
+                        <div class="alert alert-info">
+                            <span class="badge bg-{% if application.status == 'new' %}danger{% elif application.status == 'accepted' %}success{% elif application.status == 'rejected' %}dark{% else %}warning{% endif %}">
+                                {{ application.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Change Status To</label>
+                        <select name="status" class="form-select" required>
+                            <option value="">-- Select Status --</option>
+                            {% for status_val, status_label in statuses %}
+                            <option value="{{ status_val }}" {% if application.status == status_val %}selected{% endif %}>
+                                {{ status_label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i> Update Status
+                    </button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <h6 class="fw-bold mb-3">Quick Actions</h6>
+                <div class="d-grid gap-2">
+                    <a href="mailto:{{ application.email }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                    <a href="tel:{{ application.phone }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-phone"></i> Call Applicant
+                    </a>
+                    <a href="https://wa.me/{{ application.phone|slice:'1:' }}" target="_blank" class="btn btn-outline-success btn-sm">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3">Listing Information</h6>
+                <p>
+                    <strong>Title:</strong> {{ application.course.title }}<br>
+                    <strong>Location:</strong> {{ application.course.location|default:'-' }}<br>
+                    <strong>Plot Size:</strong> {{ application.course.plot_size }}<br>
+                    {% if application.course.fees %}
+                    <strong>Price:</strong> KES {{ application.course.fees|floatformat:0 }}<br>
+                    {% endif %}
+                </p>
+                <a href="{% url 'website:courses_detail' application.course.id %}" target="_blank" class="btn btn-sm btn-outline-primary w-100">
+                    View Listing Page
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'dashboard:applications_list' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Bookings
+    </a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% load static %}
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Edit Contact Information - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">{{ title|default:'Edit Contact Information' }}</h1>
+
+    <div class="card p-4">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.phone_primary.label_tag }}
+                {{ form.phone_primary }}
+                {% if form.phone_primary.errors %}
+                    <div class="text-danger small">{{ form.phone_primary.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.address.label_tag }}
+                {{ form.address }}
+                {% if form.address.errors %}
+                    <div class="text-danger small">{{ form.address.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/dashboard/contact/list/" class="btn btn-secondary ms-2">Back to Contact List</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

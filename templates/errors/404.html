@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Page Not Found - NCHSM{% endblock %}
+
+{% block content %}
+
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="text-center">
+        <div class="display-1 fw-bold mb-3" style="color:var(--primary-blue)">404</div>
+        <h1 class="fw-bold mb-3">Page Not Found</h1>
+        <p class="lead text-muted mb-4">
+            Sorry, the page you're looking for doesn't exist or has been moved.
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{% url 'website:home' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-home"></i> Go Home
+            </a>
+            <a href="{% url 'website:contact' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

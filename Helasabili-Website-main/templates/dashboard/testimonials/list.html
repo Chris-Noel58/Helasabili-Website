@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Testimonials - Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="mb-4">Testimonials</h1>
+  <a href="{% url 'dashboard:testimonials_create' %}" class="btn btn-primary mb-3">Add Testimonial</a>
+  <table class="table table-striped">
+    <thead><tr><th>Name</th><th>Course</th><th>Rating</th><th>Active</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for t in testimonials %}
+      <tr>
+        <td>{{ t.name }}</td>
+        <td>{{ t.course }}</td>
+        <td>{{ t.rating }}</td>
+        <td>{{ t.is_active }}</td>
+        <td>
+          <a href="/admin/core/testimonial/{{ t.id }}/change/" class="btn btn-sm btn-outline-secondary">Edit</a>
+          <a href="/admin/core/testimonial/{{ t.id }}/delete/" class="btn btn-sm btn-danger">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

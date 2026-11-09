@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Testimonial Form{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="mb-4">Testimonial</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+    <button class="btn btn-primary">Save</button>
+  </form>
+</div>
+{% endblock %}

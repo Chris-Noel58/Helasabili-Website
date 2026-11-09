@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Server Error - NCHSM{% endblock %}
+
+{% block content %}
+
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="text-center">
+        <div class="display-1 fw-bold text-danger mb-3">500</div>
+        <h1 class="fw-bold mb-3">Server Error</h1>
+        <p class="lead text-muted mb-4">
+            Something went wrong on our end. Our team has been notified and is working to fix it.
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{% url 'website:home' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-home"></i> Go Home
+            </a>
+            <a href="{% url 'website:contact' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-headset"></i> Get Support
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

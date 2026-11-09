@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Testimonials - NCHSM{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="mb-4 text-center">What our students say</h1>
+
+  {% if testimonials %}
+    <div class="row g-4">
+      {% for t in testimonials %}
+        <div class="col-md-4">
+          <div class="card h-100 p-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ t.name }}</h5>
+              {% if t.course %}<p class="text-muted small mb-2">{{ t.course }}</p>{% endif %}
+              <p class="card-text">{{ t.message|linebreaksbr }}</p>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+              <small class="text-muted">Rating: {{ t.rating }}/5{% if t.is_active %} • Active{% endif %}</small>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="lead text-center">No testimonials found yet. Check back soon.</p>
+  {% endif %}
+</div>
+{% endblock %}

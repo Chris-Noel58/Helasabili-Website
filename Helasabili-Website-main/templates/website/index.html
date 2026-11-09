@@ -1,0 +1,567 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Helasabili Mobile Capital Ltd{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero" data-bg-interval="6000" data-bg-images='[{% for img in gallery_images|slice:":6" %}"{{ img.image.url }}"{% if not forloop.last %},{% endif %}{% endfor %}]'>
+        <style>
+            /* Full-bleed hero that fills width corner-to-corner and preserves image aspect ratio */
+            .hero { position: relative; overflow: hidden; padding: 0; min-height: 75vh; width: 100%; display:flex; align-items:center; justify-content:center; }
+            .hero-bg, .hero-bg-layer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
+            /* Clear full-bleed backgrounds for crisp images */
+            .hero-bg-layer { background-size: cover !important; background-position: center center !important; background-repeat: no-repeat !important; opacity: 0; transition: opacity 1s ease-in-out; will-change: opacity, background-image; filter: none; transform: none; }
+            .hero-bg-layer.visible { opacity: 1; }
+
+            .hero-content { position: relative; z-index: 6; width: 100%; padding: 3rem 1rem; }
+
+            /* Slight overlay for text contrast without hiding image details */
+            .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.14)); pointer-events: none; z-index:3; }
+
+            /* Keep content readable and centered without constraining the background */
+            .hero .container { max-width: 1100px; position: relative; z-index: 7; }
+            .hero h1 { color: #fff; text-shadow: 0 4px 18px rgba(0,0,0,0.65); font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; margin-bottom: 0.5rem; }
+            .hero .lead { color: rgba(255,255,255,0.98); font-size: 1.05rem; margin-top: 0.5rem; }
+            .hero .btn { min-width: 160px; }
+
+            /* Make any muted/grey text inside the hero clearly visible (override bootstrap .text-muted) */
+            .hero .text-muted,
+            .hero .lead.text-muted,
+            .hero small,
+            .hero p.text-muted,
+            .hero .small {
+                color: rgba(255,255,255,0.95) !important;
+                opacity: 1 !important;
+            }
+
+            /* Make typed text and cursor clearly visible */
+            .typed-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 2.8rem;
+                margin-top: 0.25rem;
+                margin-bottom: 0.75rem;
+            }
+            .typed-container,
+            .typed-container .typed-text,
+            .typed-container .typed-cursor {
+                color: #fff !important;
+                opacity: 1 !important;
+            }
+            .typed-container .typed-text {
+                font-weight: 600;
+                font-size: clamp(1.1rem, 2.5vw, 2rem);
+                line-height: 1.3;
+                letter-spacing: 0.02em;
+                text-shadow: 0 3px 12px rgba(0,0,0,0.35);
+            }
+
+            /* Ensure hero background doesn't show page background through gaps */
+            .hero { background-color: transparent; }
+
+            @media (max-width: 768px) {
+                .hero-content { padding: 2rem 0.75rem; }
+            }
+        </style>
+
+        <!-- Background layers will be managed by JS -->
+        <div class="hero-bg">
+            <div class="hero-bg-layer" aria-hidden="true"></div>
+            <div class="hero-bg-layer" aria-hidden="true"></div>
+        </div>
+
+        <div class="container hero-content text-center">
+            <h1 class="display-1 fw-bold">Welcome to Helasabili Mobile Capital Ltd</h1>
+
+            <!-- Typed animated phrases inserted below -->
+            <div class="typed-container">
+                <span class="typed-text" aria-hidden="true"></span>
+            </div>
+
+            <p class="lead text-muted mt-3">Secure, affordable housing solutions and verified 50x100 plots in Nakuru and Nanyuki. Transparent transactions and rapid title delivery.</p>
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone"></i> Contact Sales
+                </a>
+                <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-map-marker-alt"></i> View Lands
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Why Choose Helasabili?</h2>
+            <p class="text-muted">Verified plots, transparent transactions, and fast title delivery for confident land investment.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <i class="fas fa-map-marker-alt fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Verified 50x100 Plots</h5>
+                    <p class="text-muted">Each plot is surveyed and title-verified before listing.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <i class="fas fa-handshake fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Transparent Transactions</h5>
+                    <p class="text-muted">Clear pricing, documented processes, and dedicated sales support.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <i class="fas fa-file-contract fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Fast Title Delivery</h5>
+                    <p class="text-muted">We prioritise rapid title processing and secure handover to buyers.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <i class="fas fa-city fa-3x mb-3" style="color:var(--brand-green)"></i>
+                    <h5 class="fw-bold">Prime Locations</h5>
+                    <p class="text-muted">Plots in Nakuru, Nanyuki, and other high-growth areas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Featured Land Listings</h2>
+            <p class="text-muted">Browse verified 50x100 plot opportunities in growing areas</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for course in courses %}
+            <div class="col-md-4 mb-3 course-card d-none">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                        {% if course.featured_image %}
+                        <img src="{{ course.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ course.title }}">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center img-fixed-height" style="background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color: #fff;">
+                            <i class="fas fa-book fa-3x"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ course.title }}</h5>
+                        <p class="card-text text-muted">{{ course.description|truncatewords:20 }}</p>
+                        <div class="small text-muted mb-3">
+                            <i class="fas fa-map-marker-alt"></i> {{ course.location|default:'-' }} | 
+                            <span class="fw-bold" style="color:var(--brand-green)">{% if course.fees %}KSH. {{ course.fees|floatformat:0 }}{% else %}Contact for price{% endif %}</span>
+                        </div>
+                        <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-primary w-100">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center text-muted">No courses available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary">View All Listings</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Client Testimonials</h2>
+            <p class="text-muted">Hear from our satisfied buyers</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {% for i in "12345" %}
+                                {% if i|add:0 <= testimonial.rating %}
+                                <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                <i class="far fa-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p class="card-text">{{ testimonial.message }}</p>
+                        <div class="d-flex align-items-center mt-3">
+                            {% if testimonial.photo %}
+                            <img src="{{ testimonial.photo.url }}" class="rounded-circle me-3" width="50" height="50" alt="{{ testimonial.name }}" style="object-fit: cover;">
+                            {% else %}
+                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" width="50" height="50" style="width: 50px; height: 50px; background:var(--primary-blue); color:#fff;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ testimonial.name }}</h6>
+                                <small class="text-muted">{{ testimonial.course }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center text-muted">No testimonials available yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'website:testimonials' %}" class="btn btn-outline-primary">View All Testimonials</a>
+        </div>
+    </div>
+</section>
+
+<!-- Latest News Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Latest News & Updates</h2>
+            <p class="text-muted">Market updates, land release announcements and company news</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for post in blog_posts %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ post.title }}">
+                    {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center img-fixed-height">
+                        <i class="fas fa-newspaper fa-3x"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar"></i> {{ post.published_date|date:"M d, Y" }}
+                        </small>
+                        <h5 class="card-title fw-bold mt-2">{{ post.title }}</h5>
+                        <p class="card-text text-muted">{{ post.excerpt|safe|linebreaksbr }}</p>
+                        <a href="{% url 'website:blog_detail' post.slug %}" class="btn btn-sm btn-outline-primary">
+                            Read More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'website:blog_list' %}" class="btn btn-outline-primary">View All News</a>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Preview Section -->
+<style>
+/* Ensure gallery overlay titles are visible over images */
+.gallery-item .gallery-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.25));
+}
+.gallery-item .gallery-overlay h6 {
+  color: #fff !important;
+  font-weight: 600;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  margin: 0;
+}
+.gallery-item .gallery-overlay .p-3 { padding: 0.8rem; }
+.gallery-item img { display: block; }
+</style>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Property Gallery</h2>
+            <p class="text-muted">Photos and maps of our latest land listings</p>
+        </div>
+        
+        <div class="row g-3">
+            {% for image in gallery_images|slice:":9" %}
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item position-relative overflow-hidden rounded gallery-item-height">
+                    <img src="{{ image.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ image.title }}" 
+                         data-bs-toggle="modal" data-bs-target="#galleryModal" onclick="showGalleryImage('{{ image.image.url }}', '{{ image.title }}')">
+                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-25 d-flex align-items-end">
+                        <div class="p-3 text-white">
+                            <h6 class="mb-0">{{ image.title }}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center text-muted">No gallery images available yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'website:gallery' %}" class="btn btn-outline-primary">View Full Gallery</a>
+        </div>
+    </div>
+</section>
+
+<!-- Videos Preview Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Latest Videos</h2>
+            <p class="text-muted">Quick video walkthroughs and property highlights</p>
+        </div>
+
+        <div class="row g-4">
+            {% for video in videos %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="video-thumb" data-video-id="{{ video.youtube_id }}" data-embed-url="{{ video.embed_url }}" data-origin="{{ request.scheme }}://{{ request.get_host }}" style="position:relative; padding-top:56.25%; background-color:#000;">
+                        <img src="{{ video.thumbnail }}" alt="{{ video.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy">
+                        <button class="play-btn" aria-label="Play {{ video.title }}" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); background:transparent; border:0; cursor:pointer;">
+                            <svg width="72" height="72" viewBox="0 0 68 48" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M.66 0C.3 0 0 .27 0 .6v46.8c0 .33.3.6.66.6h66.68c.36 0 .66-.27.66-.6V.6c0-.33-.3-.6-.66-.6H.66z" fill="#f00"></path>
+                                <path d="M45 24L27 35V13z" fill="#fff"></path>
+                            </svg>
+                        </button>
+                        <a href="{% url 'website:videos' %}" class="watch-link" style="position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,0.6); color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none; font-size:14px;">View More</a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">{{ video.title }}</h6>
+                        <p class="text-muted small">{{ video.description|truncatechars:80 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'website:videos' %}" class="btn btn-outline-primary">View All Videos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Ready to Invest?</h2>
+        <p class="lead mb-4">Secure your plot today — contact our sales team for verified options and fast title transfer.</p>
+        <a href="{% url 'website:contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-phone"></i> Contact Sales
+        </a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showGalleryImage(url, title) {
+    document.getElementById('galleryImage').src = url;
+    document.getElementById('galleryTitle').textContent = title;
+}
+
+(function(){
+    // Hero slideshow: shuffle, preload, and crossfade gallery images automatically (background-only)
+    function initHeroSlideshow() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+
+        const imagesAttr = hero.getAttribute('data-bg-images');
+        if (!imagesAttr) return;
+
+        let images = [];
+        try { images = JSON.parse(imagesAttr); } catch (e) { return; }
+        if (!Array.isArray(images) || images.length === 0) return;
+
+        // Fisher-Yates shuffle for a random order each page load
+        for (let i = images.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [images[i], images[j]] = [images[j], images[i]];
+        }
+
+        const interval = parseInt(hero.getAttribute('data-bg-interval')) || 6000;
+        const layers = Array.from(hero.querySelectorAll('.hero-bg-layer'));
+        if (layers.length < 1) return;
+
+        // Preload images
+        images.forEach(src => { const img = new Image(); img.src = src; });
+
+        // Ensure both layers exist (create if missing)
+        if (layers.length === 1) {
+            const extra = document.createElement('div');
+            extra.className = 'hero-bg-layer';
+            extra.setAttribute('aria-hidden', 'true');
+            hero.querySelector('.hero-bg').appendChild(extra);
+            layers.push(extra);
+        }
+
+        // Handle single image case
+        if (images.length === 1) {
+            layers[0].style.backgroundImage = `url('${images[0]}')`;
+            layers[0].classList.add('visible');
+            return;
+        }
+
+        // Initialize backgrounds
+        layers[0].style.backgroundImage = `url('${images[0]}')`;
+        layers[0].classList.add('visible');
+        layers[0].setAttribute('aria-hidden', 'false');
+
+        layers[1].style.backgroundImage = `url('${images[1]}')`;
+        layers[1].setAttribute('aria-hidden', 'true');
+
+        let currentLayer = 0;
+        let imgIndex = 2 % images.length;
+
+        // Swap function with crossfade
+        const tick = () => {
+            const nextLayer = (currentLayer + 1) % layers.length;
+
+            layers[nextLayer].style.backgroundImage = `url('${images[imgIndex]}')`;
+            // Force reflow to ensure transition triggers reliably
+            // eslint-disable-next-line no-unused-expressions
+            layers[nextLayer].offsetHeight;
+
+            layers[nextLayer].classList.add('visible');
+            layers[nextLayer].setAttribute('aria-hidden', 'false');
+            layers[currentLayer].classList.remove('visible');
+            layers[currentLayer].setAttribute('aria-hidden', 'true');
+
+            currentLayer = nextLayer;
+            imgIndex = (imgIndex + 1) % images.length;
+        };
+
+        // Start the interval
+        let timer = setInterval(tick, interval);
+
+        // Pause when the page is not visible to save CPU/battery
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(timer);
+            } else {
+                // restart
+                timer = setInterval(tick, interval);
+            }
+        });
+
+        // Optional: restart on resize to recalc if needed
+        let resizeTimeout = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Re-set current background to ensure proper cover after layout change
+                layers[currentLayer].style.backgroundSize = 'cover';
+            }, 200);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroSlideshow);
+    } else {
+        initHeroSlideshow();
+    }
+})();
+// Hero slideshow is handled here (background-only crisp full-bleed)
+
+// Reveal 6 random course cards on each page load
+function showRandomCourses(limit = 6) {
+    const cards = Array.from(document.querySelectorAll('.course-card'));
+    if (!cards.length) return;
+
+    // Fisher-Yates shuffle
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    // Reveal the first `limit` cards
+    for (let i = 0; i < Math.min(limit, cards.length); i++) {
+        cards[i].classList.remove('d-none');
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => showRandomCourses(6));
+} else {
+    showRandomCourses(6);
+}
+</script>
+<script>
+// Click-to-load YouTube players for homepage video thumbnails
+(function(){
+    function loadYouTubeAPI(callback) {
+        if (window.YT && window.YT.Player) { callback(); return; }
+        var tag = document.createElement('script'); tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var interval = setInterval(function(){ if (window.YT && window.YT.Player) { clearInterval(interval); callback(); } }, 100);
+        setTimeout(function(){ clearInterval(interval); callback(); }, 5000);
+    }
+
+    function createPlayer(elementId, videoId, origin) {
+        try {
+            return new YT.Player(elementId, {
+                videoId: videoId,
+                playerVars: {autoplay:1, rel:0, origin: origin},
+                events: {
+                    onReady: function(e){ e.target.playVideo(); },
+                    onError: function(e){
+                        var el = document.getElementById(elementId);
+                        if (el) {
+                            el.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;padding:10px;text-align:center;"><div><p style="margin:0 0 8px 0;">This video cannot be played here.</p><a href="https://www.youtube.com/watch?v='+videoId+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 12px;background:#ff0000;color:#fff;border-radius:4px;text-decoration:none;">Watch on YouTube</a></div></div>';
+                        }
+                    }
+                }
+            });
+        } catch (err) { return null; }
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+        document.querySelectorAll('.video-thumb').forEach(function(thumb){
+            var btn = thumb.querySelector('.play-btn');
+            if (!btn) return;
+            btn.addEventListener('click', function(e){
+                e.preventDefault();
+                var videoId = thumb.getAttribute('data-video-id');
+                var embedUrl = thumb.getAttribute('data-embed-url');
+                var origin = thumb.getAttribute('data-origin') || window.location.origin;
+                thumb.innerHTML = '';
+                var playerDiv = document.createElement('div');
+                var elemId = 'home-yt-' + videoId + '-' + Math.random().toString(36).substr(2,6);
+                playerDiv.id = elemId;
+                playerDiv.style.position='absolute'; playerDiv.style.top='0'; playerDiv.style.left='0'; playerDiv.style.width='100%'; playerDiv.style.height='100%';
+                thumb.appendChild(playerDiv);
+                loadYouTubeAPI(function(){
+                    if (window.YT && window.YT.Player) createPlayer(elemId, videoId, origin);
+                    else {
+                        var iframe = document.createElement('iframe');
+                        iframe.src = embedUrl + '?rel=0&enablejsapi=1&origin=' + encodeURIComponent(origin) + '&autoplay=1';
+                        iframe.frameBorder = 0; iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; iframe.allowFullscreen = true;
+                        iframe.style.position='absolute'; iframe.style.top='0'; iframe.style.left='0'; iframe.style.width='100%'; iframe.style.height='100%';
+                        playerDiv.appendChild(iframe);
+                    }
+                });
+            });
+        });
+    });
+})();
+</script>
+{% endblock %}

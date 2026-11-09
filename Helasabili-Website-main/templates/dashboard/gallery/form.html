@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h3 class="mb-4">{{ title|default:'Upload Image' }}</h3>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form.visible_fields %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for err in field.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {% comment %} Preview existing image when editing {% endcomment %}
+                {% if form.instance and form.instance.pk %}
+                    <div class="mb-3">
+                        <label class="form-label">Current Image</label>
+                        <div>
+                            {% if form.instance.image %}
+                                <img src="{{ form.instance.image.url }}" alt="preview" style="max-width:100%; height:auto; max-height:300px; border-radius:6px;"/>
+                            {% elif form.instance.photo %}
+                                <img src="{{ form.instance.photo.url }}" alt="preview" style="max-width:100%; height:auto; max-height:300px; border-radius:6px;"/>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'dashboard:gallery_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

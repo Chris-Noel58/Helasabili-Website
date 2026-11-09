@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Helasabili Mobile Capital Ltd{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header" style="background: linear-gradient(135deg, #0b3b8c 0%, #63c132 100%); color: white; padding: 60px 0;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-2">About Us</h1>
+        <p class="lead" style="color: #ffffff; opacity: 1;">Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki</p>
+    </div>
+</div>
+
+{% if about %}
+<!-- History Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">Our History</h2>
+                <p>{{ about.history }}</p>
+            </div>
+            <div class="col-lg-6">
+                {% if about.history_image %}
+                <img src="{{ about.history_image.url }}" class="img-fluid rounded-3 shadow" alt="College History">
+                {% else %}
+                <img src="{% static 'images/history.jpg' %}" class="img-fluid rounded-3 shadow" alt="College History">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission, Vision, Values Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Mission -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4">
+                        <div class="display-4 mb-3" style="color:#63c132;">
+                            <i class="fas fa-target"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Our Mission</h5>
+                        <p>{{ about.mission }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vision -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4">
+                        <div class="display-4 mb-3" style="color:#63c132;">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Our Vision</h5>
+                        <p>{{ about.vision }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Values -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4">
+                        <div class="display-4 mb-3" style="color:#63c132;">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Our Values</h5>
+                        <p>{{ about.values }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Principal's Message Section -->
+{% if about.principal_message %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            {% if about.principal_image %}
+            <div class="col-lg-4">
+                <img src="{{ about.principal_image.url }}" class="img-fluid rounded-3 shadow" alt="{{ about.principal_name }}">
+            </div>
+            {% endif %}
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">A Message from Our Director</h3>
+                <p class="lead">{{ about.principal_message }}</p>
+                {% if about.principal_name %}
+                <p class="fw-bold mt-4">{{ about.principal_name }}<br>
+                <small class="text-muted">Managing Director, Helasabili Mobile Capital Ltd</small></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Campus Information -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold mb-5 text-center">Our Locations</h2>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <h4 class="fw-bold mb-3">Campus Details</h4>
+                <p>{{ about.campus_description }}</p>
+                <div class="mt-4">
+                    <p class="mb-2">
+                        <strong>Location:</strong> {{ about.location }}<br>
+                        <strong>Established:</strong> {{ about.established_year }}<br>
+                        <strong>Facilities:</strong> Modern classrooms, laboratories, library, and student amenities
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                {% if about.campus_image %}
+                <img src="{{ about.campus_image.url }}" class="img-fluid rounded-3 shadow" alt="Campus">
+                {% else %}
+                <img src="{% static 'images/campus.jpg' %}" class="img-fluid rounded-3 shadow" alt="Campus">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Media Gallery: show uploaded images and videos (use safe context variables) -->
+<section class="py-5">
+    <div class="container">
+        {% if about_images %}
+        <h3 class="fw-bold mb-4">Gallery</h3>
+        <div class="row g-3">
+            {% for img in about_images %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                {% if img.image %}
+                <a href="{{ img.image.url }}" target="_blank">
+                    <img src="{{ img.image.url }}" class="img-fluid rounded shadow-sm" alt="About image">
+                </a>
+                {% elif img.file %}
+                <a href="{{ img.file.url }}" target="_blank">
+                    <img src="{{ img.file.url }}" class="img-fluid rounded shadow-sm" alt="About image">
+                </a>
+                {% else %}
+                <a href="{{ img }}" target="_blank">
+                    <img src="{{ img }}" class="img-fluid rounded shadow-sm" alt="About image">
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if about_videos %}
+        <h3 class="fw-bold mt-5 mb-4">Videos</h3>
+        <div class="row g-3">
+            {% for vid in about_videos %}
+            <div class="col-12 col-md-6">
+                <div class="ratio ratio-16x9">
+                    {% if vid.file %}
+                    <video src="{{ vid.file.url }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% elif vid.video %}
+                    <video src="{{ vid.video.url }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% elif vid.url %}
+                    <video src="{{ vid.url }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% else %}
+                    <video src="{{ vid }}" controls class="w-100 rounded shadow-sm"></video>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Team/Staff Section -->
+{% include 'includes/team_members.html' %}
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Ready to Join Our Community?</h2>
+        <p class="lead mb-4">Request a site visit or booking for our listings today</p>
+        <a href="{% url 'website:apply' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-calendar-check"></i> Book Now
+        </a>
+    </div>
+</section>
+
+{% endif %}
+{% endblock %}

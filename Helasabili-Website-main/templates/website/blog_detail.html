@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{% if post %}{{ post.title }}{% elif object %}{{ object.title }}{% elif blog %}{{ blog.title }}{% else %}News & Blog{% endif %}
+{% endblock %}
+
+{% block content %}
+<style>
+/* Ensure article content shows proper paragraphs and list markers even if theme resets them */
+.content p { margin: 0 0 1rem; line-height: 1.7; }
+.content ul, .content ol { margin: 0 0 1rem 1.5rem; padding-left: 1.25rem; }
+.content ul { list-style-type: disc; }
+.content ol { list-style-type: decimal; }
+.content li { margin-bottom: 0.5rem; }
+.content strong, .content b { font-weight: 600; }
+.content em, .content i { font-style: italic; }
+</style>
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <article class="mb-4">
+        <header>
+          <h1 class="display-5 fw-bold">
+            {% if post %}{{ post.title }}{% elif object %}{{ object.title }}{% elif blog %}{{ blog.title }}{% endif %}
+          </h1>
+          <p class="text-muted">
+            {% if post and post.published_date %}{{ post.published_date|date:"M d, Y" }}{% elif object and object.published_date %}{{ object.published_date|date:"M d, Y" }}{% elif blog and blog.published_date %}{{ blog.published_date|date:"M d, Y" }}{% endif %}
+            {% if post and post.author %} | By {{ post.author }}{% elif object and object.author %} | By {{ object.author }}{% elif blog and blog.author %} | By {{ blog.author }}{% endif %}
+          </p>
+        </header>
+
+        {% if post and post.featured_image %}
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="img-fluid mb-4">
+        {% elif object and object.featured_image %}
+        <img src="{{ object.featured_image.url }}" alt="{{ object.title }}" class="img-fluid mb-4">
+        {% elif blog and blog.featured_image %}
+        <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" class="img-fluid mb-4">
+        {% endif %}
+
+        <div class="content">
+          {% if post %}
+            {{ post.content|safe|linebreaksbr }}
+          {% elif object %}
+            {{ object.content|safe|linebreaksbr }}
+          {% elif blog %}
+            {{ blog.content|safe|linebreaksbr }}
+          {% endif %}
+        </div>
+      </article>
+
+      <p><a href="{% url 'website:blog_list' %}" class="btn btn-outline-secondary">&larr; Back to articles</a></p>
+    </div>
+
+    <div class="col-lg-4">
+      <aside>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Recent Posts</h5>
+            <ul class="list-unstyled mb-0">
+              {% if recent_posts %}
+                {% for p in recent_posts %}
+                  <li><a href="{% url 'website:blog_detail' p.slug %}">{{ p.title|truncatewords:6 }}</a></li>
+                {% endfor %}
+              {% elif related_posts %}
+                {% for p in related_posts %}
+                  <li><a href="{% url 'website:blog_detail' p.slug %}">{{ p.title|truncatewords:6 }}</a></li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}

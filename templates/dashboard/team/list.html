@@ -1,0 +1,132 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Team Members - Dashboard{% endblock %}
+{% block page_title %}Manage Team Members{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Team Members</h3>
+        <p class="text-muted mb-0">Add, edit, and control who appears in the website's Meet Our Team section.</p>
+    </div>
+    <a href="{% url 'dashboard:team_member_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i> Add Team Member
+    </a>
+</div>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-3">
+        <div class="col-md-7">
+            <label class="visually-hidden" for="team-search">Search team members</label>
+            <input id="team-search" type="search" name="search" class="form-control"
+                   placeholder="Search by name, role, or bio..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-3">
+            <label class="visually-hidden" for="team-status">Filter by status</label>
+            <select id="team-status" name="status" class="form-select">
+                <option value="">All statuses</option>
+                <option value="active" {% if filter_status == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if filter_status == 'inactive' %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">
+                <i class="fas fa-search me-1"></i> Search
+            </button>
+            {% if search_query or filter_status %}
+            <a href="{% url 'dashboard:team_members_list' %}" class="btn btn-outline-secondary">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<div class="row g-4">
+    {% for member in team_members %}
+    <div class="col-sm-6 col-xl-4">
+        <article class="card h-100 overflow-hidden">
+            {% if member.photo %}
+            <img src="{{ member.photo.url }}" class="team-dashboard-photo" alt="{{ member.name }}" loading="lazy" decoding="async">
+            {% else %}
+            <div class="team-dashboard-photo-placeholder" aria-hidden="true">
+                <i class="fas fa-user"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <h5 class="fw-bold mb-1">{{ member.name }}</h5>
+                        {% if member.title %}<p class="text-muted mb-2">{{ member.title }}</p>{% endif %}
+                    </div>
+                    <span class="badge bg-{% if member.is_active %}success{% else %}secondary{% endif %}">
+                        {% if member.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </div>
+                {% if member.bio %}<p class="small mb-0">{{ member.bio|truncatewords:25 }}</p>{% endif %}
+            </div>
+            <div class="card-footer bg-white border-top d-flex justify-content-between align-items-center">
+                <small class="text-muted">Display order: {{ member.order }}</small>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'dashboard:team_member_update' member.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-edit me-1"></i> Edit
+                    </a>
+                    <form method="post" action="{% url 'dashboard:team_member_delete' member.pk %}"
+                          onsubmit="return confirm('Delete {{ member.name|escapejs }} from the team?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete {{ member.name }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </article>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card p-5 text-center">
+            <i class="fas fa-user-friends fa-2x text-muted mb-3"></i>
+            <h5 class="fw-bold">No team members found</h5>
+            <p class="text-muted mb-3">
+                {% if search_query or filter_status %}Try changing your search or filter.{% else %}Add your first team member to display them on the website.{% endif %}
+            </p>
+            {% if not search_query and not filter_status %}
+            <a href="{% url 'dashboard:team_member_create' %}" class="btn btn-primary align-self-center">Add Team Member</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if team_members.has_other_pages %}
+<nav class="mt-4" aria-label="Team member pages">
+    <ul class="pagination justify-content-center">
+        {% if team_members.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ team_members.previous_page_number }}&search={{ search_query|urlencode }}&status={{ filter_status|urlencode }}">Previous</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ team_members.number }} of {{ team_members.paginator.num_pages }}</span></li>
+        {% if team_members.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ team_members.next_page_number }}&search={{ search_query|urlencode }}&status={{ filter_status|urlencode }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .team-dashboard-photo,
+    .team-dashboard-photo-placeholder {
+        display: grid;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .team-dashboard-photo-placeholder {
+        place-items: center;
+        background: #eef2f7;
+        color: #64748b;
+        font-size: 2rem;
+    }
+</style>
+{% endblock %}

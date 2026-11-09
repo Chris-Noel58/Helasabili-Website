@@ -1,0 +1,139 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Manage Blog - Dashboard{% endblock %}
+{% block page_title %}Manage Blog Posts{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Blog Posts</h3>
+    <a href="{% url 'dashboard:blog_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Write New Post
+    </a>
+</div>
+
+<!-- Search & Filter -->
+<div class="card p-3 mb-4 border-0 shadow-sm">
+    <form method="GET" class="row g-3">
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" placeholder="Search posts..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-4">
+            <select name="status" class="form-select">
+                <option value="">All Status</option>
+                <option value="draft" {% if filter_status == 'draft' %}selected{% endif %}>Draft</option>
+                <option value="published" {% if filter_status == 'published' %}selected{% endif %}>Published</option>
+                <option value="archived" {% if filter_status == 'archived' %}selected{% endif %}>Archived</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Posts Table -->
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Views</th>
+                    <th>Featured</th>
+                    <th>Published</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>
+                        <strong>{{ post.title|truncatewords:10 }}</strong>
+                    </td>
+                    <td>{{ post.author }}</td>
+                    <td>
+                        <span class="badge bg-{% if post.status == 'published' %}success{% elif post.status == 'draft' %}warning{% else %}secondary{% endif %}">
+                            {{ post.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-info">{{ post.views }}</span>
+                    </td>
+                    <td>
+                        {% if post.is_featured %}
+                        <i class="fas fa-star text-warning"></i> Featured
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ post.published_date|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="{% url 'dashboard:blog_update' post.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form method="POST" action="{% url 'dashboard:blog_delete' post.id %}" style="display:inline;" 
+                              onsubmit="return confirm('Delete this post?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-5">
+                        <i class="fas fa-file-alt fa-2x mb-3"></i>
+                        <p>No blog posts yet</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav class="mt-4" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

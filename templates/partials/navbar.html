@@ -1,0 +1,135 @@
+{% load static %}
+
+<header class="site-header" id="siteNavbar">
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'website:home' %}" aria-label="Helasabili home page">
+                <span class="brand-mark">
+                    <i class="fas fa-building"></i>
+                </span>
+                <span class="brand-copy">
+                    <span class="brand-name">Helasabili</span>
+                    <span class="brand-tag">Mobile Capital Ltd</span>
+                </span>
+            </a>
+
+            <button class="navbar-toggler" type="button" id="siteNavToggle" aria-controls="navbarNav" aria-expanded="false" aria-label="Open navigation menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="mobile-nav-panel" id="navbarNav">
+                <div class="mobile-nav-heading">
+                    <span class="fw-bold">Menu</span>
+                    <button class="mobile-nav-close" type="button" aria-label="Close navigation menu">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'website:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'website:about' %}">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'courses_list' or request.resolver_match.url_name == 'apply' %}active{% endif %}" href="#" id="propertiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Properties
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="propertiesDropdown">
+                            <li><a class="dropdown-item" href="{% url 'website:courses_list' %}">Listings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'website:apply' %}">Book Now</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" href="{% url 'website:blog_list' %}">News &amp; Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'videos' %}active{% endif %}" href="{% url 'website:videos' %}">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'website:gallery' %}">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'website:contact' %}">Contact</a>
+                    </li>
+                </ul>
+
+                <div class="header-actions">
+                    <a class="nav-button nav-button-secondary" href="{% url 'website:contact' %}">
+                        <i class="fas fa-phone-alt"></i> Call Sales
+                    </a>
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a class="nav-button nav-button-primary" href="{% url 'dashboard:dashboard' %}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="mobile-nav-backdrop" data-close-site-menu></div>
+
+<script>
+    (function () {
+        const navbar = document.getElementById('siteNavbar');
+        const toggle = document.getElementById('siteNavToggle');
+        const menu = document.getElementById('navbarNav');
+        const closeButton = navbar && navbar.querySelector('.mobile-nav-close');
+        const backdrop = document.querySelector('[data-close-site-menu]');
+
+        if (!navbar || !toggle || !menu || !backdrop || !closeButton) return;
+
+        function setMenuOpen(open) {
+            document.body.classList.toggle('site-menu-open', open);
+            menu.classList.toggle('is-open', open);
+            backdrop.classList.toggle('show', open);
+
+            if (window.innerWidth < 1200) {
+                menu.style.display = open ? 'block' : 'none';
+                menu.style.transform = open ? 'translateX(0)' : 'translateX(-105%)';
+                menu.style.visibility = open ? 'visible' : 'hidden';
+                menu.style.pointerEvents = open ? 'auto' : 'none';
+            } else {
+                menu.style.display = 'flex';
+                menu.style.transform = 'none';
+                menu.style.visibility = 'visible';
+                menu.style.pointerEvents = 'auto';
+            }
+
+            backdrop.style.opacity = open ? '1' : '0';
+            backdrop.style.visibility = open ? 'visible' : 'hidden';
+            backdrop.style.pointerEvents = open ? 'auto' : 'none';
+            toggle.setAttribute('aria-expanded', String(open));
+            toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+        }
+
+        toggle.addEventListener('click', function () {
+            setMenuOpen(!document.body.classList.contains('site-menu-open'));
+        });
+        closeButton.addEventListener('click', function () {
+            setMenuOpen(false);
+        });
+        backdrop.addEventListener('click', function () {
+            setMenuOpen(false);
+        });
+        menu.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-item').forEach(function (link) {
+            link.addEventListener('click', function () {
+                setMenuOpen(false);
+            });
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') setMenuOpen(false);
+        });
+        const desktopQuery = window.matchMedia('(min-width: 1200px)');
+        const closeMenuOnDesktop = function (event) {
+            if (event.matches) setMenuOpen(false);
+        };
+        if (desktopQuery.addEventListener) {
+            desktopQuery.addEventListener('change', closeMenuOnDesktop);
+        } else if (desktopQuery.addListener) {
+            desktopQuery.addListener(closeMenuOnDesktop);
+        }
+    }());
+</script>

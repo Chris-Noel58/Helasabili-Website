@@ -1,0 +1,131 @@
+{% load static %}
+
+<footer class="footer-light pt-5 pb-3 mt-5">
+    <div class="container">
+        <div class="row mb-4">
+            <!-- About Section -->
+            <div class="col-md-3 mb-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-building" style="color: #63c132;"></i> Helasabili
+                </h5>
+                <p class="text-dark">Helasabili Mobile Capital Ltd — verified land plots and secure property investments in Nakuru and Nanyuki</p>
+                <div class="social-links">
+                    {% if contact_info.facebook %}
+                    <a href="{{ contact_info.facebook }}" target="_blank" class="me-2">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    {% endif %}
+                    {% if contact_info.twitter %}
+                    <a href="{{ contact_info.twitter }}" target="_blank" class="me-2">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    {% endif %}
+                    {% if contact_info.instagram %}
+                    <a href="{{ contact_info.instagram }}" target="_blank" class="me-2">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    {% endif %}
+                    {% if contact_info.youtube %}
+                    <a href="{{ contact_info.youtube }}" target="_blank" class="me-2">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="col-md-3 mb-4">
+                <h5 class="fw-bold mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'website:home' %}" class="text-dark text-decoration-none">Home</a></li>
+                    <li><a href="{% url 'website:about' %}" class="text-dark text-decoration-none">About Us</a></li>
+                    <li><a href="{% url 'website:courses_list' %}" class="text-dark text-decoration-none">Listings</a></li>
+                    <li><a href="{% url 'website:apply' %}" class="text-dark text-decoration-none">Book Now</a></li>
+                    <li><a href="{% url 'website:blog_list' %}" class="text-dark text-decoration-none">News & Updates</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="col-md-3 mb-4">
+                <h5 class="fw-bold mb-3">Contact Us</h5>
+                {% if contact_info %}
+                <div class="mb-2">
+                    <i class="fas fa-phone" style="color:#63c132"></i>
+                    <a href="tel:{{ contact_info.phone_primary }}" class="text-dark text-decoration-none">
+                        {{ contact_info.phone_primary }}
+                    </a>
+                </div>
+                <div class="mb-2">
+                    <i class="fas fa-envelope" style="color:#63c132"></i>
+                    <a href="mailto:{{ contact_info.email }}" class="text-dark text-decoration-none">
+                        {{ contact_info.email }}
+                    </a>
+                </div>
+                <div>
+                    <i class="fas fa-map-marker-alt" style="color:#63c132"></i>
+                    <span class="text-dark">{{ contact_info.city }}, {{ contact_info.country }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Newsletter -->
+            <div class="col-md-3 mb-4">
+                <h5 class="fw-bold mb-3">Newsletter</h5>
+                <p class="text-dark small">Subscribe for updates on available plots, pricing, and property news</p>
+                <form method="POST" action="{% url 'website:newsletter_subscribe' %}" class="d-flex">
+                    {% csrf_token %}
+                    <input type="email" name="email" placeholder="Your email" class="form-control form-control-sm" required>
+                    <button type="submit" class="btn btn-primary btn-sm ms-2">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <hr class="bg-secondary">
+        
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col-md-6">
+                <p class="text-dark small mb-0">
+                    &copy; 2026 Helasabili Mobile Capital Ltd. All rights reserved.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-dark small mb-0">
+                    <a href="#" class="text-dark text-decoration-none">Privacy Policy</a> | 
+                    <a href="#" class="text-dark text-decoration-none">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% comment %} WhatsApp floating button: use school's primary number or fallback {% endcomment %}
+{% if contact_info and contact_info.phone_primary %}
+<a id="whatsapp-float" class="whatsapp-float" href="#" target="_blank" aria-label="Chat on WhatsApp" data-phone="{{ contact_info.phone_primary }}">
+    <i class="fab fa-whatsapp"></i>
+</a>
+{% else %}
+<a id="whatsapp-float" class="whatsapp-float" href="#" target="_blank" aria-label="Chat on WhatsApp" data-phone="0724891461">
+    <i class="fab fa-whatsapp"></i>
+</a>
+{% endif %}
+
+<script>
+(function(){
+  var btn = document.getElementById('whatsapp-float');
+  if(!btn) return;
+  var raw = btn.getAttribute('data-phone') || '';
+  var digits = raw.replace(/\D/g,'');
+  if(!digits) { btn.style.display='none'; return; }
+  // Format common local numbers (Kenya) that start with 0 or are 9 digits
+  if(digits.length === 10 && digits.charAt(0) === '0') {
+      digits = '254' + digits.slice(1);
+  } else if(digits.length === 9) {
+      digits = '254' + digits;
+  }
+  // If already includes country code (e.g., starts with 254) leave as is
+  btn.href = 'https://wa.me/' + digits;
+})();
+</script>

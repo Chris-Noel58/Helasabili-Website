@@ -1,0 +1,21 @@
+{% load static %}
+<div class="team-section py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">Meet Our Team</h2>
+    <div class="row">
+      {% for member in team_members %}
+      <div class="col-md-3 mb-4">
+        <div class="card h-100 shadow-sm text-center p-3">
+          {% if member.photo %}
+          <img src="{{ member.photo.url }}" class="img-fluid mb-3 rounded" alt="{{ member.name }}">
+          {% else %}
+          <img src="{% static 'images/default-avatar.png' %}" class="img-fluid mb-3 rounded" alt="{{ member.name }}">
+          {% endif %}
+          <h5 class="mb-1">{{ member.name }}</h5>
+          <p class="text-muted">{{ member.title }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

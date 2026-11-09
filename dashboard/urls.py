@@ -1,0 +1,74 @@
+from django.urls import path
+from dashboard import views
+
+app_name = 'dashboard'
+
+urlpatterns = [
+    # Authentication
+    path('login/', views.admin_login_view, name='login'),
+    path('logout/', views.admin_logout_view, name='logout'),
+    
+    # Dashboard home
+    path('', views.dashboard_home, name='dashboard'),
+    
+    # Courses
+    path('courses/', views.courses_list, name='courses_list'),
+    path('courses/add/', views.course_create, name='course_create'),
+    path('courses/<int:pk>/edit/', views.course_update, name='course_update'),
+    path('courses/<int:pk>/delete/', views.course_delete, name='course_delete'),
+    
+    # Blog
+    path('posts/', views.blog_list, name='blog_list'),
+    path('posts/add/', views.blog_create, name='blog_create'),
+    path('posts/<int:pk>/edit/', views.blog_update, name='blog_update'),
+    path('posts/<int:pk>/delete/', views.blog_delete, name='blog_delete'),
+    
+    # Testimonials
+    path('testimonials/', views.testimonials_list, name='testimonials_list'),
+    path('testimonials/add/', views.testimonial_create, name='testimonial_create'),
+    # plural alias for templates that use 'testimonials_create'
+    path('testimonials/add/', views.testimonial_create, name='testimonials_create'),
+    path('testimonials/<int:pk>/edit/', views.testimonial_update, name='testimonial_update'),
+    # plural alias for templates that use 'testimonials_update'
+    path('testimonials/<int:pk>/edit/', views.testimonial_update, name='testimonials_update'),
+    path('testimonials/<int:pk>/delete/', views.testimonial_delete, name='testimonial_delete'),
+    # plural alias for templates that use 'testimonials_delete'
+    path('testimonials/<int:pk>/delete/', views.testimonial_delete, name='testimonials_delete'),
+
+    # Team members
+    path('team/', views.team_members_list, name='team_members_list'),
+    path('team/add/', views.team_member_create, name='team_member_create'),
+    path('team/<int:pk>/edit/', views.team_member_update, name='team_member_update'),
+    path('team/<int:pk>/delete/', views.team_member_delete, name='team_member_delete'),
+
+    # Gallery
+    path('gallery/', views.gallery_list, name='gallery_list'),
+    path('gallery/<int:pk>/hero/', views.gallery_hero_toggle, name='gallery_hero_toggle'),
+    path('gallery/<int:pk>/why-choose/', views.gallery_why_toggle, name='gallery_why_toggle'),
+    path('gallery/add/', views.gallery_upload, name='gallery_upload'),
+    path('gallery/<int:pk>/edit/', views.gallery_update, name='gallery_update'),
+    path('gallery/<int:pk>/delete/', views.gallery_delete, name='gallery_delete'),
+    
+    # Applications
+    path('applications/', views.applications_list, name='applications_list'),
+    path('applications/<int:pk>/', views.application_detail, name='application_detail'),
+    path('applications/export/', views.applications_export_csv, name='applications_export_csv'),
+
+    # Enquiries
+    path('enquiries/', views.enquiries_list, name='enquiries_list'),
+    
+    # Videos management
+    path('videos/', views.videos_list, name='videos_list'),
+    path('videos/add/', views.video_create, name='video_create'),
+    path('videos/<int:pk>/edit/', views.video_update, name='video_update'),
+    path('videos/<int:pk>/delete/', views.video_delete, name='video_delete'),
+    
+    # About & Contact
+    path('about/edit/', views.about_page_edit, name='about_page_edit'),
+    path('contact/edit/', views.contact_info_edit, name='contact_info_edit'),
+    path('contact/list/', views.contact_list, name='contact_list'),
+    path('contact/form/', views.contact_edit, name='contact_edit'),
+    # Add aliases so templates can link to adding contact info
+    path('contact/add/', views.contact_info_edit, name='contact_add'),
+    path('contacti/add/', views.contact_info_edit, name='contact_create'),
+]
