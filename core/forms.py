@@ -219,6 +219,13 @@ class GalleryImageForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
         fields = ['title', 'image', 'category', 'description', 'is_active', 'order']
+        help_texts = {
+            'image': (
+                'For homepage hero use, upload a landscape image around 1600 × 1200 px '
+                '(minimum 1200 × 900 px). The hero crops and zooms images to fit, so '
+                'keep the main subject near the center.'
+            ),
+        }
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
