@@ -309,7 +309,7 @@
         </div>
         
         <div class="row g-3">
-            {% for image in gallery_images|slice:":9" %}
+            {% for image in featured_gallery_images|slice:":9" %}
             <div class="col-md-4 col-sm-6">
                 <div class="gallery-item position-relative overflow-hidden rounded gallery-item-height">
                     <img src="{{ image.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ image.title }}" loading="lazy" decoding="async"

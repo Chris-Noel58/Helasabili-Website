@@ -83,10 +83,14 @@ class TestimonialAdmin(admin.ModelAdmin):
 
 @admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'image_preview', 'is_active', 'order')
-    list_filter = ('category', 'is_active', 'created_at')
+    list_display = (
+        'title', 'category', 'image_preview', 'is_active', 'show_in_gallery', 'order',
+    )
+    list_filter = ('category', 'is_active', 'show_in_gallery', 'created_at')
     search_fields = ('title', 'description')
-    fields = ('title', 'image', 'category', 'description', 'is_active', 'order')
+    fields = (
+        'title', 'image', 'category', 'description', 'is_active', 'show_in_gallery', 'order',
+    )
     readonly_fields = ('image_preview', 'created_at', 'updated_at')
     
     def image_preview(self, obj):

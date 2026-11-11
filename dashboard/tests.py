@@ -85,6 +85,70 @@ class DashboardEnquiriesViewTests(TestCase):
         image.refresh_from_db()
         self.assertFalse(image.show_in_home_hero)
 
+    def test_gallery_image_can_be_featured_on_gallery_and_homepage(self):
+        self.client.login(username='adminuser', password='StrongPass123')
+        featured_image = GalleryImage.objects.create(
+            title='Featured property photo',
+            image='gallery/featured-property.jpg',
+            category='other',
+        )
+        unfeatured_image = GalleryImage.objects.create(
+            title='Unfeatured property photo',
+            image='gallery/unfeatured-property.jpg',
+            category='other',
+        )
+
+        gallery_response = self.client.get('/dashboard/gallery/')
+        self.assertContains(gallery_response, 'Feature on Gallery &amp; Home')
+
+        response = self.client.post(
+            f'/dashboard/gallery/{featured_image.pk}/feature/',
+            {'show_in_gallery': '1'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        featured_image.refresh_from_db()
+        self.assertTrue(featured_image.show_in_gallery)
+
+        public_gallery_response = self.client.get('/gallery/')
+        self.assertContains(public_gallery_response, 'gallery/featured-property.jpg')
+        self.assertNotContains(public_gallery_response, 'gallery/unfeatured-property.jpg')
+
+        homepage_response = self.client.get('/')
+        self.assertIn(
+            featured_image,
+            homepage_response.context['featured_gallery_images'],
+        )
+        self.assertNotIn(
+            unfeatured_image,
+            homepage_response.context['featured_gallery_images'],
+        )
+
+        response = self.client.post(
+            f'/dashboard/gallery/{featured_image.pk}/feature/',
+            {'show_in_gallery': '0'},
+        )
+        self.assertRedirects(response, '/dashboard/gallery/')
+        featured_image.refresh_from_db()
+        self.assertFalse(featured_image.show_in_gallery)
+
+    def test_inactive_gallery_image_cannot_be_featured(self):
+        self.client.login(username='adminuser', password='StrongPass123')
+        image = GalleryImage.objects.create(
+            title='Inactive image',
+            image='gallery/inactive-featured.jpg',
+            category='other',
+            is_active=False,
+        )
+
+        response = self.client.post(
+            f'/dashboard/gallery/{image.pk}/feature/',
+            {'show_in_gallery': '1'},
+        )
+
+        self.assertRedirects(response, '/dashboard/gallery/')
+        image.refresh_from_db()
+        self.assertFalse(image.show_in_gallery)
+
     def test_gallery_image_can_be_selected_as_why_choose_background(self):
         self.client.login(username='adminuser', password='StrongPass123')
         first_image = GalleryImage.objects.create(

@@ -43,6 +43,11 @@ urlpatterns = [
 
     # Gallery
     path('gallery/', views.gallery_list, name='gallery_list'),
+    path(
+        'gallery/<int:pk>/feature/',
+        views.gallery_feature_toggle,
+        name='gallery_feature_toggle',
+    ),
     path('gallery/<int:pk>/hero/', views.gallery_hero_toggle, name='gallery_hero_toggle'),
     path('gallery/<int:pk>/why-choose/', views.gallery_why_toggle, name='gallery_why_toggle'),
     path('gallery/add/', views.gallery_upload, name='gallery_upload'),

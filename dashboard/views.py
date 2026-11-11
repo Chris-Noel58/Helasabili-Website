@@ -492,6 +492,27 @@ def gallery_hero_toggle(request, pk):
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 @require_http_methods(["POST"])
+def gallery_feature_toggle(request, pk):
+    """Include or remove an active gallery image from the public gallery and homepage."""
+    image = get_object_or_404(GalleryImage, pk=pk)
+    selected = request.POST.get('show_in_gallery')
+    if selected not in {'0', '1'}:
+        messages.error(request, 'Choose whether to show this image in the Gallery and homepage.')
+    elif selected == '1' and not image.is_active:
+        messages.error(request, 'Activate this image before featuring it in the Gallery and homepage.')
+    else:
+        image.show_in_gallery = selected == '1'
+        image.save(update_fields=['show_in_gallery'])
+        if image.show_in_gallery:
+            messages.success(request, f'"{image.title}" will appear in the Gallery and homepage.')
+        else:
+            messages.success(request, f'"{image.title}" was removed from the Gallery and homepage.')
+    return redirect('dashboard:gallery_list')
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+@require_http_methods(["POST"])
 def gallery_why_toggle(request, pk):
     """Select one active gallery image as the Why Choose section background."""
     image = get_object_or_404(GalleryImage, pk=pk)

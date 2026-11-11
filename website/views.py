@@ -36,6 +36,7 @@ def home(request):
     testimonials = Testimonial.objects.filter(is_active=True).order_by('order')[:3]
     blog_posts = BlogPost.objects.filter(status='published').order_by('-published_date')[:3]
     gallery_images = GalleryImage.objects.filter(is_active=True).order_by('order', 'id')
+    featured_gallery_images = gallery_images.filter(show_in_gallery=True)
     hero_gallery_images = gallery_images.filter(show_in_home_hero=True)
     if not hero_gallery_images.exists():
         hero_gallery_images = gallery_images[:1]
@@ -46,6 +47,7 @@ def home(request):
         'testimonials': testimonials,
         'blog_posts': blog_posts,
         'gallery_images': gallery_images,
+        'featured_gallery_images': featured_gallery_images,
         'hero_gallery_images': hero_gallery_images,
         'why_choose_background': why_choose_background,
         'videos': Video.objects.filter(is_active=True).order_by('-created_at')[:6],
@@ -186,7 +188,10 @@ def blog_detail(request, slug):
 
 def gallery(request):
     """Gallery view"""
-    images = GalleryImage.objects.filter(is_active=True).order_by('order')
+    images = GalleryImage.objects.filter(
+        is_active=True,
+        show_in_gallery=True,
+    ).order_by('order', 'id')
     category = request.GET.get('category', '')
     
     if category:

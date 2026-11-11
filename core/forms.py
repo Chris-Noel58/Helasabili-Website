@@ -218,12 +218,18 @@ class GalleryImageForm(forms.ModelForm):
     """Gallery image management form for admin"""
     class Meta:
         model = GalleryImage
-        fields = ['title', 'image', 'category', 'description', 'is_active', 'order']
+        fields = [
+            'title', 'image', 'category', 'description', 'is_active',
+            'show_in_gallery', 'order',
+        ]
         help_texts = {
             'image': (
                 'For homepage hero use, upload a landscape image around 1600 × 1200 px '
                 '(minimum 1200 × 900 px). The hero crops and zooms images to fit, so '
                 'keep the main subject near the center.'
+            ),
+            'show_in_gallery': (
+                'Display this image on the public Gallery page and in the homepage Property Gallery.'
             ),
         }
         widgets = {
@@ -243,6 +249,9 @@ class GalleryImageForm(forms.ModelForm):
                 'placeholder': 'Image Description'
             }),
             'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'show_in_gallery': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
             }),
             'order': forms.NumberInput(attrs={

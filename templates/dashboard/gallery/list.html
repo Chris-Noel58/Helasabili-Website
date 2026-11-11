@@ -14,7 +14,7 @@
 </div>
 
 <div class="alert alert-info">
-    Select images for the clear photo area on the left side of the homepage hero. Multiple selections cross-fade; one selection stays still. You can also select one image as the background for the Why Choose section.
+    Choose which active images appear on the public Gallery page and in the homepage Property Gallery. You can also select images for the homepage hero and choose a Why Choose background.
 </div>
 
 <!-- Search & Filter -->
@@ -59,6 +59,9 @@
                 {% if image.show_in_home_hero %}
                 <span class="badge bg-primary mt-2">Homepage hero</span>
                 {% endif %}
+                {% if image.show_in_gallery %}
+                <span class="badge bg-info mt-2">Gallery &amp; Home</span>
+                {% endif %}
                 {% if image.show_in_why_section %}
                 <span class="badge bg-success mt-2">Why Choose background</span>
                 {% endif %}
@@ -70,6 +73,20 @@
                 <a href="{% url 'dashboard:gallery_update' image.id %}" class="btn btn-sm btn-outline-primary">
                     <i class="fas fa-edit"></i> Edit
                 </a>
+                <form method="POST" action="{% url 'dashboard:gallery_feature_toggle' image.id %}" class="d-inline">
+                    {% csrf_token %}
+                    {% if image.show_in_gallery %}
+                    <input type="hidden" name="show_in_gallery" value="0">
+                    <button type="submit" class="btn btn-sm btn-outline-success">
+                        <i class="fas fa-check"></i> Featured on Gallery &amp; Home
+                    </button>
+                    {% else %}
+                    <input type="hidden" name="show_in_gallery" value="1">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary" {% if not image.is_active %}disabled title="Activate this image first"{% endif %}>
+                        <i class="fas fa-images"></i> Feature on Gallery &amp; Home
+                    </button>
+                    {% endif %}
+                </form>
                 <form method="POST" action="{% url 'dashboard:gallery_hero_toggle' image.id %}" class="d-inline">
                     {% csrf_token %}
                     {% if image.show_in_home_hero %}
