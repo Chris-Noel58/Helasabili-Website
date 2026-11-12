@@ -313,6 +313,10 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or 'webmaster@localhost'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 
+# Optional server-side Google Places API integration for Google reviews.
+GOOGLE_PLACES_API_KEY = config('GOOGLE_PLACES_API_KEY', default='')
+GOOGLE_PLACE_ID = config('GOOGLE_PLACE_ID', default='')
+
 # Security Settings
 # Only force HTTPS and secure cookies when the site is running in production (DEBUG=False).
 if not DEBUG:

@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from core.models import (
     Course, BlogPost, Testimonial, GalleryImage,
-    Application, AboutPage, ContactInfo, AdminProfile, ContactMessage, TeamMember
+    Application, SiteVisitBooking, AboutPage, ContactInfo, AdminProfile, ContactMessage, TeamMember
 )
 from core.forms import (
     CourseForm, CourseImageFormSet, BlogPostForm, TestimonialForm, GalleryImageForm,
@@ -83,6 +83,10 @@ def dashboard_home(request):
         'total_gallery': GalleryImage.objects.count(),
         'total_testimonials': Testimonial.objects.count(),
         'new_applications': Application.objects.filter(status='new').count(),
+        'total_site_visits': SiteVisitBooking.objects.count(),
+        'new_site_visits': SiteVisitBooking.objects.filter(
+            status=SiteVisitBooking.STATUS_REQUESTED,
+        ).count(),
         'recent_applications': Application.objects.all()[:5],
         'recent_posts': BlogPost.objects.all()[:5],
         'applications_by_course': Application.objects.values('course__title').annotate(count=Count('id'))[:5],
@@ -140,7 +144,7 @@ def courses_list(request):
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 def course_create(request):
-    """Create new course, optionally from Helasabili item"""
+    """Create a property listing, optionally from Helasabili inventory."""
     if request.method == 'POST':
         form = CourseForm(request.POST, request.FILES)
         image_formset = CourseImageFormSet(request.POST, request.FILES)
@@ -167,7 +171,7 @@ def course_create(request):
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 def course_update(request, pk):
-    """Update course"""
+    """Update a property listing."""
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         form = CourseForm(request.POST, request.FILES, instance=course)
@@ -175,7 +179,7 @@ def course_update(request, pk):
         if form.is_valid() and image_formset.is_valid():
             form.save()
             image_formset.save()
-            messages.success(request, 'Course updated successfully!')
+            messages.success(request, 'Listing updated successfully!')
             return redirect('dashboard:courses_list')
     else:
         form = CourseForm(instance=course)
@@ -193,10 +197,10 @@ def course_update(request, pk):
 @user_passes_test(is_admin)
 @require_http_methods(["POST"])
 def course_delete(request, pk):
-    """Delete course"""
+    """Delete a property listing."""
     course = get_object_or_404(Course, pk=pk)
     course.delete()
-    messages.success(request, 'Course deleted successfully!')
+    messages.success(request, 'Listing deleted successfully!')
     return redirect('dashboard:courses_list')
 
 
@@ -310,32 +314,32 @@ def testimonials_list(request):
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 def testimonial_create(request):
-    """Create new testimonial"""
+    """Create a customer review"""
     if request.method == 'POST':
         form = TestimonialForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Testimonial added successfully!')
+            messages.success(request, 'Customer review added successfully!')
             return redirect('dashboard:testimonials_list')
     else:
         form = TestimonialForm()
     
     return render(request, 'dashboard/testimonials/form.html', {
         'form': form,
-        'title': 'Add New Testimonial'
+        'title': 'Add Customer Review'
     })
 
 
 @login_required(login_url='dashboard:login')
 @user_passes_test(is_admin)
 def testimonial_update(request, pk):
-    """Update testimonial"""
+    """Update a customer review"""
     testimonial = get_object_or_404(Testimonial, pk=pk)
     if request.method == 'POST':
         form = TestimonialForm(request.POST, request.FILES, instance=testimonial)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Testimonial updated successfully!')
+            messages.success(request, 'Customer review updated successfully!')
             return redirect('dashboard:testimonials_list')
     else:
         form = TestimonialForm(instance=testimonial)
@@ -343,7 +347,7 @@ def testimonial_update(request, pk):
     return render(request, 'dashboard/testimonials/form.html', {
         'form': form,
         'testimonial': testimonial,
-        'title': f'Edit - {testimonial.name}'
+        'title': f'Edit Customer Review - {testimonial.name}'
     })
 
 
@@ -650,7 +654,7 @@ def applications_export_csv(request):
     response['Content-Disposition'] = 'attachment; filename="applications.csv"'
     
     writer = csv.writer(response)
-    writer.writerow(['Full Name', 'Email', 'Phone', 'Course', 'Status', 'Date Applied'])
+    writer.writerow(['Full Name', 'Email', 'Phone', 'Property Project', 'Status', 'Date Applied'])
     
     applications = Application.objects.all().values_list(
         'full_name', 'email', 'phone', 'course__title', 'status', 'created_at'
@@ -659,6 +663,47 @@ def applications_export_csv(request):
         writer.writerow(app)
     
     return response
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+def site_visit_bookings_list(request):
+    bookings = SiteVisitBooking.objects.select_related('property_project').all()
+    search = request.GET.get('search', '').strip()
+    status = request.GET.get('status', '')
+
+    if search:
+        bookings = bookings.filter(
+            Q(customer_name__icontains=search) |
+            Q(email__icontains=search) |
+            Q(phone__icontains=search) |
+            Q(property_title__icontains=search)
+        )
+    if status in dict(SiteVisitBooking.STATUS_CHOICES):
+        bookings = bookings.filter(status=status)
+
+    bookings = Paginator(bookings, 20).get_page(request.GET.get('page'))
+    return render(request, 'dashboard/site_visits/list.html', {
+        'bookings': bookings,
+        'statuses': SiteVisitBooking.STATUS_CHOICES,
+        'search_query': search,
+        'filter_status': status,
+    })
+
+
+@login_required(login_url='dashboard:login')
+@user_passes_test(is_admin)
+@require_http_methods(["POST"])
+def site_visit_booking_update(request, pk):
+    booking = get_object_or_404(SiteVisitBooking, pk=pk)
+    new_status = request.POST.get('status')
+    if new_status not in dict(SiteVisitBooking.STATUS_CHOICES):
+        messages.error(request, 'Choose a valid site visit status.')
+    else:
+        booking.status = new_status
+        booking.save(update_fields=['status', 'updated_at'])
+        messages.success(request, 'Site visit booking status updated.')
+    return redirect('dashboard:site_visit_bookings_list')
 
 
 # ===================== ENQUIRIES MANAGEMENT =====================

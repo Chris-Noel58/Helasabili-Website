@@ -25,8 +25,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20">
-    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=21">
+    <link rel="stylesheet" href="{% static 'css/chat_widget.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/site_visit_popup.css' %}?v=1">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -41,6 +42,8 @@
     
     <!-- Footer -->
     {% include 'partials/footer.html' %}
+
+    {% include 'partials/site_visit_popup.html' %}
     
     <!-- Scroll to Top Button -->
     <button id="scrollTopBtn" class="scroll-to-top" type="button" aria-label="Scroll to top">
@@ -56,6 +59,7 @@
     <!-- Custom JS -->
     <script src="{% static 'js/main.js' %}?v=2"></script>
     <script src="{% static 'js/chat_widget.js' %}"></script>
+    <script src="{% static 'js/site_visit_popup.js' %}?v=1" defer></script>
     
     {% block extra_js %}{% endblock %}
 

@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<!-- Course Content -->
+<!-- Property Project Content -->
 <section class="py-5">
     <div class="container">
         <div class="row g-5">
@@ -104,7 +104,7 @@
                         <div class="card border-0 bg-light">
                             <div class="card-body">
                                 <h6 class="fw-bold mb-3">
-                                    <i class="fas fa-map-marker-alt" style="color:#63c132"></i> Location
+                                    <i class="fas fa-map-marker-alt" style="color:var(--brand-green)"></i> Location
                                 </h6>
                                 <p class="mb-0">{{ course.location|default:'-' }}</p>
                             </div>
@@ -114,7 +114,7 @@
                         <div class="card border-0 bg-light">
                             <div class="card-body">
                                 <h6 class="fw-bold mb-3">
-                                    <i class="fas fa-ruler-combined" style="color:#63c132"></i> Plot Size
+                                    <i class="fas fa-ruler-combined" style="color:var(--brand-green)"></i> Plot Size
                                 </h6>
                                 <p class="mb-0">{{ course.plot_size }}</p>
                             </div>
@@ -171,7 +171,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
                         <h5 class="fw-bold mb-3">Need Help?</h5>
-                        <p class="text-muted">Contact our admissions team for more information about this course.</p>
+                        <p class="text-muted">Contact our sales team for more information about this property project.</p>
                         <a href="{% url 'website:contact' %}" class="btn btn-outline-primary w-100">
                             Contact Us
                         </a>
@@ -196,7 +196,7 @@
                     <img src="{{ related_course.featured_image.url }}" class="card-img-top" alt="{{ related_course.title }}" style="height: 200px; object-fit: cover;" loading="lazy" decoding="async">
                     {% else %}
                     <div class="d-flex align-items-center justify-content-center" style="height: 200px; background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color:#fff;">
-                        <i class="fas fa-book fa-3x"></i>
+                        <i class="fas fa-map-marker-alt fa-3x"></i>
                     </div>
                     {% endif %}
                     <div class="card-body">

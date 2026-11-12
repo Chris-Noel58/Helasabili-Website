@@ -66,7 +66,7 @@ class TimeStampedModel(models.Model):
 
 
 class Course(TimeStampedModel):
-    """Course model repurposed for property listings"""
+    """Property project model used for public land listings."""
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
@@ -81,8 +81,8 @@ class Course(TimeStampedModel):
 
     class Meta:
         ordering = ['order', 'title']
-        verbose_name = 'Course'
-        verbose_name_plural = 'Courses'
+        verbose_name = 'Property Project'
+        verbose_name_plural = 'Property Projects'
 
     def __str__(self):
         return self.title
@@ -105,8 +105,8 @@ class CourseImage(TimeStampedModel):
 
     class Meta:
         ordering = ['order', 'id']
-        verbose_name = 'Course Image'
-        verbose_name_plural = 'Course Images'
+        verbose_name = 'Project Image'
+        verbose_name_plural = 'Project Images'
 
     def __str__(self):
         return self.caption or f"{self.course.title} image {self.id}"
@@ -153,9 +153,9 @@ class BlogPost(TimeStampedModel):
 
 
 class Testimonial(TimeStampedModel):
-    """Student/Alumni testimonials model"""
+    """Customer reviews and testimonials for property services"""
     name = models.CharField(max_length=150)
-    course = models.CharField(max_length=200)
+    course = models.CharField(max_length=200, verbose_name='Property / Service')
     message = models.TextField()
     photo = models.ImageField(upload_to='testimonials/')
     rating = models.PositiveIntegerField(default=5, choices=[(i, f"{i} Star{'s' if i > 1 else ''}") for i in range(1, 6)])
@@ -174,6 +174,34 @@ class Testimonial(TimeStampedModel):
         previous_image = _stored_image_name(self, 'photo')
         super().save(*args, **kwargs)
         _optimize_image(self.photo, previous_image, (800, 800))
+
+
+class CustomerReview(TimeStampedModel):
+    """A customer-submitted review that requires moderation before publication."""
+    STATUS_PENDING = 'pending'
+    STATUS_APPROVED = 'approved'
+    STATUS_REJECTED = 'rejected'
+    STATUS_CHOICES = [
+        (STATUS_PENDING, 'Pending approval'),
+        (STATUS_APPROVED, 'Approved'),
+        (STATUS_REJECTED, 'Rejected'),
+    ]
+
+    name = models.CharField(max_length=150)
+    email = models.EmailField()
+    message = models.TextField(max_length=2000)
+    rating = models.PositiveIntegerField(
+        choices=[(i, f"{i} Star{'s' if i > 1 else ''}") for i in range(1, 6)]
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Customer Review'
+        verbose_name_plural = 'Customer Reviews'
+
+    def __str__(self):
+        return f"{self.name} - {self.get_status_display()}"
 
 
 class GalleryImage(TimeStampedModel):
@@ -266,7 +294,7 @@ class Video(TimeStampedModel):
 
 
 class Application(TimeStampedModel):
-    """Student application model"""
+    """Customer inquiry about a property project."""
     STATUS_CHOICES = [
         ('new', 'New'),
         ('reviewed', 'Reviewed'),
@@ -278,7 +306,12 @@ class Application(TimeStampedModel):
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='applications')
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='applications',
+        verbose_name='Property Project',
+    )
     message = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     ip_address = models.GenericIPAddressField(null=True, blank=True)
@@ -290,6 +323,48 @@ class Application(TimeStampedModel):
 
     def __str__(self):
         return f"{self.full_name} - {self.course.title}"
+
+
+class SiteVisitBooking(TimeStampedModel):
+    """A customer request to visit a property project."""
+    STATUS_REQUESTED = 'requested'
+    STATUS_CONFIRMED = 'confirmed'
+    STATUS_COMPLETED = 'completed'
+    STATUS_CANCELLED = 'cancelled'
+    STATUS_CHOICES = [
+        (STATUS_REQUESTED, 'Requested'),
+        (STATUS_CONFIRMED, 'Confirmed'),
+        (STATUS_COMPLETED, 'Completed'),
+        (STATUS_CANCELLED, 'Cancelled'),
+    ]
+
+    customer_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30)
+    property_project = models.ForeignKey(
+        Course,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='site_visit_bookings',
+        verbose_name='Property project',
+    )
+    property_title = models.CharField(max_length=200)
+    preferred_date = models.DateField()
+    message = models.TextField(blank=True, max_length=1000)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_REQUESTED,
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Site Visit Booking'
+        verbose_name_plural = 'Site Visit Bookings'
+
+    def __str__(self):
+        return f"{self.customer_name} - {self.property_title}"
 
 
 class AboutPage(models.Model):

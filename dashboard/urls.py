@@ -59,6 +59,10 @@ urlpatterns = [
     path('applications/<int:pk>/', views.application_detail, name='application_detail'),
     path('applications/export/', views.applications_export_csv, name='applications_export_csv'),
 
+    # Site visit bookings
+    path('site-visits/', views.site_visit_bookings_list, name='site_visit_bookings_list'),
+    path('site-visits/<int:pk>/status/', views.site_visit_booking_update, name='site_visit_booking_update'),
+
     # Enquiries
     path('enquiries/', views.enquiries_list, name='enquiries_list'),
     

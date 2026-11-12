@@ -64,7 +64,7 @@
                             <div class="text-muted small">
                                 <i class="fas fa-ruler-combined"></i> 50 x 100
                             </div>
-                            <div class="fw-bold" style="font-size:1.1rem; color:#63c132;">
+                            <div class="fw-bold" style="font-size:1.1rem; color:var(--brand-green);">
                                 {% if course.fees %}
                                     KSH. {{ course.fees|floatformat:0 }}
                                 {% else %}
@@ -89,52 +89,6 @@
             {% endfor %}
         </div>
         
-        <!-- Pagination -->
-        {% if is_paginated %}
-        <nav class="mt-5" aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">
-                        <i class="fas fa-chevron-left"></i> First
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
-                        Previous
-                    </a>
-                </li>
-                {% endif %}
-                
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
-                    </li>
-                    {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">
-                            {{ num }}
-                        </a>
-                    </li>
-                    {% endif %}
-                {% endfor %}
-                
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
-                        Next
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">
-                        Last <i class="fas fa-chevron-right"></i>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
         {% else %}
         <div class="alert alert-info text-center py-5">
             <i class="fas fa-info-circle fa-3x mb-3"></i>

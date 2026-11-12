@@ -56,6 +56,21 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url 'dashboard:site_visit_bookings_list' %}" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="mb-1 opacity-75">Site Visit Requests</p>
+                        <h3 class="mb-0">{{ total_site_visits }}</h3>
+                        <small>Awaiting response: {{ new_site_visits }}</small>
+                    </div>
+                    <i class="fas fa-calendar-check fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
 
 <!-- Secondary Statistics -->
@@ -165,6 +180,9 @@
                 </a>
                 <a href="{% url 'dashboard:applications_list' %}" class="list-group-item list-group-item-action">
                     <i class="fas fa-list" style="color:var(--brand-green)"></i> Manage Bookings
+                </a>
+                <a href="{% url 'dashboard:site_visit_bookings_list' %}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calendar-check" style="color:var(--brand-green)"></i> Manage Site Visits
                 </a>
             </div>
         </div>

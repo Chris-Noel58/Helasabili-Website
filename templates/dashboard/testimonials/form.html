@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Testimonial Form{% endblock %}
+{% block title %}{{ title|default:'Customer Review' }}{% endblock %}
 {% block content %}
 <div class="container py-5">
-  <h1 class="mb-4">Testimonial</h1>
+  <h1 class="mb-4">{{ title|default:'Customer Review' }}</h1>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.non_field_errors }}

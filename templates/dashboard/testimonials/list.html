@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Testimonials - Dashboard{% endblock %}
+{% block title %}Client Testimonials - Dashboard{% endblock %}
 {% block content %}
 <div class="container py-5">
-  <h1 class="mb-4">Testimonials</h1>
-  <a href="{% url 'dashboard:testimonials_create' %}" class="btn btn-primary mb-3">Add Testimonial</a>
+  <h1 class="mb-4">Client Testimonials</h1>
+  <a href="{% url 'dashboard:testimonials_create' %}" class="btn btn-primary mb-3">Add Client Testimonial</a>
+  <a href="{% url 'admin:core_customerreview_changelist' %}" class="btn btn-outline-primary mb-3 ms-2">Review Customer Submissions</a>
   <table class="table table-striped">
-    <thead><tr><th>Name</th><th>Course</th><th>Rating</th><th>Active</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Customer</th><th>Property / Service</th><th>Rating</th><th>Published</th><th>Actions</th></tr></thead>
     <tbody>
       {% for t in testimonials %}
       <tr>

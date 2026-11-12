@@ -1,14 +1,33 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import inlineformset_factory
+from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Column, Submit, HTML
 from core.rich_text import sanitize_rich_text
 from core.models import (
-    Course, CourseImage, BlogPost, Testimonial, GalleryImage, 
-    Application, AboutPage, ContactInfo, AdminProfile, TeamMember
+    Course, CourseImage, BlogPost, Testimonial, CustomerReview, GalleryImage,
+    Application, SiteVisitBooking, AboutPage, ContactInfo, AdminProfile, TeamMember
 )
 from core.models import Video
+
+
+class CustomerReviewForm(forms.ModelForm):
+    publication_consent = forms.BooleanField(
+        required=True,
+        label='I agree that my name and review may be published if approved.',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+    )
+
+    class Meta:
+        model = CustomerReview
+        fields = ['name', 'email', 'rating', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'email'}),
+            'rating': forms.Select(attrs={'class': 'form-select'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'maxlength': 2000}),
+        }
 
 
 class VideoForm(forms.ModelForm):
@@ -27,7 +46,7 @@ class VideoForm(forms.ModelForm):
 
 
 class ApplicationForm(forms.ModelForm):
-    """Application form for students"""
+    """Customer inquiry form for property listings."""
     class Meta:
         model = Application
         fields = ['full_name', 'email', 'phone', 'course', 'message']
@@ -66,6 +85,63 @@ class ApplicationForm(forms.ModelForm):
         self.fields['message'].required = False
 
 
+class SiteVisitBookingForm(forms.ModelForm):
+    property_project = forms.ModelChoiceField(
+        queryset=Course.objects.none(),
+        empty_label='Select a property project',
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Property project',
+    )
+
+    class Meta:
+        model = SiteVisitBooking
+        fields = ['customer_name', 'email', 'phone', 'property_project', 'preferred_date', 'message']
+        widgets = {
+            'customer_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'autocomplete': 'name',
+                'placeholder': 'Your name',
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'autocomplete': 'email',
+                'placeholder': 'you@example.com',
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'autocomplete': 'tel',
+                'placeholder': 'Your phone number',
+            }),
+            'preferred_date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date',
+            }),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'maxlength': 1000,
+                'placeholder': 'Optional details',
+            }),
+        }
+        labels = {
+            'customer_name': 'Your name',
+            'preferred_date': 'Preferred visit date',
+            'message': 'Message (optional)',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['property_project'].queryset = Course.objects.filter(
+            is_active=True,
+        ).order_by('-created_at', '-pk')
+
+    def clean_preferred_date(self):
+        preferred_date = self.cleaned_data['preferred_date']
+        if preferred_date < timezone.localdate():
+            raise forms.ValidationError('Choose today or a future date.')
+        return preferred_date
+
+
 class NewsletterForm(forms.Form):
     """Newsletter subscription form"""
     email = forms.EmailField(
@@ -79,14 +155,14 @@ class NewsletterForm(forms.Form):
 
 
 class CourseForm(forms.ModelForm):
-    """Course management form for admin"""
+    """Property project management form for admin."""
     class Meta:
         model = Course
         fields = ['title', 'description', 'location', 'plot_size', 'fees', 'featured_image', 'extra_details', 'is_active', 'order']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Course Title'
+                'placeholder': 'Project Title'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -181,23 +257,28 @@ class BlogPostForm(forms.ModelForm):
 
 
 class TestimonialForm(forms.ModelForm):
-    """Testimonial management form for admin"""
+    """Customer review management form for admin"""
     class Meta:
         model = Testimonial
         fields = ['name', 'course', 'message', 'photo', 'rating', 'is_active', 'order']
+        labels = {
+            'name': 'Customer Name',
+            'course': 'Property / Service',
+            'message': 'Review',
+        }
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Student Name'
+                'placeholder': 'Customer Name'
             }),
             'course': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Course Name'
+                'placeholder': 'Property or Service'
             }),
             'message': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4,
-                'placeholder': 'Testimonial Message'
+                'placeholder': 'Customer Review'
             }),
             'photo': forms.FileInput(attrs={
                 'class': 'form-control'

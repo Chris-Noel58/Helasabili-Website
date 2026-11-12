@@ -1,0 +1,88 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Site Visit Bookings - Helasabili Admin{% endblock %}
+{% block page_title %}Site Visit Bookings{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h5 class="mb-1">Customer site visit requests</h5>
+            <p class="text-muted mb-0">Review requests and update their confirmation status.</p>
+        </div>
+        <form method="get" class="d-flex flex-wrap gap-2">
+            <input class="form-control" type="search" name="search" value="{{ search_query }}" placeholder="Search bookings" aria-label="Search bookings">
+            <select class="form-select" name="status" aria-label="Filter by status">
+                <option value="">All statuses</option>
+                {% for value, label in statuses %}
+                <option value="{{ value }}" {% if filter_status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit">Filter</button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Customer</th>
+                    <th>Property project</th>
+                    <th>Preferred date</th>
+                    <th>Contact</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>
+                        <strong>{{ booking.customer_name }}</strong>
+                        <div class="small text-muted">Requested {{ booking.created_at|date:"M d, Y" }}</div>
+                    </td>
+                    <td>{{ booking.property_title }}</td>
+                    <td>{{ booking.preferred_date|date:"M d, Y" }}</td>
+                    <td>
+                        <a href="tel:{{ booking.phone }}">{{ booking.phone }}</a>
+                        <div><a href="mailto:{{ booking.email }}">{{ booking.email }}</a></div>
+                    </td>
+                    <td>{{ booking.message|default:"—"|linebreaksbr }}</td>
+                    <td><span class="badge bg-secondary">{{ booking.get_status_display }}</span></td>
+                    <td>
+                        <form method="post" action="{% url 'dashboard:site_visit_booking_update' booking.pk %}" class="d-flex gap-2">
+                            {% csrf_token %}
+                            <select class="form-select form-select-sm" name="status" aria-label="Status for {{ booking.customer_name }}">
+                                {% for value, label in statuses %}
+                                <option value="{{ value }}" {% if booking.status == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-sm btn-outline-primary" type="submit">Save</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="py-5 text-center text-muted">No site visit bookings found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if bookings.has_other_pages %}
+    <nav aria-label="Site visit booking pages">
+        <ul class="pagination justify-content-center mb-0">
+            {% if bookings.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ bookings.previous_page_number }}&search={{ search_query|urlencode }}&status={{ filter_status|urlencode }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}</span></li>
+            {% if bookings.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ bookings.next_page_number }}&search={{ search_query|urlencode }}&status={{ filter_status|urlencode }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

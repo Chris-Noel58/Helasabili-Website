@@ -9,7 +9,7 @@
 <!-- Hero Section -->
 <section class="home-hero-section" aria-labelledby="home-hero-title">
     <div class="home-hero">
-        <div class="home-hero-photo" data-bg-interval="6000" data-bg-images='[{% for img in hero_gallery_images %}{% if not forloop.first %},{% endif %}"{{ img.image.url }}"{% endfor %}]'>
+        <div class="home-hero-photo" data-bg-interval="3500" data-bg-images='[{% for img in hero_gallery_images %}{% if not forloop.first %},{% endif %}"{{ img.image.url }}"{% endfor %}]'>
             <div class="home-hero-photo-layer visible">
                 <img src="{% if hero_gallery_images %}{{ hero_gallery_images.0.image.url }}{% else %}{% get_media_prefix %}gallery/_R6A0311.jpg.jpeg{% endif %}"
                      alt=""
@@ -52,7 +52,7 @@
     if (!photo) return;
 
     const layers = Array.from(photo.querySelectorAll('.home-hero-photo-layer'));
-    const interval = Number.parseInt(photo.dataset.bgInterval, 10) || 6000;
+    const interval = Number.parseInt(photo.dataset.bgInterval, 10) || 3500;
     let images;
 
     try {
@@ -148,23 +148,23 @@
     </div>
 </section>
 
-<!-- Featured Courses Section -->
+<!-- Featured Projects Section -->
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Featured Land Listings</h2>
-            <p class="text-muted">Browse verified 50x100 plot opportunities in growing areas</p>
+            <h2 class="fw-bold mb-2">Featured Projects</h2>
+            <p class="text-muted">Explore our latest property developments</p>
         </div>
         
         <div class="row g-4">
             {% for course in courses %}
-            <div class="col-md-4 mb-3 course-card d-none">
+            <div class="col-md-4 mb-3">
                 <div class="card border-0 shadow-sm h-100 hover-lift">
                         {% if course.featured_image %}
                         <img src="{{ course.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ course.title }}" loading="lazy" decoding="async">
                         {% else %}
                         <div class="d-flex align-items-center justify-content-center img-fixed-height" style="background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color: #fff;">
-                            <i class="fas fa-book fa-3x"></i>
+                            <i class="fas fa-map-marker-alt fa-3x"></i>
                         </div>
                     {% endif %}
                     <div class="card-body">
@@ -175,72 +175,20 @@
                             <span class="fw-bold" style="color:var(--brand-green)">{% if course.fees %}KSH. {{ course.fees|floatformat:0 }}{% else %}Contact for price{% endif %}</span>
                         </div>
                         <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-primary w-100">
-                            Learn More
+                            View Project
                         </a>
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="col-12">
-                <p class="text-center text-muted">No courses available at the moment.</p>
+                <p class="text-center text-muted">No projects available at the moment.</p>
             </div>
             {% endfor %}
         </div>
         
         <div class="text-center mt-4">
             <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary">View All Listings</a>
-        </div>
-    </div>
-</section>
-
-<!-- Testimonials Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Client Testimonials</h2>
-            <p class="text-muted">Hear from our satisfied buyers</p>
-        </div>
-        
-        <div class="row g-4">
-            {% for testimonial in testimonials %}
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            {% for i in "12345" %}
-                                {% if i|add:0 <= testimonial.rating %}
-                                <i class="fas fa-star text-warning"></i>
-                                {% else %}
-                                <i class="far fa-star text-warning"></i>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <p class="card-text">{{ testimonial.message }}</p>
-                        <div class="d-flex align-items-center mt-3">
-                            {% if testimonial.photo %}
-                            <img src="{{ testimonial.photo.url }}" class="rounded-circle me-3" width="50" height="50" alt="{{ testimonial.name }}" style="object-fit: cover;" loading="lazy" decoding="async">
-                            {% else %}
-                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" width="50" height="50" style="width: 50px; height: 50px; background:var(--primary-blue); color:#fff;">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            {% endif %}
-                            <div>
-                                <h6 class="mb-0 fw-bold">{{ testimonial.name }}</h6>
-                                <small class="text-muted">{{ testimonial.course }}</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center text-muted">No testimonials available yet.</p>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <div class="text-center mt-4">
-            <a href="{% url 'website:testimonials' %}" class="btn btn-outline-primary">View All Testimonials</a>
         </div>
     </div>
 </section>
@@ -382,6 +330,67 @@
     </div>
 </section>
 
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2">Client Testimonials</h2>
+            <p class="text-muted">Hear from our satisfied buyers</p>
+        </div>
+
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {% for i in "12345" %}
+                                {% if i|add:0 <= testimonial.rating %}
+                                <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                <i class="far fa-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p class="card-text">{{ testimonial.message }}</p>
+                        <div class="d-flex align-items-center mt-3">
+                            {% if testimonial.photo_url %}
+                            <img src="{{ testimonial.photo_url }}" class="rounded-circle me-3" width="50" height="50" alt="{{ testimonial.name }}" style="object-fit: cover;" loading="lazy" decoding="async">
+                            {% else %}
+                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" width="50" height="50" style="width: 50px; height: 50px; background:var(--primary-blue); color:#fff;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ testimonial.name }}</h6>
+                                {% if testimonial.author_url %}
+                                <small><a class="text-muted" href="{{ testimonial.author_url }}" target="_blank" rel="noopener noreferrer">Google reviewer</a></small>
+                                {% else %}
+                                <small class="text-muted">{{ testimonial.source }}</small>
+                                {% endif %}
+                                {% if testimonial.relative_date %}<small class="text-muted d-block">{{ testimonial.relative_date }}</small>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center text-muted">No testimonials available yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'website:testimonials' %}" class="btn btn-outline-primary">View All Testimonials</a>
+            <a href="{% url 'website:testimonials' %}#review-form-title" class="btn btn-primary ms-2">Submit a Review</a>
+            {% if google_reviews_url %}
+            <a href="{{ google_reviews_url }}" class="btn btn-outline-primary ms-2" target="_blank" rel="noopener noreferrer">Review us on Google</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -423,28 +432,6 @@ function showGalleryImage(url, title) {
     document.getElementById('galleryTitle').textContent = title;
 }
 
-// Reveal 6 random course cards on each page load
-function showRandomCourses(limit = 6) {
-    const cards = Array.from(document.querySelectorAll('.course-card'));
-    if (!cards.length) return;
-
-    // Fisher-Yates shuffle
-    for (let i = cards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
-    }
-
-    // Reveal the first `limit` cards
-    for (let i = 0; i < Math.min(limit, cards.length); i++) {
-        cards[i].classList.remove('d-none');
-    }
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => showRandomCourses(6));
-} else {
-    showRandomCourses(6);
-}
 </script>
 <script>
 // Click-to-load YouTube players for homepage video thumbnails

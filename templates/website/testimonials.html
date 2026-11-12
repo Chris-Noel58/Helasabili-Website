@@ -1,32 +1,99 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Client Testimonials - Helasabili Mobile Capital Ltd{% endblock %}
-{% block meta_description %}Read feedback from Helasabili clients about verified land purchases, site visits, and property investment services.{% endblock %}
+{% block title %}Client Reviews - Helasabili Mobile Capital Ltd{% endblock %}
+{% block meta_description %}Read customer feedback about Helasabili and share your own review for approval.{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-  <h1 class="mb-4 text-center">What our students say</h1>
+  <h1 class="mb-2 text-center">Client Reviews</h1>
+  <p class="text-muted text-center mb-5">Hear from our customers and share your experience.</p>
 
   {% if testimonials %}
     <div class="row g-4">
-      {% for t in testimonials %}
+      {% for review in testimonials %}
         <div class="col-md-4">
-          <div class="card h-100 p-3">
+          <div class="card h-100 border-0 shadow-sm">
             <div class="card-body">
-              <h5 class="card-title">{{ t.name }}</h5>
-              {% if t.course %}<p class="text-muted small mb-2">{{ t.course }}</p>{% endif %}
-              <p class="card-text">{{ t.message|linebreaksbr }}</p>
+              <div class="mb-3" aria-label="{{ review.rating }} out of 5 stars">
+                {% for i in "12345" %}
+                  {% if i|add:0 <= review.rating %}
+                    <i class="fas fa-star text-warning" aria-hidden="true"></i>
+                  {% else %}
+                    <i class="far fa-star text-warning" aria-hidden="true"></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <p class="card-text">{{ review.message|linebreaksbr }}</p>
             </div>
-            <div class="card-footer bg-transparent border-0">
-              <small class="text-muted">Rating: {{ t.rating }}/5{% if t.is_active %} • Active{% endif %}</small>
+            <div class="card-footer bg-transparent border-0 d-flex align-items-center">
+              {% if review.photo_url %}
+                <img src="{{ review.photo_url }}" class="rounded-circle me-3" width="48" height="48" alt="" style="object-fit:cover" loading="lazy" decoding="async">
+              {% else %}
+                <span class="rounded-circle me-3 d-inline-flex align-items-center justify-content-center" style="width:48px;height:48px;background:var(--primary-blue);color:#fff" aria-hidden="true">
+                  <i class="fas fa-user"></i>
+                </span>
+              {% endif %}
+              <div>
+                <strong class="d-block">{{ review.name }}</strong>
+                {% if review.author_url %}
+                  <a class="small" href="{{ review.author_url }}" target="_blank" rel="noopener noreferrer">Google reviewer</a>
+                {% else %}
+                  <small class="text-muted">{{ review.source }}</small>
+                {% endif %}
+                {% if review.relative_date %}<small class="text-muted d-block">{{ review.relative_date }}</small>{% endif %}
+              </div>
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
+    {% if is_paginated %}
+      <nav class="mt-4" aria-label="Review pages">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+          {% endif %}
+          <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
   {% else %}
-    <p class="lead text-center">No testimonials found yet. Check back soon.</p>
+    <p class="lead text-center">No reviews have been published yet. Be the first to share your experience.</p>
   {% endif %}
+
+  <section class="mt-5 mx-auto" style="max-width:720px" aria-labelledby="review-form-title">
+    <h2 id="review-form-title" class="h3 mb-3">Share your review</h2>
+    <p class="text-muted">Your email is for review verification only and will not be published. Reviews appear publicly only after admin approval.</p>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success" role="status">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url 'website:testimonials' %}">
+      {% csrf_token %}
+      {% for field in review_form %}
+        {% if field.name == 'publication_consent' %}
+          <div class="form-check mb-3">
+            {{ field }}
+            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+        {% else %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Submit review</button>
+    </form>
+    {% if google_reviews_url %}
+      <a href="{{ google_reviews_url }}" class="btn btn-outline-primary mt-3" target="_blank" rel="noopener noreferrer">Write a Google review</a>
+    {% endif %}
+  </section>
 </div>
 {% endblock %}

@@ -31,7 +31,7 @@
         </div>
         <div class="col-md-3">
             <select name="course" class="form-select">
-                <option value="">All Courses</option>
+                <option value="">All Property Projects</option>
                 {% for course in courses %}
                 <option value="{{ course.id }}" {% if filter_course == course.id|stringformat:"s" %}selected{% endif %}>
                     {{ course.title }}

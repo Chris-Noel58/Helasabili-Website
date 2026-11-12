@@ -1,0 +1,54 @@
+{% if site_visit_projects %}
+<aside class="site-visit-popup" id="site-visit-popup" aria-labelledby="site-visit-title" hidden>
+    <section class="site-visit-popup__card">
+        <button class="site-visit-popup__close" type="button" aria-label="Close site visit booking form">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="site-visit-popup__intro">
+            <span class="site-visit-popup__eyebrow">See it for yourself</span>
+            <h2 id="site-visit-title">Plan a site visit</h2>
+            <p>Choose a project and a preferred date. Our team will contact you to confirm.</p>
+        </div>
+        <div class="site-visit-popup__feedback" role="status" aria-live="polite" hidden></div>
+        <form class="site-visit-popup__form" action="{% url 'website:site_visit_booking' %}" method="post">
+            {% csrf_token %}
+            <label>
+                <span>Your name</span>
+                <input class="form-control" type="text" name="customer_name" autocomplete="name" maxlength="200" required>
+            </label>
+            <div class="site-visit-popup__row">
+                <label>
+                    <span>Phone</span>
+                    <input class="form-control" type="tel" name="phone" autocomplete="tel" maxlength="30" required>
+                </label>
+                <label>
+                    <span>Email</span>
+                    <input class="form-control" type="email" name="email" autocomplete="email" maxlength="254" required>
+                </label>
+            </div>
+            <label>
+                <span>Property project</span>
+                <select class="form-select" name="property_project" required>
+                    <option value="">Select a project</option>
+                    {% for project in site_visit_projects %}
+                    <option value="{{ project.pk }}">{{ project.title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                <span>Preferred visit date</span>
+                <input class="form-control" type="date" name="preferred_date" required>
+            </label>
+            <label>
+                <span>Message <small>(optional)</small></span>
+                <textarea class="form-control" name="message" rows="2" maxlength="1000" placeholder="Anything you would like us to know?"></textarea>
+            </label>
+            <button class="site-visit-popup__submit" type="submit">
+                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                Request a site visit
+            </button>
+            <p class="site-visit-popup__note">Your details are only used to arrange this visit.</p>
+        </form>
+    </section>
+</aside>
+{% endif %}

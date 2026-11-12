@@ -21,7 +21,7 @@
                     {% endif %}
                     
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Course Title *</label>
+                        <label class="form-label fw-bold">Project Title *</label>
                         {{ form.title }}
                         {% if form.title.errors %}
                         <div class="alert alert-danger small mt-1">{{ form.title.errors }}</div>
@@ -152,7 +152,7 @@
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-save"></i> Save Course
+                            <i class="fas fa-save"></i> Save Listing
                         </button>
                         <a href="{% url 'dashboard:courses_list' %}" class="btn btn-outline-secondary">
                             Cancel

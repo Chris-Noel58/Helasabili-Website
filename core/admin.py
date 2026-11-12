@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html, mark_safe
+from django.utils import timezone
 from core.models import (
-    Course, BlogPost, Testimonial, GalleryImage,
-    Application, AboutPage, ContactInfo, AdminProfile, SiteSettings, TeamMember, ContactMessage,
+    Course, BlogPost, Testimonial, CustomerReview, GalleryImage,
+    Application, SiteVisitBooking, AboutPage, ContactInfo, AdminProfile, SiteSettings, TeamMember, ContactMessage,
     AboutImage, AboutVideo
 )
 from core.models import Conversation, ConversationMessage
@@ -29,7 +30,7 @@ class CourseAdmin(admin.ModelAdmin):
         ('Basic Information', {
             'fields': ('title', 'slug', 'description', 'featured_image')
         }),
-        ('Course Details', {
+        ('Project Details', {
             'fields': ('location', 'plot_size', 'fees', 'extra_details')
         }),
         ('Display Settings', {
@@ -81,6 +82,25 @@ class TestimonialAdmin(admin.ModelAdmin):
     get_rating_stars.short_description = 'Rating'
 
 
+@admin.register(CustomerReview)
+class CustomerReviewAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'rating', 'status', 'created_at')
+    list_filter = ('status', 'rating', 'created_at')
+    search_fields = ('name', 'email', 'message')
+    readonly_fields = ('created_at', 'updated_at')
+    actions = ('approve_reviews', 'reject_reviews')
+
+    @admin.action(description='Approve selected reviews')
+    def approve_reviews(self, request, queryset):
+        updated = queryset.update(status=CustomerReview.STATUS_APPROVED, updated_at=timezone.now())
+        self.message_user(request, f'{updated} review(s) approved.')
+
+    @admin.action(description='Reject selected reviews')
+    def reject_reviews(self, request, queryset):
+        updated = queryset.update(status=CustomerReview.STATUS_REJECTED, updated_at=timezone.now())
+        self.message_user(request, f'{updated} review(s) rejected.')
+
+
 @admin.register(GalleryImage)
 class GalleryImageAdmin(admin.ModelAdmin):
     list_display = (
@@ -113,7 +133,7 @@ class ApplicationAdmin(admin.ModelAdmin):
         ('Applicant Information', {
             'fields': ('full_name', 'email', 'phone')
         }),
-        ('Application Details', {
+        ('Inquiry Details', {
             'fields': ('course', 'message', 'status')
         }),
         ('Meta Information', {
@@ -135,6 +155,17 @@ class ApplicationAdmin(admin.ModelAdmin):
     def mark_as_rejected(self, request, queryset):
         queryset.update(status='rejected')
     mark_as_rejected.short_description = 'Mark selected as Rejected'
+
+
+@admin.register(SiteVisitBooking)
+class SiteVisitBookingAdmin(admin.ModelAdmin):
+    list_display = (
+        'customer_name', 'property_title', 'preferred_date', 'phone', 'email',
+        'status', 'created_at',
+    )
+    list_filter = ('status', 'preferred_date', 'created_at')
+    search_fields = ('customer_name', 'email', 'phone', 'property_title')
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(AboutPage)

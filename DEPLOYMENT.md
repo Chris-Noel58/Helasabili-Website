@@ -62,7 +62,16 @@ EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=your-email@gmail.com
 EMAIL_HOST_PASSWORD=app-specific-password
+
+# Optional Google reviews (Google Places API (New))
+GOOGLE_PLACES_API_KEY=your-restricted-server-side-api-key
+GOOGLE_PLACE_ID=your-business-place-id
 ```
+
+### Google Reviews
+To show reviews from your Google Business Profile, enable the Places API (New) in Google Cloud, enable billing, and create an API key restricted to the Places API. Keep the key server-side in the environment; do not put it in a template or commit it. Find your business's Place ID and set it as `GOOGLE_PLACE_ID`. The site requests reviews from Google's API when the homepage or testimonials page is opened; Google's API currently returns a limited set of reviews (up to five), and the external reviews include Google author attribution. Without both environment values, the site simply omits Google-sourced reviews.
+
+Customer reviews submitted on `/testimonials/` are private while pending. Sign in to Django Admin, open **Customer Reviews**, and approve reviews before they can appear publicly. Rejected and pending reviews remain hidden.
 
 ### 3. Prepare Database
 ```bash

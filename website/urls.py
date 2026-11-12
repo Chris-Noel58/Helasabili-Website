@@ -17,6 +17,7 @@ urlpatterns = [
     path('gallery/', views.gallery, name='gallery'),
     path('testimonials/', views.testimonials, name='testimonials'),
     path('apply/', views.apply, name='apply'),
+    path('site-visit-bookings/', views.site_visit_booking, name='site_visit_booking'),
     path('contact/', views.contact, name='contact'),
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
     # Sitemap routes

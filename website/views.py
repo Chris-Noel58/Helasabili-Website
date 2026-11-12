@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db.models import Q
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.conf import settings
 from django.http import JsonResponse, HttpResponseBadRequest
+from urllib.parse import urlencode
 import json
 import re
 import os
@@ -18,22 +19,61 @@ except Exception:
 logger = logging.getLogger(__name__)
 from decimal import Decimal, InvalidOperation
 from core.models import (
-    Course, BlogPost, Testimonial, GalleryImage, 
+    Course, BlogPost, Testimonial, CustomerReview, GalleryImage,
     Application, AboutPage, ContactInfo, ContactMessage, AboutImage, AboutVideo
 )
 from core.models import Video
-from core.forms import ApplicationForm, ContactForm
+from core.forms import ApplicationForm, SiteVisitBookingForm, ContactForm, CustomerReviewForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import modelform_factory
 from django.db import DatabaseError
+from .google_reviews import fetch_google_reviews
 
 
 # ==================== HOME & GENERAL PAGES ====================
 
+def _google_review_url():
+    place_id = getattr(settings, 'GOOGLE_PLACE_ID', '')
+    if not place_id:
+        return ''
+    return 'https://search.google.com/local/writereview?' + urlencode({'placeid': place_id})
+
+
+def _public_reviews(limit=None):
+    reviews = []
+    for review in Testimonial.objects.filter(is_active=True):
+        reviews.append({
+            'name': review.name,
+            'message': review.message,
+            'rating': review.rating,
+            'photo_url': review.photo.url if review.photo else '',
+            'source': 'Helasabili client',
+            'author_url': '',
+            'relative_date': '',
+            'sort_date': review.created_at.isoformat(),
+        })
+
+    for review in CustomerReview.objects.filter(status=CustomerReview.STATUS_APPROVED):
+        reviews.append({
+            'name': review.name,
+            'message': review.message,
+            'rating': review.rating,
+            'photo_url': '',
+            'source': 'Customer review',
+            'author_url': '',
+            'relative_date': '',
+            'sort_date': review.created_at.isoformat(),
+        })
+
+    reviews.extend(fetch_google_reviews())
+    reviews.sort(key=lambda review: review['sort_date'], reverse=True)
+    return reviews[:limit] if limit is not None else reviews
+
+
 def home(request):
     """Home page view with featured content"""
-    courses = Course.objects.filter(is_active=True).order_by('order')[:3]
-    testimonials = Testimonial.objects.filter(is_active=True).order_by('order')[:3]
+    courses = Course.objects.filter(is_active=True).order_by('-created_at', '-pk')[:6]
+    testimonials = _public_reviews(limit=6)
     blog_posts = BlogPost.objects.filter(status='published').order_by('-published_date')[:3]
     gallery_images = GalleryImage.objects.filter(is_active=True).order_by('order', 'id')
     featured_gallery_images = gallery_images.filter(show_in_gallery=True)
@@ -45,6 +85,7 @@ def home(request):
     context = {
         'courses': courses,
         'testimonials': testimonials,
+        'google_reviews_url': _google_review_url(),
         'blog_posts': blog_posts,
         'gallery_images': gallery_images,
         'featured_gallery_images': featured_gallery_images,
@@ -53,6 +94,24 @@ def home(request):
         'videos': Video.objects.filter(is_active=True).order_by('-created_at')[:6],
     }
     return render(request, 'website/index.html', context)
+
+
+@require_POST
+def site_visit_booking(request):
+    form = SiteVisitBookingForm(request.POST)
+    if not form.is_valid():
+        return JsonResponse({
+            'success': False,
+            'errors': form.errors.get_json_data(),
+        }, status=400)
+
+    booking = form.save(commit=False)
+    booking.property_title = booking.property_project.title
+    booking.save()
+    return JsonResponse({
+        'success': True,
+        'message': 'Thanks! Your site visit request has been sent. We will contact you to confirm the date.',
+    }, status=201)
 
 
 def videos(request):
@@ -102,16 +161,9 @@ def courses_list(request):
             Q(description__icontains=search_query)
         )
     
-    # Pagination
-    paginator = Paginator(courses, 6)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
-    
     context = {
-        'page_obj': page_obj,
-        'courses': page_obj.object_list,
+        'courses': courses,
         'search_query': search_query,
-        'is_paginated': page_obj.has_other_pages(),
     }
     return render(request, 'website/courses.html', context)
 
@@ -217,11 +269,16 @@ def gallery(request):
 # ==================== TESTIMONIALS ====================
 
 def testimonials(request):
-    """Testimonials view"""
-    testimonials_list = Testimonial.objects.filter(is_active=True).order_by('order')
-    
-    # Pagination
-    paginator = Paginator(testimonials_list, 6)
+    """Display approved reviews and accept reviews for admin moderation."""
+    form = CustomerReviewForm()
+    if request.method == 'POST':
+        form = CustomerReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Thank you for your review. It will appear after admin approval.')
+            return redirect('website:testimonials')
+
+    paginator = Paginator(_public_reviews(), 6)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
@@ -229,6 +286,8 @@ def testimonials(request):
         'page_obj': page_obj,
         'testimonials': page_obj.object_list,
         'is_paginated': page_obj.has_other_pages(),
+        'review_form': form,
+        'google_reviews_url': _google_review_url(),
     }
     return render(request, 'website/testimonials.html', context)
 

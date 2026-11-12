@@ -1,4 +1,4 @@
-from core.models import ContactInfo, AboutPage
+from core.models import ContactInfo, AboutPage, Course
 from .models import SiteSettings, TeamMember
 
 
@@ -34,4 +34,7 @@ def site_context(request):
         'site_tagline': 'Verified land plots & affordable housing — Nakuru & Nanyuki',
         'site_settings': site_settings,
         'team_members': team_members,
+        'site_visit_projects': Course.objects.filter(
+            is_active=True,
+        ).order_by('-created_at', '-pk')[:6],
     }
