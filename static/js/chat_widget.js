@@ -11,19 +11,28 @@ document.addEventListener('DOMContentLoaded', function(){
   function openWidget(){
     widget.classList.remove('ai-chat-closed');
     panel.setAttribute('aria-hidden','false');
+    toggle.setAttribute('aria-expanded','true');
     input.focus();
   }
   function closeWidget(){
     widget.classList.add('ai-chat-closed');
     panel.setAttribute('aria-hidden','true');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.focus();
   }
 
-  toggle.addEventListener('click', openWidget);
+  toggle.addEventListener('click', function(){
+    if(widget.classList.contains('ai-chat-closed')) openWidget(); else closeWidget();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !widget.classList.contains('ai-chat-closed')) closeWidget();
+  });
   closeBtn.addEventListener('click', closeWidget);
 
   suggestions.addEventListener('click', function(e){
-    if(e.target.tagName === 'BUTTON'){
-      const q = e.target.dataset.suggestion;
+    const btn = e.target.closest('button');
+    if(btn){
+      const q = btn.dataset.suggestion;
       input.value = q;
       sendMessage(q);
     }
@@ -94,75 +103,42 @@ document.addEventListener('DOMContentLoaded', function(){
         data.listings.forEach(function(item){
           const card = document.createElement('div');
           card.className = 'ai-listing-card';
-          card.style.display = 'flex';
-          card.style.gap = '8px';
-          card.style.alignItems = 'center';
-          card.style.padding = '8px';
-          card.style.borderRadius = '8px';
-          card.style.border = '1px solid #e6eef3';
-          card.style.marginTop = '8px';
-          card.style.textDecoration = 'none';
-          card.style.color = 'inherit';
 
           if(item.image){
             const img = document.createElement('img');
             img.src = item.image;
-            img.style.width = '72px';
-            img.style.height = '54px';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '6px';
+            img.alt = '';
+            img.loading = 'lazy';
             card.appendChild(img);
           }
 
           const meta = document.createElement('div');
-          meta.style.flex = '1';
-
-          const t = document.createElement('div');
+          meta.className = 'ai-listing-meta';
+          const t = document.createElement('strong');
           t.textContent = item.title;
-          t.style.fontWeight = '600';
           meta.appendChild(t);
-
-          const loc = document.createElement('div');
-          loc.textContent = item.location || '';
-          loc.style.fontSize = '13px';
-          loc.style.color = '#6b7280';
-          meta.appendChild(loc);
-
+          if(item.location){
+            const loc = document.createElement('span');
+            loc.textContent = item.location;
+            meta.appendChild(loc);
+          }
           if(item.fees){
-            const p = document.createElement('div');
-            p.textContent = 'KES ' + item.fees;
-            p.style.marginTop = '6px';
-            p.style.fontWeight = '700';
-            p.style.color = '#1f6f3a';
+            const p = document.createElement('span');
+            p.className = 'ai-listing-price';
+            p.textContent = 'KES ' + Number(item.fees).toLocaleString('en-KE');
             meta.appendChild(p);
           }
-
           card.appendChild(meta);
 
-          // actions
           const actions = document.createElement('div');
-          actions.style.display = 'flex';
-          actions.style.flexDirection = 'column';
-          actions.style.gap = '6px';
-
+          actions.className = 'actions';
           const viewBtn = document.createElement('a');
-          viewBtn.href = item.detail_url || ('/course/' + item.id + '/');
+          viewBtn.href = item.detail_url || ('/listings/' + item.id + '/');
           viewBtn.textContent = 'View';
-          viewBtn.style.background = '#eef6fb';
-          viewBtn.style.padding = '6px 8px';
-          viewBtn.style.borderRadius = '6px';
-          viewBtn.style.textDecoration = 'none';
-          viewBtn.style.color = '#0f4a85';
-
           const bookBtn = document.createElement('a');
           bookBtn.href = item.apply_url || ('/apply/?listing=' + item.id);
           bookBtn.textContent = 'Book';
-          bookBtn.style.background = '#2b7a3f';
-          bookBtn.style.color = '#fff';
-          bookBtn.style.padding = '6px 8px';
-          bookBtn.style.borderRadius = '6px';
-          bookBtn.style.textDecoration = 'none';
-
+          bookBtn.className = 'is-primary';
           actions.appendChild(viewBtn);
           actions.appendChild(bookBtn);
           card.appendChild(actions);

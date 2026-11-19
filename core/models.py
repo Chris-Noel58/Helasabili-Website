@@ -77,6 +77,10 @@ class Course(TimeStampedModel):
     plot_size = models.CharField(max_length=50, default='50 x 100')
     extra_details = models.TextField(blank=True, help_text='Additional listing details (e.g., landmarks, access roads)')
     is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(
+        default=False,
+        help_text='Show this listing in the featured slider at the top of the homepage.',
+    )
     order = models.PositiveIntegerField(default=0)
 
     class Meta:

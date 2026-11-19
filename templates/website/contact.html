@@ -1,72 +1,74 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load ui %}
 
-{% block title %}Contact Helasabili Mobile Capital Ltd{% endblock %}
+{% block title %}Contact Us - Helasabili Mobile Capital Ltd{% endblock %}
 {% block meta_description %}Contact Helasabili for information about verified land listings, pricing, site visits, bookings, and property investment in Kenya.{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="row">
-    <div class="col-md-6">
-      <h2 class="fw-bold">Contact Us</h2>
-      <p class="text-muted">Reach out for enquiries about land listings, bookings, payments, and site visits.</p>
+{% include 'partials/page_header.html' with title="Contact us" crumb="Contact" subtitle="Questions about a plot, pricing, payments or site visits? Our sales team will get back to you within 24 hours." %}
 
-      {% if listing %}
-      <div class="card mb-3">
-        {% if listing.featured_image %}
-        <img src="{{ listing.featured_image.url }}" class="card-img-top" alt="{{ listing.title }}" decoding="async">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ listing.title }}</h5>
-          <p class="card-text"><strong>Location:</strong> {{ listing.location }}</p>
-          <p class="card-text"><strong>Price:</strong> {% if listing.fees %}KES {{ listing.fees }}{% else %}Contact for price{% endif %}</p>
-          {% if listing.extra_details %}
-          <p class="card-text">{{ listing.extra_details|truncatechars:200 }}</p>
-          {% endif %}
-          <a href="/listings/{{ listing.pk }}/" class="btn btn-outline-primary btn-sm">View listing</a>
-          <a href="/apply/?listing={{ listing.pk }}" class="btn btn-success btn-sm ms-2">Book / Reserve</a>
+<section class="section section--tight">
+    <div class="container contact-layout">
+        <aside class="contact-panel">
+            {% if listing %}
+            <div class="listing-context">
+                {% if listing.featured_image %}<img src="{{ listing.featured_image|thumb:480 }}" alt="" decoding="async">{% endif %}
+                <div>
+                    <p class="eyebrow">Enquiring about</p>
+                    <h2>{{ listing.title }}</h2>
+                    <p>{% if listing.location %}{{ listing.location }} &middot; {% endif %}{% if listing.fees %}KES {{ listing.fees|floatformat:"0g" }}{% else %}Price on request{% endif %}</p>
+                    <div class="listing-context__links">
+                        <a href="{% url 'website:courses_detail' listing.pk %}">View listing</a>
+                        <a href="{% url 'website:apply' %}?listing={{ listing.pk }}">Book a visit</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <h2 class="contact-panel__title">Get in touch</h2>
+            {% if contact_info %}
+            <ul class="contact-list">
+                {% if contact_info.phone_primary %}
+                <li><span class="contact-list__icon">{% icon 'phone' %}</span><span><small>Call sales</small><a href="tel:{{ contact_info.phone_primary }}">{{ contact_info.phone_primary }}</a>{% if contact_info.phone_secondary %}<a href="tel:{{ contact_info.phone_secondary }}">{{ contact_info.phone_secondary }}</a>{% endif %}</span></li>
+                <li><span class="contact-list__icon">{% icon 'brand-whatsapp' %}</span><span><small>WhatsApp</small><a href="https://wa.me/{{ contact_info.phone_primary|whatsapp_number }}" target="_blank" rel="noopener">Chat with us</a></span></li>
+                {% endif %}
+                {% if contact_info.email %}
+                <li><span class="contact-list__icon">{% icon 'mail' %}</span><span><small>Email</small><a href="mailto:{{ contact_info.email }}">{{ contact_info.email }}</a></span></li>
+                {% endif %}
+                {% if contact_info.address %}
+                <li><span class="contact-list__icon">{% icon 'map-pin' %}</span><span><small>Office</small>{{ contact_info.address|linebreaksbr }}{% if contact_info.city %}<br>{{ contact_info.city }}, {{ contact_info.country }}{% endif %}</span></li>
+                {% endif %}
+                {% if contact_info.opening_hours %}
+                <li><span class="contact-list__icon">{% icon 'clock' %}</span><span><small>Office hours</small>{{ contact_info.opening_hours }}</span></li>
+                {% endif %}
+            </ul>
+            {% else %}
+            <p class="muted">Contact information is not available yet. Please use the form and we will get back to you.</p>
+            {% endif %}
+        </aside>
+
+        <div class="form-card">
+            <h2>Send us a message</h2>
+            <p class="muted">Fields marked * are required.</p>
+            <form class="form" method="post" action="{% url 'website:contact' %}" novalidate data-validate>
+                {% csrf_token %}
+                {% if listing %}<input type="hidden" name="listing" value="{{ listing.pk }}">{% endif %}
+                {% if form.non_field_errors %}<div class="form-alert">{{ form.non_field_errors }}</div>{% endif %}
+                <div class="form-row">
+                    {% include 'partials/form_field.html' with field=form.name label="Full name" %}
+                    {% include 'partials/form_field.html' with field=form.email label="Email address" %}
+                </div>
+                {% include 'partials/form_field.html' with field=form.subject %}
+                {% include 'partials/form_field.html' with field=form.message %}
+                <button type="submit" class="btn btn--primary btn--lg">{% icon 'send' %} Send message</button>
+            </form>
         </div>
-      </div>
-      {% endif %}
-
-      {% if contact_info %}
-      <ul class="list-unstyled">
-        {% if contact_info.phone_primary %}<li><strong>Phone:</strong> {{ contact_info.phone_primary }}</li>{% endif %}
-        {% if contact_info.email %}<li><strong>Email:</strong> <a href="mailto:{{ contact_info.email }}">{{ contact_info.email }}</a></li>{% endif %}
-        {% if contact_info.address %}<li><strong>Address:</strong> {{ contact_info.address }}</li>{% endif %}
-      </ul>
-      {% else %}
-      <p class="text-muted">Contact information is not available yet.</p>
-      {% endif %}
     </div>
+</section>
 
-    <div class="col-md-6">
-      <h3 class="fw-bold">Send a Message</h3>
-      <form method="post" action="{% url 'website:contact' %}">
-        {% csrf_token %}
-        {% if listing %}
-        <input type="hidden" name="listing" value="{{ listing.pk }}" />
-        {% endif %}
-        {{ form.non_field_errors }}
-        <div class="mb-3">
-          {{ form.name.label_tag }}
-          {{ form.name }}
-        </div>
-        <div class="mb-3">
-          {{ form.email.label_tag }}
-          {{ form.email }}
-        </div>
-        <div class="mb-3">
-          {{ form.subject.label_tag }}
-          {{ form.subject }}
-        </div>
-        <div class="mb-3">
-          {{ form.message.label_tag }}
-          {{ form.message }}
-        </div>
-        <button class="btn btn-primary">Send Message</button>
-      </form>
-    </div>
-  </div>
-</div>
+{% if contact_info and contact_info.latitude and contact_info.longitude %}
+<section class="map-embed" aria-label="Office location map">
+    <iframe title="Helasabili office location" src="https://maps.google.com/maps?q={{ contact_info.latitude }},{{ contact_info.longitude }}&amp;z=15&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</section>
+{% endif %}
 {% endblock %}

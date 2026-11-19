@@ -1,0 +1,24 @@
+{% load ui %}{# Expects: course; optional heading_level #}
+<article class="property-card">
+    <a class="property-card__media" href="{% url 'website:courses_detail' course.id %}" tabindex="-1" aria-hidden="true">
+        {% if course.featured_image %}
+        <img src="{{ course.featured_image.url }}" srcset="{{ course.featured_image|srcset:1200 }}" sizes="(min-width: 1100px) 360px, (min-width: 700px) 45vw, 92vw" alt="" loading="lazy" decoding="async">
+        {% else %}
+        <span class="media-placeholder">{% icon 'map' %}</span>
+        {% endif %}
+        {% if course.location %}<span class="chip chip--overlay">{% icon 'map-pin' %}{{ course.location|truncatechars:32 }}</span>{% endif %}
+    </a>
+    <div class="property-card__body">
+        <h3 class="property-card__title"><a href="{% url 'website:courses_detail' course.id %}">{{ course.title }}</a></h3>
+        <ul class="property-card__facts">
+            <li>{% icon 'ruler' %}{{ course.plot_size|default:'50 x 100' }}</li>
+            <li>{% icon 'shield-check' %}Title verified</li>
+        </ul>
+        <div class="property-card__footer">
+            <p class="price">
+                {% if course.fees %}<span class="price__label">Price</span> KES {{ course.fees|floatformat:"0g" }}{% else %}<span class="price__label">Price</span> On request{% endif %}
+            </p>
+            <a class="link-arrow" href="{% url 'website:courses_detail' course.id %}">View Project {% icon 'arrow-right' %}</a>
+        </div>
+    </div>
+</article>

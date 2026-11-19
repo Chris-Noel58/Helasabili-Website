@@ -1,23 +1,25 @@
-{% load static %}
-<div class="team-section py-5">
-  <div class="container">
-    <h2 class="text-center mb-5">Meet Our Team</h2>
-    <div class="row">
-      {% for member in team_members %}
-      <div class="col-md-3 mb-4">
-        <div class="card h-100 shadow-sm text-center p-3">
-          {% if member.photo %}
-          <img src="{{ member.photo.url }}" class="team-member-photo img-fluid mb-3 rounded" alt="{{ member.name }}" loading="lazy" decoding="async">
-          {% else %}
-          <div class="team-member-photo-placeholder mb-3 rounded" aria-hidden="true">
-            <i class="fas fa-user"></i>
-          </div>
-          {% endif %}
-          <h5 class="mb-1">{{ member.name }}</h5>
-          {% if member.title %}<p class="text-muted mb-0">{{ member.title }}</p>{% endif %}
+{% load ui %}{% if team_members %}
+<section class="section team-section" aria-labelledby="team-title">
+    <div class="container">
+        <div class="section-head section-head--center">
+            <div>
+                <p class="eyebrow">Our people</p>
+                <h2 id="team-title" class="section-title">Meet the team</h2>
+            </div>
         </div>
-      </div>
-      {% endfor %}
+        <div class="team-grid">
+            {% for member in team_members %}
+            <article class="team-card">
+                {% if member.photo %}
+                <img src="{{ member.photo.url }}" class="team-member-photo" alt="{{ member.name }}" loading="lazy" decoding="async">
+                {% else %}
+                <div class="team-member-photo-placeholder" aria-hidden="true">{% icon 'user' %}</div>
+                {% endif %}
+                <h3>{{ member.name }}</h3>
+                {% if member.title %}<p>{{ member.title }}</p>{% endif %}
+            </article>
+            {% endfor %}
+        </div>
     </div>
-  </div>
-</div>
+</section>
+{% endif %}

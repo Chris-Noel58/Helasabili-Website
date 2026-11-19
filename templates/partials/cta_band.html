@@ -1,0 +1,17 @@
+{% load ui %}{# Optional: cta_title, cta_text, cta_listing (Course), cta_class #}
+<section class="cta-band {{ cta_class }}">
+    <div class="container cta-band__inner">
+        <div>
+            <h2>{{ cta_title|default:"Ready to own your plot?" }}</h2>
+            <p>{{ cta_text|default:"Talk to our sales team for verified options, a site visit and a fast title transfer." }}</p>
+        </div>
+        <div class="cta-band__actions">
+            <a class="btn btn--accent btn--lg" href="{% url 'website:apply' %}{% if cta_listing %}?listing={{ cta_listing.id }}{% endif %}">{% icon 'calendar-check' %} Book a site visit</a>
+            {% if contact_info and contact_info.phone_primary %}
+            <a class="btn btn--ghost-light btn--lg" href="tel:{{ contact_info.phone_primary }}">{% icon 'phone' %} {{ contact_info.phone_primary }}</a>
+            {% else %}
+            <a class="btn btn--ghost-light btn--lg" href="{% url 'website:contact' %}">{% icon 'mail' %} Contact sales</a>
+            {% endif %}
+        </div>
+    </div>
+</section>

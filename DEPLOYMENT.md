@@ -82,6 +82,10 @@ python manage.py createsuperuser --settings=nchskikuyu.settings
 ### 4. Collect Static Files
 ```bash
 python manage.py collectstatic --noinput --settings=nchskikuyu.settings
+
+# Optional but recommended: pre-build the resized WebP images the public site serves
+# (otherwise each one is generated on its first page view and cached in media/thumbs/)
+python manage.py generate_thumbnails --settings=nchskikuyu.settings
 ```
 
 ### 5. Set Permissions

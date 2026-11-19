@@ -1,495 +1,310 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static ui %}
 
-{% block title %}Home - Helasabili Mobile Capital Ltd{% endblock %}
+{% block title %}Helasabili Mobile Capital Ltd | Verified Land for Sale in Nakuru &amp; Nanyuki{% endblock %}
 {% block meta_description %}Find verified 50x100 land plots in Nakuru and Nanyuki with transparent pricing, secure transactions, and fast title delivery from Helasabili Mobile Capital Ltd.{% endblock %}
+{% block body_class %}page-home{% endblock %}
+
+{% block preload %}
+{% if hero_listings %}{% with first=hero_listings.0 %}
+<link rel="preload" as="image" href="{{ first.featured_image|thumb:1200 }}" imagesrcset="{{ first.featured_image|srcset:1600 }}" imagesizes="(min-width: 992px) 560px, 92vw" fetchpriority="high">
+{% endwith %}{% endif %}
+{% endblock %}
+
+{% block og_image %}{% if hero_listings %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ hero_listings.0.featured_image|thumb:1200 }}">{% endif %}{% endblock %}
 
 {% block content %}
 
-<!-- Hero Section -->
-<section class="home-hero-section" aria-labelledby="home-hero-title">
-    <div class="home-hero">
-        <div class="home-hero-photo" data-bg-interval="3500" data-bg-images='[{% for img in hero_gallery_images %}{% if not forloop.first %},{% endif %}"{{ img.image.url }}"{% endfor %}]'>
-            <div class="home-hero-photo-layer visible">
-                <img src="{% if hero_gallery_images %}{{ hero_gallery_images.0.image.url }}{% else %}{% get_media_prefix %}gallery/_R6A0311.jpg.jpeg{% endif %}"
-                     alt=""
-                     aria-hidden="true"
-                     fetchpriority="high">
-            </div>
-            <div class="home-hero-photo-layer" aria-hidden="true">
-                <img alt="" aria-hidden="true">
-            </div>
-        </div>
-
-        <div class="home-hero-panel">
-            <div class="home-hero-copy">
-                <h1 id="home-hero-title">Find Your Place.<br>Build Your <span>Future.</span></h1>
-                <div class="typed-container home-hero-typed">
-                    <span class="typed-text" aria-hidden="true"></span>
-                </div>
-                <p class="home-hero-description">
-                    Verified plots and affordable housing solutions in Nakuru and Nanyuki, with secure transactions and reliable title delivery.
-                </p>
-                <div class="home-hero-actions">
-                    <a href="{% url 'website:courses_list' %}" class="home-hero-button home-hero-button-primary">
-                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                        View Available Lands
-                    </a>
-                    <a href="{% url 'website:contact' %}" class="home-hero-button home-hero-button-secondary">
-                        <i class="fas fa-phone" aria-hidden="true"></i>
-                        Contact Sales
-                    </a>
-                </div>
-            </div>
-
-        </div>
+<!-- Hero: headline + search, with a slider of featured listings (each links to its detail page) -->
+<section class="hero{% if hero_listings %} hero--showcase{% endif %}" aria-labelledby="hero-title">
+    {% if hero_listings %}
+    <div class="hero__ambient" aria-hidden="true">
+        <img src="{{ hero_listings.0.featured_image|thumb:480 }}" alt="" data-ambient decoding="async">
     </div>
-</section>
-
-<script>
-(function () {
-    const photo = document.querySelector('.home-hero-photo');
-    if (!photo) return;
-
-    const layers = Array.from(photo.querySelectorAll('.home-hero-photo-layer'));
-    const interval = Number.parseInt(photo.dataset.bgInterval, 10) || 3500;
-    let images;
-
-    try {
-        images = JSON.parse(photo.dataset.bgImages || '[]');
-    } catch (error) {
-        console.error('Hero slideshow image list could not be parsed.', error);
-        return;
-    }
-
-    if (!Array.isArray(images) || layers.length < 2) return;
-    images = [...new Set(images.filter((src) => typeof src === 'string' && src))];
-    if (images.length < 2) return;
-
-    let currentLayer = 0;
-    let imageIndex = 1;
-    let timer;
-
-    function showNextImage() {
-        if (document.hidden) return;
-
-        const nextLayer = (currentLayer + 1) % layers.length;
-        const nextImage = layers[nextLayer].querySelector('img');
-        const nextSrc = images[imageIndex];
-        const preload = new Image();
-        preload.onload = function () {
-            if (document.hidden) return;
-            nextImage.src = nextSrc;
-            layers[nextLayer].setAttribute('aria-hidden', 'false');
-            layers[nextLayer].classList.add('visible');
-            layers[currentLayer].setAttribute('aria-hidden', 'true');
-            layers[currentLayer].classList.remove('visible');
-            currentLayer = nextLayer;
-            imageIndex = (imageIndex + 1) % images.length;
-        };
-        preload.onerror = function () {
-            console.error('Hero slideshow image failed to load:', nextSrc);
-            imageIndex = (imageIndex + 1) % images.length;
-        };
-        preload.src = nextSrc;
-    }
-
-    function startSlideshow() {
-        window.clearInterval(timer);
-        if (!document.hidden) timer = window.setInterval(showNextImage, interval);
-    }
-
-    document.addEventListener('visibilitychange', startSlideshow);
-    startSlideshow();
-}());
-</script>
-
-<!-- Why Choose Us Section -->
-<section class="why-choose-section{% if why_choose_background %} has-background{% endif %}">
-    {% if why_choose_background %}
-    <div class="why-choose-background" style="background-image: url('{{ why_choose_background.image.url }}');" aria-hidden="true"></div>
     {% endif %}
-    <div class="container why-choose-content">
-        <div class="text-center mb-5 why-choose-heading">
-            <h2 class="fw-bold mb-2">Why Choose Helasabili?</h2>
-            <p>Verified plots, transparent transactions, and fast title delivery for confident land investment.</p>
+    <div class="container hero__inner">
+        <div class="hero__content">
+            <p class="eyebrow eyebrow--light">{% icon 'shield-check' %} Verified land in Nakuru &amp; Nanyuki</p>
+            <h1 id="hero-title">Find your place.<br>Build your <span class="text-accent">future.</span></h1>
+            <p class="hero__lead">Title-verified plots and affordable housing solutions, with transparent pricing, secure transactions and reliable title delivery.</p>
+
+            <form class="hero-search" action="{% url 'website:courses_list' %}" method="get" role="search">
+                <label class="visually-hidden" for="heroSearch">Search properties</label>
+                <span class="hero-search__field">
+                    {% icon 'search' 'hero-search__icon' %}
+                    <input id="heroSearch" type="search" name="search" placeholder="Location or project name" enterkeyhint="search">
+                </span>
+                <button type="submit" class="btn btn--accent">Search plots</button>
+            </form>
+
+            <ul class="hero__trust">
+                <li>{% icon 'check' %} Surveyed &amp; title-verified</li>
+                <li>{% icon 'check' %} Clear, documented pricing</li>
+                <li>{% icon 'check' %} Fast title processing</li>
+            </ul>
         </div>
-        
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-map-marker-alt fa-3x mb-3" style="color:var(--brand-green)"></i>
-                    <h5 class="fw-bold">Verified 50x100 Plots</h5>
-                    <p class="text-muted">Each plot is surveyed and title-verified before listing.</p>
-                </div>
+
+        {% if hero_listings %}
+        <div class="showcase" data-showcase data-interval="6000" role="region" aria-roledescription="carousel" aria-label="Featured listings">
+            <div class="showcase__head">
+                <span class="showcase__badge">{% icon 'sparkles' %} Featured listings</span>
+                {% if hero_listings|length > 1 %}<span class="showcase__count"><span data-showcase-current>1</span> / {{ hero_listings|length }}</span>{% endif %}
             </div>
-            <div class="col-md-3">
-                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-handshake fa-3x mb-3" style="color:var(--brand-green)"></i>
-                    <h5 class="fw-bold">Transparent Transactions</h5>
-                    <p class="text-muted">Clear pricing, documented processes, and dedicated sales support.</p>
+            <div class="showcase__frame">
+                <div class="showcase__track" tabindex="0">
+                    {% for listing in hero_listings %}
+                    <a class="showcase__slide" href="{% url 'website:courses_detail' listing.id %}"
+                       data-ambient-src="{{ listing.featured_image|thumb:480 }}" aria-roledescription="slide"
+                       aria-label="{{ forloop.counter }} of {{ hero_listings|length }}: {{ listing.title }}{% if listing.location %}, {{ listing.location }}{% endif %}">
+                        <span class="showcase__media">
+                            <img class="showcase__fill" src="{{ listing.featured_image|thumb:480 }}" alt="" aria-hidden="true" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" decoding="async"
+                                 onerror="this.onerror=null;this.src='{{ listing.featured_image.url|escapejs }}'">
+                            <img class="showcase__img" src="{{ listing.featured_image|thumb:1200 }}" srcset="{{ listing.featured_image|srcset:1600 }}"
+                                 sizes="(min-width: 992px) 560px, 92vw" alt="{{ listing.title }}"
+                                 {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async"
+                                 onerror="this.onerror=null;this.removeAttribute('srcset');this.src='{{ listing.featured_image.url|escapejs }}'">
+                        </span>
+                        <span class="showcase__info">
+                            <span class="showcase__meta">
+                                <strong>{{ listing.title }}</strong>
+                                <small>{% icon 'map-pin' %}{{ listing.location|default:'Location on request' }} &middot; {{ listing.plot_size|default:'50 x 100' }}</small>
+                            </span>
+                            <span class="showcase__price">
+                                <small>Price</small>
+                                {% if listing.fees %}KES {{ listing.fees|floatformat:"0g" }}{% else %}On request{% endif %}
+                            </span>
+                            <span class="showcase__cta">View listing {% icon 'arrow-right' %}</span>
+                        </span>
+                    </a>
+                    {% endfor %}
                 </div>
+                {% if hero_listings|length > 1 %}
+                <button type="button" class="showcase__nav showcase__nav--prev" data-showcase-prev aria-label="Previous listing">{% icon 'chevron-left' %}</button>
+                <button type="button" class="showcase__nav showcase__nav--next" data-showcase-next aria-label="Next listing">{% icon 'chevron-right' %}</button>
+                {% endif %}
             </div>
-            <div class="col-md-3">
-                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-file-contract fa-3x mb-3" style="color:var(--brand-green)"></i>
-                    <h5 class="fw-bold">Fast Title Delivery</h5>
-                    <p class="text-muted">We prioritise rapid title processing and secure handover to buyers.</p>
+            <div class="showcase__footer">
+                <a class="link-arrow link-arrow--light" href="{% url 'website:courses_list' %}">All listings {% icon 'arrow-right' %}</a>
+                {% if hero_listings|length > 1 %}
+                <div class="showcase__dots" role="tablist" aria-label="Choose listing">
+                    {% for listing in hero_listings %}
+                    <button type="button" class="showcase__dot{% if forloop.first %} is-active{% endif %}" role="tab" aria-label="Show {{ listing.title }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-showcase-dot="{{ forloop.counter0 }}"><span></span></button>
+                    {% endfor %}
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card why-choose-card border-0 h-100 text-center p-4 hover-lift">
-                    <i class="fas fa-city fa-3x mb-3" style="color:var(--brand-green)"></i>
-                    <h5 class="fw-bold">Prime Locations</h5>
-                    <p class="text-muted">Plots in Nakuru, Nanyuki, and other high-growth areas.</p>
-                </div>
+                {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
 </section>
 
-<!-- Featured Projects Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Featured Projects</h2>
-            <p class="text-muted">Explore our latest property developments</p>
-        </div>
-        
-        <div class="row g-4">
-            {% for course in courses %}
-            <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow-sm h-100 hover-lift">
-                        {% if course.featured_image %}
-                        <img src="{{ course.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ course.title }}" loading="lazy" decoding="async">
-                        {% else %}
-                        <div class="d-flex align-items-center justify-content-center img-fixed-height" style="background: linear-gradient(135deg, var(--primary-blue), var(--brand-green)); color: #fff;">
-                            <i class="fas fa-map-marker-alt fa-3x"></i>
-                        </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ course.title }}</h5>
-                        <p class="card-text text-muted">{{ course.description|truncatewords:20 }}</p>
-                        <div class="small text-muted mb-3">
-                            <i class="fas fa-map-marker-alt"></i> {{ course.location|default:'-' }} | 
-                            <span class="fw-bold" style="color:var(--brand-green)">{% if course.fees %}KSH. {{ course.fees|floatformat:0 }}{% else %}Contact for price{% endif %}</span>
-                        </div>
-                        <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-primary w-100">
-                            View Project
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center text-muted">No projects available at the moment.</p>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <div class="text-center mt-4">
-            <a href="{% url 'website:courses_list' %}" class="btn btn-outline-primary">View All Listings</a>
-        </div>
-    </div>
-</section>
-
-<!-- Latest News Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Latest News & Updates</h2>
-            <p class="text-muted">Market updates, land release announcements and company news</p>
-        </div>
-        
-        <div class="row g-4">
-            {% for post in blog_posts %}
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 hover-lift">
-                    {% if post.featured_image %}
-                    <img src="{{ post.featured_image.url }}" class="card-img-top img-fixed-height" alt="{{ post.title }}" loading="lazy" decoding="async">
-                    {% else %}
-                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center img-fixed-height">
-                        <i class="fas fa-newspaper fa-3x"></i>
-                    </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar"></i> {{ post.published_date|date:"M d, Y" }}
-                        </small>
-                        <h5 class="card-title fw-bold mt-2">{{ post.title }}</h5>
-                        <p class="card-text text-muted">{{ post.excerpt|safe|linebreaksbr }}</p>
-                        <a href="{% url 'website:blog_detail' post.slug %}" class="btn btn-sm btn-outline-primary">
-                            Read More
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <div class="text-center mt-4">
-            <a href="{% url 'website:blog_list' %}" class="btn btn-outline-primary">View All News</a>
-        </div>
-    </div>
-</section>
-
-<!-- Gallery Preview Section -->
-<style>
-/* Ensure gallery overlay titles are visible over images */
-.gallery-item .gallery-overlay {
-  background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.25));
-}
-.gallery-item .gallery-overlay h6 {
-  color: #fff !important;
-  font-weight: 600;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-  margin: 0;
-}
-.gallery-item .gallery-overlay .p-3 { padding: 0.8rem; }
-.gallery-item img { display: block; }
-</style>
-
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Property Gallery</h2>
-            <p class="text-muted">Photos and maps of our latest land listings</p>
-        </div>
-        
-        <div class="row g-3">
-            {% for image in featured_gallery_images|slice:":9" %}
-            <div class="col-md-4 col-sm-6">
-                <div class="gallery-item position-relative overflow-hidden rounded gallery-item-height">
-                    <img src="{{ image.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ image.title }}" loading="lazy" decoding="async"
-                         data-bs-toggle="modal" data-bs-target="#galleryModal" onclick="showGalleryImage('{{ image.image.url }}', '{{ image.title }}')">
-                    <div class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-25 d-flex align-items-end">
-                        <div class="p-3 text-white">
-                            <h6 class="mb-0">{{ image.title }}</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center text-muted">No gallery images available yet.</p>
-            </div>
-            {% endfor %}
-        </div>
-        
-        <div class="text-center mt-4">
-            <a href="{% url 'website:gallery' %}" class="btn btn-outline-primary">View Full Gallery</a>
-        </div>
-    </div>
-</section>
-
-<!-- Videos Preview Section -->
-<section class="py-5 bg-white">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Latest Videos</h2>
-            <p class="text-muted">Quick video walkthroughs and property highlights</p>
-        </div>
-
-        <div class="row g-4">
-            {% for video in videos %}
-            <div class="col-md-4 col-sm-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="video-thumb" data-video-id="{{ video.youtube_id }}" data-embed-url="{{ video.embed_url }}" data-origin="{{ request.scheme }}://{{ request.get_host }}" style="position:relative; padding-top:56.25%; background-color:#000;">
-                        <img src="{{ video.thumbnail }}" alt="{{ video.title }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">
-                        <button class="play-btn" aria-label="Play {{ video.title }}" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); background:transparent; border:0; cursor:pointer;">
-                            <svg width="72" height="72" viewBox="0 0 68 48" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M.66 0C.3 0 0 .27 0 .6v46.8c0 .33.3.6.66.6h66.68c.36 0 .66-.27.66-.6V.6c0-.33-.3-.6-.66-.6H.66z" fill="#f00"></path>
-                                <path d="M45 24L27 35V13z" fill="#fff"></path>
-                            </svg>
-                        </button>
-                        <a href="{% url 'website:videos' %}" class="watch-link" style="position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,0.6); color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none; font-size:14px;">View More</a>
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-title mb-1">{{ video.title }}</h6>
-                        <p class="text-muted small">{{ video.description|truncatechars:80 }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="text-center mt-4">
-            <a href="{% url 'website:videos' %}" class="btn btn-outline-primary">View All Videos</a>
-        </div>
-    </div>
-</section>
-
-<!-- Call to Action Section -->
-<section class="py-5" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--brand-green) 100%); color: white;">
-    <div class="container text-center">
-        <h2 class="fw-bold mb-3 text-white">Ready to Invest?</h2>
-        <p class="lead mb-4 text-white">Secure your plot today — contact our sales team for verified options and fast title transfer.</p>
-        <a href="{% url 'website:contact' %}" class="btn btn-light btn-lg">
-            <i class="fas fa-phone"></i> Contact Sales
+{% if hero_gallery_images %}
+<!-- Photo strip: gallery photos selected "Show in hero" in the dashboard, sliding continuously -->
+<section class="photo-strip" aria-label="Photos from our sites" data-marquee>
+    <div class="photo-strip__track" data-lightbox-group>
+        {% for img in hero_gallery_images %}
+        <a class="photo-strip__item" href="{{ img.image|thumb:1600 }}" data-lightbox data-caption="{{ img.title }}">
+            <img src="{{ img.image|thumb:800 }}" alt="{{ img.title }}" loading="lazy" decoding="async"
+                 onerror="this.onerror=null;this.src='{{ img.image.url|escapejs }}'">
+            {% if img.title %}<span class="photo-strip__caption">{{ img.title }}</span>{% endif %}
         </a>
+        {% endfor %}
     </div>
 </section>
+{% endif %}
 
-<!-- Testimonials Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Client Testimonials</h2>
-            <p class="text-muted">Hear from our satisfied buyers</p>
+<!-- Why Helasabili -->
+<section class="section why-choose-section" aria-labelledby="why-title">
+    <div class="container why-grid{% if not why_choose_background %} why-grid--solo{% endif %}">
+        {% if why_choose_background %}
+        <div class="why-media">
+            <img class="why-choose-background" src="{{ why_choose_background.image|thumb:1200 }}" srcset="{{ why_choose_background.image|srcset:1200 }}" sizes="(min-width: 992px) 45vw, 92vw" alt="{{ why_choose_background.title }}" loading="lazy" decoding="async">
+            <div class="why-media__badge">
+                <span class="why-media__badge-icon">{% icon 'file-check' %}</span>
+                <span><strong>Title-verified</strong> before every listing</span>
+            </div>
         </div>
-
-        <div class="row g-4">
-            {% for testimonial in testimonials %}
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            {% for i in "12345" %}
-                                {% if i|add:0 <= testimonial.rating %}
-                                <i class="fas fa-star text-warning"></i>
-                                {% else %}
-                                <i class="far fa-star text-warning"></i>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <p class="card-text">{{ testimonial.message }}</p>
-                        <div class="d-flex align-items-center mt-3">
-                            {% if testimonial.photo_url %}
-                            <img src="{{ testimonial.photo_url }}" class="rounded-circle me-3" width="50" height="50" alt="{{ testimonial.name }}" style="object-fit: cover;" loading="lazy" decoding="async">
-                            {% else %}
-                            <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" width="50" height="50" style="width: 50px; height: 50px; background:var(--primary-blue); color:#fff;">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            {% endif %}
-                            <div>
-                                <h6 class="mb-0 fw-bold">{{ testimonial.name }}</h6>
-                                {% if testimonial.author_url %}
-                                <small><a class="text-muted" href="{{ testimonial.author_url }}" target="_blank" rel="noopener noreferrer">Google reviewer</a></small>
-                                {% else %}
-                                <small class="text-muted">{{ testimonial.source }}</small>
-                                {% endif %}
-                                {% if testimonial.relative_date %}<small class="text-muted d-block">{{ testimonial.relative_date }}</small>{% endif %}
-                            </div>
-                        </div>
-                    </div>
+        {% endif %}
+        <div class="why-content">
+            <p class="eyebrow">Why Helasabili</p>
+            <h2 id="why-title" class="section-title">Land investment you can trust, from first visit to title deed.</h2>
+            <p class="section-lead">We do the groundwork, from surveying and verifying the title to handling the paperwork, so you can buy with confidence.</p>
+            <div class="feature-grid">
+                <div class="feature">
+                    <span class="feature__icon">{% icon 'map-pin' %}</span>
+                    <h3>Verified 50x100 plots</h3>
+                    <p>Each plot is surveyed and title-verified before it is listed.</p>
+                </div>
+                <div class="feature">
+                    <span class="feature__icon">{% icon 'handshake' %}</span>
+                    <h3>Transparent transactions</h3>
+                    <p>Clear pricing, documented processes and dedicated sales support.</p>
+                </div>
+                <div class="feature">
+                    <span class="feature__icon">{% icon 'file-check' %}</span>
+                    <h3>Fast title delivery</h3>
+                    <p>We prioritise rapid title processing and a secure handover.</p>
+                </div>
+                <div class="feature">
+                    <span class="feature__icon">{% icon 'trending-up' %}</span>
+                    <h3>Prime locations</h3>
+                    <p>Plots in Nakuru, Nanyuki and other high-growth areas.</p>
                 </div>
             </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center text-muted">No testimonials available yet.</p>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="text-center mt-4">
-            <a href="{% url 'website:testimonials' %}" class="btn btn-outline-primary">View All Testimonials</a>
-            <a href="{% url 'website:testimonials' %}#review-form-title" class="btn btn-primary ms-2">Submit a Review</a>
-            {% if google_reviews_url %}
-            <a href="{{ google_reviews_url }}" class="btn btn-outline-primary ms-2" target="_blank" rel="noopener noreferrer">Review us on Google</a>
-            {% endif %}
         </div>
     </div>
 </section>
 
-{% endblock %}
+<!-- Featured projects -->
+<section class="section section--tint" aria-labelledby="projects-title">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Featured projects</p>
+                <h2 id="projects-title" class="section-title">Available plots</h2>
+            </div>
+            <a class="btn btn--outline" href="{% url 'website:courses_list' %}">View all listings {% icon 'arrow-right' %}</a>
+        </div>
+        {% if courses %}
+        <div class="card-grid card-grid--scroll">
+            {% for course in courses %}
+                {% include 'partials/property_card.html' %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">{% icon 'map' %}<p>New projects are coming soon. <a href="{% url 'website:contact' %}">Contact our sales team</a> for upcoming releases.</p></div>
+        {% endif %}
+    </div>
+</section>
 
-{% block extra_js %}
-<script>
-(function () {
-    const heroActions = document.querySelector('.home-hero-actions');
-    if (!heroActions || !('IntersectionObserver' in window)) return;
+<!-- How it works -->
+<section class="section" aria-labelledby="steps-title">
+    <div class="container">
+        <div class="section-head section-head--center">
+            <div>
+                <p class="eyebrow">How it works</p>
+                <h2 id="steps-title" class="section-title">Owning land in four simple steps</h2>
+            </div>
+        </div>
+        <ol class="steps">
+            <li class="step">
+                <span class="step__num">01</span>
+                <h3>Choose a plot</h3>
+                <p>Browse verified listings and shortlist the plots that fit your budget and plans.</p>
+            </li>
+            <li class="step">
+                <span class="step__num">02</span>
+                <h3>Visit the site</h3>
+                <p>Book a site visit and see the land, access roads and surroundings for yourself.</p>
+            </li>
+            <li class="step">
+                <span class="step__num">03</span>
+                <h3>Secure your plot</h3>
+                <p>Make your payment and sign a documented sale agreement with our team.</p>
+            </li>
+            <li class="step">
+                <span class="step__num">04</span>
+                <h3>Receive your title</h3>
+                <p>We process the transfer and hand over your title deed securely.</p>
+            </li>
+        </ol>
+        <div class="center-actions hide-phone">
+            <a class="btn btn--primary" href="{% url 'website:apply' %}">{% icon 'calendar-check' %} Book a site visit</a>
+        </div>
+    </div>
+</section>
 
-    const mobileQuery = window.matchMedia('(max-width: 767.98px)');
-    let actionsVisible = false;
+<!-- Testimonials -->
+<section class="section section--navy" aria-labelledby="reviews-title">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow eyebrow--light">Client reviews</p>
+                <h2 id="reviews-title" class="section-title">What our buyers say</h2>
+            </div>
+            <div class="section-head__actions">
+                <a class="btn btn--light" href="{% url 'website:testimonials' %}#review-form-title">Write a review</a>
+                {% if google_reviews_url %}<a class="btn btn--ghost-light" href="{{ google_reviews_url }}" target="_blank" rel="noopener noreferrer">Review us on Google</a>{% endif %}
+            </div>
+        </div>
+        {% if testimonials %}
+        <div class="card-grid card-grid--scroll">
+            {% for review in testimonials %}
+                {% include 'partials/review_card.html' %}
+            {% endfor %}
+        </div>
+        <div class="center-actions"><a class="link-arrow link-arrow--light" href="{% url 'website:testimonials' %}">Read all reviews {% icon 'arrow-right' %}</a></div>
+        {% else %}
+        <div class="empty-state empty-state--dark">{% icon 'quote' %}<p>No reviews yet. <a href="{% url 'website:testimonials' %}#review-form-title">Be the first to share your experience.</a></p></div>
+        {% endif %}
+    </div>
+</section>
 
-    function updateFloatingControls() {
-        const actionsRect = heroActions.getBoundingClientRect();
-        actionsVisible = actionsRect.bottom > 0 && actionsRect.top < window.innerHeight;
-        document.body.classList.toggle(
-            'home-hero-actions-visible',
-            mobileQuery.matches && actionsVisible
-        );
-    }
+<!-- Gallery preview -->
+{% if featured_gallery_images %}
+<section class="section" aria-labelledby="gallery-title">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Gallery</p>
+                <h2 id="gallery-title" class="section-title">See the land for yourself</h2>
+            </div>
+            <a class="btn btn--outline" href="{% url 'website:gallery' %}">View full gallery {% icon 'arrow-right' %}</a>
+        </div>
+        {% with tiles=featured_gallery_images|slice:":6" %}
+        <div class="bento bento--{{ tiles|length }}" data-lightbox-group>
+            {% for image in tiles %}
+            <a class="bento__item" href="{{ image.image|thumb:1600 }}" data-lightbox data-caption="{{ image.title }}">
+                <img src="{{ image.image.url }}" srcset="{{ image.image|srcset:1200 }}" sizes="{% if forloop.first %}(min-width: 900px) 50vw, 92vw{% else %}(min-width: 900px) 25vw, 46vw{% endif %}" alt="{{ image.title }}" loading="lazy" decoding="async">
+                <span class="bento__caption">{{ image.title }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% endwith %}
+    </div>
+</section>
+{% endif %}
 
-    const observer = new IntersectionObserver(function (entries) {
-        actionsVisible = entries[0].isIntersecting;
-        updateFloatingControls();
-    });
-    observer.observe(heroActions);
-    updateFloatingControls();
-    window.addEventListener('scroll', updateFloatingControls, { passive: true });
-    window.addEventListener('resize', updateFloatingControls);
+<!-- Videos -->
+{% if videos %}
+<section class="section section--tint" aria-labelledby="videos-title">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Video tours</p>
+                <h2 id="videos-title" class="section-title">Walk the plots from anywhere</h2>
+            </div>
+            <a class="btn btn--outline" href="{% url 'website:videos' %}">All videos {% icon 'arrow-right' %}</a>
+        </div>
+        <div class="card-grid card-grid--scroll">
+            {% for video in videos|slice:":3" %}
+                {% include 'partials/video_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 
-    if (mobileQuery.addEventListener) {
-        mobileQuery.addEventListener('change', updateFloatingControls);
-    } else if (mobileQuery.addListener) {
-        mobileQuery.addListener(updateFloatingControls);
-    }
-}());
+<!-- News -->
+{% if blog_posts %}
+<section class="section" aria-labelledby="news-title">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">News &amp; updates</p>
+                <h2 id="news-title" class="section-title">Latest from Helasabili</h2>
+            </div>
+            <a class="btn btn--outline" href="{% url 'website:blog_list' %}">All articles {% icon 'arrow-right' %}</a>
+        </div>
+        <div class="card-grid card-grid--scroll">
+            {% for post in blog_posts %}
+                {% include 'partials/post_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 
-function showGalleryImage(url, title) {
-    document.getElementById('galleryImage').src = url;
-    document.getElementById('galleryTitle').textContent = title;
-}
+{% include 'partials/cta_band.html' %}
 
-</script>
-<script>
-// Click-to-load YouTube players for homepage video thumbnails
-(function(){
-    function loadYouTubeAPI(callback) {
-        if (window.YT && window.YT.Player) { callback(); return; }
-        var tag = document.createElement('script'); tag.src = 'https://www.youtube.com/iframe_api';
-        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        var interval = setInterval(function(){ if (window.YT && window.YT.Player) { clearInterval(interval); callback(); } }, 100);
-        setTimeout(function(){ clearInterval(interval); callback(); }, 5000);
-    }
-
-    function createPlayer(elementId, videoId, origin) {
-        try {
-            return new YT.Player(elementId, {
-                videoId: videoId,
-                playerVars: {autoplay:1, rel:0, origin: origin},
-                events: {
-                    onReady: function(e){ e.target.playVideo(); },
-                    onError: function(e){
-                        var el = document.getElementById(elementId);
-                        if (el) {
-                            el.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;padding:10px;text-align:center;"><div><p style="margin:0 0 8px 0;">This video cannot be played here.</p><a href="https://www.youtube.com/watch?v='+videoId+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 12px;background:#ff0000;color:#fff;border-radius:4px;text-decoration:none;">Watch on YouTube</a></div></div>';
-                        }
-                    }
-                }
-            });
-        } catch (err) { return null; }
-    }
-
-    document.addEventListener('DOMContentLoaded', function(){
-        document.querySelectorAll('.video-thumb').forEach(function(thumb){
-            var btn = thumb.querySelector('.play-btn');
-            if (!btn) return;
-            btn.addEventListener('click', function(e){
-                e.preventDefault();
-                var videoId = thumb.getAttribute('data-video-id');
-                var embedUrl = thumb.getAttribute('data-embed-url');
-                var origin = thumb.getAttribute('data-origin') || window.location.origin;
-                thumb.innerHTML = '';
-                var playerDiv = document.createElement('div');
-                var elemId = 'home-yt-' + videoId + '-' + Math.random().toString(36).substr(2,6);
-                playerDiv.id = elemId;
-                playerDiv.style.position='absolute'; playerDiv.style.top='0'; playerDiv.style.left='0'; playerDiv.style.width='100%'; playerDiv.style.height='100%';
-                thumb.appendChild(playerDiv);
-                loadYouTubeAPI(function(){
-                    if (window.YT && window.YT.Player) createPlayer(elemId, videoId, origin);
-                    else {
-                        var iframe = document.createElement('iframe');
-                        iframe.src = embedUrl + '?rel=0&enablejsapi=1&origin=' + encodeURIComponent(origin) + '&autoplay=1';
-                        iframe.frameBorder = 0; iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; iframe.allowFullscreen = true;
-                        iframe.style.position='absolute'; iframe.style.top='0'; iframe.style.left='0'; iframe.style.width='100%'; iframe.style.height='100%';
-                        playerDiv.appendChild(iframe);
-                    }
-                });
-            });
-        });
-    });
-})();
-</script>
 {% endblock %}

@@ -96,3 +96,6 @@ celerybeat-schedule
 !media/**
 
 
+
+# Generated WebP thumbnails (rebuilt automatically / by manage.py generate_thumbnails)
+media/thumbs/

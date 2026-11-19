@@ -1,0 +1,14 @@
+{% load ui %}{# Expects: page_obj; optional extra_query (e.g. "&category=x") #}
+<nav class="pager" aria-label="Pagination">
+    {% if page_obj.has_previous %}
+    <a class="pager__btn" href="?page={{ page_obj.previous_page_number }}{{ extra_query }}" rel="prev">{% icon 'chevron-left' %} Previous</a>
+    {% else %}
+    <span class="pager__btn is-disabled">{% icon 'chevron-left' %} Previous</span>
+    {% endif %}
+    <span class="pager__status">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a class="pager__btn" href="?page={{ page_obj.next_page_number }}{{ extra_query }}" rel="next">Next {% icon 'chevron-right' %}</a>
+    {% else %}
+    <span class="pager__btn is-disabled">Next {% icon 'chevron-right' %}</span>
+    {% endif %}
+</nav>

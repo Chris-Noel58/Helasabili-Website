@@ -182,6 +182,42 @@ class FeaturedProjectTests(TestCase):
         self.assertNotContains(response, 'page-link')
 
 
+class HeroFeaturedListingsTests(TestCase):
+    """The homepage hero slider shows listings and links each one to its detail page."""
+
+    def make_listing(self, title, featured=False, image='courses/plot.jpg'):
+        listing = Course.objects.create(title=title, description='A plot.', is_active=True)
+        # update() avoids save(), which would try to optimise a non-existent image file
+        Course.objects.filter(pk=listing.pk).update(featured_image=image, is_featured=featured)
+        return listing
+
+    def hero_links(self, response):
+        html = response.content.decode()
+        start = html.index('data-showcase')
+        end = html.index('<!-- Why Helasabili -->')
+        return html[start:end]
+
+    def test_featured_listings_appear_in_hero_with_detail_links(self):
+        featured = self.make_listing('Featured Plot', featured=True)
+        other = self.make_listing('Ordinary Plot')
+
+        hero = self.hero_links(self.client.get('/'))
+
+        self.assertIn(reverse('website:courses_detail', args=[featured.pk]), hero)
+        self.assertIn('Featured Plot', hero)
+        self.assertIn('View listing', hero)
+        self.assertNotIn(reverse('website:courses_detail', args=[other.pk]), hero)
+
+    def test_hero_falls_back_to_newest_listings_with_photos(self):
+        with_photo = self.make_listing('Photo Plot')
+        without_photo = self.make_listing('No Photo Plot', image='')
+
+        hero = self.hero_links(self.client.get('/'))
+
+        self.assertIn(reverse('website:courses_detail', args=[with_photo.pk]), hero)
+        self.assertNotIn(reverse('website:courses_detail', args=[without_photo.pk]), hero)
+
+
 class CustomerReviewTests(TestCase):
     def test_dashboard_links_to_customer_review_moderation(self):
         admin_user = get_user_model().objects.create_superuser(

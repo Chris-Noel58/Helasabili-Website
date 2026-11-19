@@ -9,6 +9,7 @@
     const feedback = popup.querySelector('.site-visit-popup__feedback');
     const submitButton = popup.querySelector('.site-visit-popup__submit');
     const storageKey = 'helasabiliSiteVisitPromptDismissed';
+    const submitLabel = submitButton.innerHTML;
 
     function wasDismissed() {
         try {
@@ -33,16 +34,40 @@
         markDismissed();
     }
 
-    if (!wasDismissed()) {
-        window.setTimeout(function () {
-            if (!popup.hidden) {
-                return;
-            }
-            popup.hidden = false;
-            window.requestAnimationFrame(function () {
-                popup.classList.add('is-visible');
-            });
-        }, 4500);
+    function show() {
+        if (!popup.hidden || wasDismissed()) {
+            return;
+        }
+        // Do not compete with an open chat panel or mobile menu.
+        if (document.body.classList.contains('nav-open') ||
+            document.querySelector('#ai-chat-widget:not(.ai-chat-closed)')) {
+            return;
+        }
+        popup.hidden = false;
+        window.requestAnimationFrame(function () {
+            popup.classList.add('is-visible');
+        });
+        cleanup();
+    }
+
+    // Show only once the visitor shows interest: 40% scrolled, or 25 seconds on page.
+    const timer = window.setTimeout(show, 25000);
+    function onScroll() {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollable > 0 && window.scrollY / scrollable > 0.4) {
+            show();
+        }
+    }
+    function cleanup() {
+        window.clearTimeout(timer);
+        window.removeEventListener('scroll', onScroll);
+    }
+    // On phones the bottom action bar already offers "Book a visit", so never interrupt there.
+    const isPhone = window.matchMedia('(max-width: 767.98px)').matches;
+    if (!wasDismissed() && !isPhone) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+    } else {
+        cleanup();
     }
 
     closeButton.addEventListener('click', dismiss);
@@ -88,7 +113,7 @@
                 feedback.classList.add('is-error');
                 feedback.hidden = false;
                 submitButton.disabled = false;
-                submitButton.innerHTML = '<i class="fas fa-calendar-check" aria-hidden="true"></i> Request a site visit';
+                submitButton.innerHTML = submitLabel;
                 return;
             }
 
@@ -102,7 +127,7 @@
             feedback.classList.add('is-error');
             feedback.hidden = false;
             submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-calendar-check" aria-hidden="true"></i> Request a site visit';
+            submitButton.innerHTML = submitLabel;
         }
     });
 })();

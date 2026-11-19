@@ -77,11 +77,17 @@ def home(request):
     blog_posts = BlogPost.objects.filter(status='published').order_by('-published_date')[:3]
     gallery_images = GalleryImage.objects.filter(is_active=True).order_by('order', 'id')
     featured_gallery_images = gallery_images.filter(show_in_gallery=True)
+    # Photos the admin selected with "Show in hero": shown in the sliding strip under the hero.
     hero_gallery_images = gallery_images.filter(show_in_home_hero=True)
-    if not hero_gallery_images.exists():
-        hero_gallery_images = gallery_images[:1]
     why_choose_background = gallery_images.filter(show_in_why_section=True).first()
-    
+
+    # Hero "Featured listings" slider: listings ticked as featured in the dashboard,
+    # falling back to the newest listings with a photo so the slider is never empty.
+    with_photo = Course.objects.filter(is_active=True).exclude(featured_image='').exclude(featured_image__isnull=True)
+    hero_listings = list(with_photo.filter(is_featured=True).order_by('order', '-created_at')[:6])
+    if not hero_listings:
+        hero_listings = list(with_photo.order_by('-created_at', '-pk')[:5])
+
     context = {
         'courses': courses,
         'testimonials': testimonials,
@@ -90,6 +96,7 @@ def home(request):
         'gallery_images': gallery_images,
         'featured_gallery_images': featured_gallery_images,
         'hero_gallery_images': hero_gallery_images,
+        'hero_listings': hero_listings,
         'why_choose_background': why_choose_background,
         'videos': Video.objects.filter(is_active=True).order_by('-created_at')[:6],
     }

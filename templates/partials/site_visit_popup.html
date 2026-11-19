@@ -1,8 +1,8 @@
-{% if site_visit_projects %}
+{% load ui %}{% if site_visit_projects %}
 <aside class="site-visit-popup" id="site-visit-popup" aria-labelledby="site-visit-title" hidden>
     <section class="site-visit-popup__card">
         <button class="site-visit-popup__close" type="button" aria-label="Close site visit booking form">
-            <i class="fas fa-times" aria-hidden="true"></i>
+            {% icon 'x' %}
         </button>
         <div class="site-visit-popup__intro">
             <span class="site-visit-popup__eyebrow">See it for yourself</span>
@@ -44,7 +44,7 @@
                 <textarea class="form-control" name="message" rows="2" maxlength="1000" placeholder="Anything you would like us to know?"></textarea>
             </label>
             <button class="site-visit-popup__submit" type="submit">
-                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                {% icon 'calendar-check' %}
                 Request a site visit
             </button>
             <p class="site-visit-popup__note">Your details are only used to arrange this visit.</p>

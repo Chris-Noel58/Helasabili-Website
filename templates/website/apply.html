@@ -1,190 +1,77 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load ui %}
 
-{% block title %}Book Now - Helasabili{% endblock %}
+{% block title %}Book a Site Visit - Helasabili Mobile Capital Ltd{% endblock %}
 {% block meta_description %}Request a site visit or booking for a verified Helasabili land listing in Nakuru or Nanyuki.{% endblock %}
 
 {% block content %}
+{% include 'partials/page_header.html' with title="Book a site visit" crumb="Book a visit" subtitle="Tell us which plot you're interested in and our team will confirm availability, pricing and a visit date." %}
 
-<!-- Page Header -->
-<div class="page-header">
-    <div class="container">
-        <h1 class="display-4 fw-bold mb-2">Book Now</h1>
-        <p class="lead">Request a site visit or booking for this listing</p>
-    </div>
-</div>
-
-<!-- Application Form Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <!-- Form -->
-            <div class="col-lg-7 mb-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-5">
-                        <h3 class="fw-bold mb-4">Booking Request</h3>
-                        
-                        <form method="POST" data-validate="true">
-                            {% csrf_token %}
-                            
-                            {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {{ form.non_field_errors }}
-                            </div>
-                            {% endif %}
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Full Name *</label>
-                                {{ form.full_name }}
-                                {% if form.full_name.errors %}
-                                <div class="alert alert-danger small mt-1">{{ form.full_name.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Email Address *</label>
-                                {{ form.email }}
-                                {% if form.email.errors %}
-                                <div class="alert alert-danger small mt-1">{{ form.email.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number *</label>
-                                {{ form.phone }}
-                                {% if form.phone.errors %}
-                                <div class="alert alert-danger small mt-1">{{ form.phone.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Listing *</label>
-                                {{ form.course }}
-                                {% if form.course.errors %}
-                                <div class="alert alert-danger small mt-1">{{ form.course.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Booking Notes (Optional)</label>
-                                {{ form.message }}
-                                {% if form.message.errors %}
-                                <div class="alert alert-danger small mt-1">{{ form.message.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-calendar-check"></i> Request Booking
-                            </button>
-                        </form>
-                    </div>
+<section class="section section--tight">
+    <div class="container contact-layout contact-layout--form-first">
+        <div class="form-card">
+            <h2>Booking request</h2>
+            <p class="muted">Fields marked * are required. We'll contact you within 24 hours.</p>
+            <form class="form" method="post" novalidate data-validate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="form-alert">{{ form.non_field_errors }}</div>{% endif %}
+                {% include 'partials/form_field.html' with field=form.full_name label="Full name" %}
+                <div class="form-row">
+                    {% include 'partials/form_field.html' with field=form.email label="Email address" %}
+                    {% include 'partials/form_field.html' with field=form.phone label="Phone number" %}
                 </div>
-            </div>
-            
-            <!-- Info Sidebar -->
-            <div class="col-lg-5">
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">
-                            <i class="fas fa-info-circle" style="color:var(--brand-green)"></i> Land Listing Info
-                        </h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <strong>✓</strong> Request a site visit
-                            </li>
-                            <li class="mb-2">
-                                <strong>✓</strong> Get verified listing details
-                            </li>
-                            <li class="mb-2">
-                                <strong>✓</strong> Confirm availability and pricing
-                            </li>
-                            <li>
-                                <strong>✓</strong> Our team will contact you within 24 hours
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                {% if contact_info %}
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">
-                            <i class="fas fa-phone text-primary"></i> Contact Us
-                        </h5>
-                        <div class="mb-3">
-                            <strong>Phone:</strong><br>
-                            <a href="tel:{{ contact_info.phone_primary }}" class="text-decoration-none">
-                                {{ contact_info.phone_primary }}
-                            </a>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Email:</strong><br>
-                            <a href="mailto:{{ contact_info.email }}" class="text-decoration-none">
-                                {{ contact_info.email }}
-                            </a>
-                        </div>
-                        <div>
-                            <strong>Hours:</strong><br>
-                            {{ contact_info.opening_hours }}
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
+                {% include 'partials/form_field.html' with field=form.course label="Property" %}
+                {% include 'partials/form_field.html' with field=form.message label="Notes, such as a preferred visit date" %}
+                <button type="submit" class="btn btn--accent btn--lg btn--block">{% icon 'calendar-check' %} Request booking</button>
+            </form>
         </div>
+
+        <aside class="contact-panel">
+            <h2 class="contact-panel__title">What happens next</h2>
+            <ol class="timeline">
+                <li><strong>We call you</strong><span>A sales advisor contacts you within 24 hours to confirm details.</span></li>
+                <li><strong>Visit the site</strong><span>We arrange a convenient date to view the plot and surroundings.</span></li>
+                <li><strong>Verified paperwork</strong><span>Get verified listing details, pricing and the sale agreement.</span></li>
+                <li><strong>Own your land</strong><span>Complete payment and we process your title transfer.</span></li>
+            </ol>
+            {% if contact_info %}
+            <div class="help-box">
+                <h3>Prefer to talk?</h3>
+                {% if contact_info.phone_primary %}<a href="tel:{{ contact_info.phone_primary }}">{% icon 'phone' %} {{ contact_info.phone_primary }}</a>{% endif %}
+                {% if contact_info.email %}<a href="mailto:{{ contact_info.email }}">{% icon 'mail' %} {{ contact_info.email }}</a>{% endif %}
+                {% if contact_info.opening_hours %}<p>{% icon 'clock' %} {{ contact_info.opening_hours }}</p>{% endif %}
+            </div>
+            {% endif %}
+        </aside>
     </div>
 </section>
 
-<!-- FAQ Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="fw-bold mb-5 text-center">Frequently Asked Questions</h2>
-        
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item border-0 mb-3 shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                How do I purchase a property?
-                            </button>
-                        </h2>
-                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Contact our sales team to discuss the property, arrange a site visit, and learn about the purchase and title-transfer process.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="accordion-item border-0 mb-3 shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                Can I visit a project before purchasing?
-                            </button>
-                        </h2>
-                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Yes. Contact our sales team to arrange a visit and confirm availability for the property you are interested in.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="accordion-item border-0 mb-3 shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                How long does it take to get an admission decision?
-                            </button>
-                        </h2>
-                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Most decisions are made within 2-3 weeks of submission. You'll receive an email with the decision directly.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<section class="section section--tint" aria-labelledby="faq-title">
+    <div class="container container--narrow">
+        <div class="section-head section-head--center">
+            <div>
+                <p class="eyebrow">FAQ</p>
+                <h2 id="faq-title" class="section-title">Frequently asked questions</h2>
             </div>
+        </div>
+        <div class="faq">
+            <details open>
+                <summary>How do I purchase a property?{% icon 'chevron-down' %}</summary>
+                <p>Contact our sales team to discuss the property, arrange a site visit, and learn about the purchase and title-transfer process.</p>
+            </details>
+            <details>
+                <summary>Can I visit a project before purchasing?{% icon 'chevron-down' %}</summary>
+                <p>Yes. Book a site visit using the form above and we will confirm availability for the property you are interested in.</p>
+            </details>
+            <details>
+                <summary>Are the plots title-verified?{% icon 'chevron-down' %}</summary>
+                <p>Yes. Each plot is surveyed and its title verified before it is listed, and every sale is backed by a documented agreement.</p>
+            </details>
+            <details>
+                <summary>How soon will I hear back after booking?{% icon 'chevron-down' %}</summary>
+                <p>Our team will contact you within 24 hours of your request to confirm the details and agree on a visit date.</p>
+            </details>
         </div>
     </div>
 </section>
-
 {% endblock %}

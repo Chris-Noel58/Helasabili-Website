@@ -1,0 +1,23 @@
+{% load ui %}{# Expects: review (dict from _public_reviews) #}
+<figure class="review-card">
+    <div class="stars" role="img" aria-label="{{ review.rating }} out of 5 stars">
+        {% for i in "12345" %}<span class="star{% if i|add:0 <= review.rating %} is-on{% endif %}">{% icon 'star-solid' %}</span>{% endfor %}
+    </div>
+    <blockquote class="review-card__quote">{{ review.message|linebreaksbr }}</blockquote>
+    <figcaption class="review-card__author">
+        {% if review.photo_url %}
+        <img class="avatar" src="{{ review.photo_url }}" width="44" height="44" alt="" loading="lazy" decoding="async">
+        {% else %}
+        <span class="avatar avatar--initial" aria-hidden="true">{{ review.name|slice:":1"|upper }}</span>
+        {% endif %}
+        <span>
+            <strong>{{ review.name }}</strong>
+            {% if review.author_url %}
+            <a href="{{ review.author_url }}" target="_blank" rel="noopener noreferrer">Google reviewer</a>
+            {% else %}
+            <small>{{ review.source }}</small>
+            {% endif %}
+            {% if review.relative_date %}<small>{{ review.relative_date }}</small>{% endif %}
+        </span>
+    </figcaption>
+</figure>

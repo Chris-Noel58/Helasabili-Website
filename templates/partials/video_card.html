@@ -1,0 +1,12 @@
+{% load ui %}{# Expects: video #}
+<article class="video-card">
+    <div class="video-embed" data-youtube-id="{{ video.youtube_id }}">
+        {% if video.thumbnail %}<img src="{{ video.thumbnail }}" alt="" loading="lazy" decoding="async">{% endif %}
+        <button type="button" class="video-embed__play" aria-label="Play video: {{ video.title }}">{% icon 'play-solid' %}</button>
+    </div>
+    <div class="video-card__body">
+        <h3 class="video-card__title">{{ video.title }}</h3>
+        {% if video.description %}<p>{{ video.description|truncatechars:140 }}</p>{% endif %}
+        <a class="link-arrow" href="https://www.youtube.com/watch?v={{ video.youtube_id }}" target="_blank" rel="noopener">Watch on YouTube {% icon 'arrow-right' %}</a>
+    </div>
+</article>

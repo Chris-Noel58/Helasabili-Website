@@ -1,113 +1,43 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load ui %}
 
-{% block title %}Listings - Helasabili Mobile Capital Ltd{% endblock %}
+{% block title %}Land for Sale | Property Listings - Helasabili Mobile Capital Ltd{% endblock %}
 {% block meta_description %}Browse verified 50x100 land plots and property investment opportunities in Nakuru, Nanyuki, and nearby areas.{% endblock %}
 
 {% block content %}
+{% include 'partials/page_header.html' with title="Property listings" subtitle="Verified 50x100 plots and land investment opportunities in Nakuru, Nanyuki and beyond." %}
 
-<!-- Page Header -->
-<div class="page-header">
+<section class="section section--tight">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-2">Property Listings</h1>
-        <p class="lead">Browse verified 50x100 plots and land investment opportunities</p>
-    </div>
-</div>
+        <div class="toolbar">
+            <form class="search-field" method="get" role="search">
+                <label class="visually-hidden" for="listingSearch">Search listings</label>
+                {% icon 'search' 'search-field__icon' %}
+                <input id="listingSearch" type="search" name="search" value="{{ search_query }}" placeholder="Location or project name" enterkeyhint="search">
+                <button type="submit" class="btn btn--primary">Search</button>
+            </form>
+            <p class="toolbar__count">
+                {% with total=courses|length %}
+                <strong>{{ total }}</strong> {{ total|pluralize:"property,properties" }}{% if search_query %} matching &ldquo;{{ search_query }}&rdquo; &middot; <a href="{% url 'website:courses_list' %}">Clear search</a>{% endif %}
+                {% endwith %}
+            </p>
+        </div>
 
-<!-- Search & Filter -->
-<section class="py-4 bg-light border-bottom">
-    <div class="container">
-        <form method="GET" class="listing-search-form d-flex gap-2" data-validate="true">
-            <div class="flex-grow-1">
-                  <input type="text" name="search" class="form-control form-control-lg" 
-                      placeholder="Search listings (location, name)..." value="{{ search_query }}">
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-search"></i> Search
-            </button>
-        </form>
-    </div>
-</section>
-
-<!-- Courses Grid -->
-<section class="py-5">
-    <div class="container">
         {% if courses %}
-        <div class="row g-4">
+        <div class="card-grid">
             {% for course in courses %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm hover-lift">
-                    {% if course.featured_image %}
-                        {% if course.featured_image.url %}
-                        <img src="{{ course.featured_image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;" loading="lazy" decoding="async">
-                        {% elif course.featured_image.name and MEDIA_URL %}
-                        <img src="{{ MEDIA_URL }}{{ course.featured_image.name }}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;" loading="lazy" decoding="async">
-                        {% else %}
-                        <img src="{% static 'images/default-course.jpg' %}" class="card-img-top" alt="{{ course.title }}" style="height: 220px; object-fit: cover;" loading="lazy" decoding="async">
-                        {% endif %}
-                    {% else %}
-                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 220px;">
-                        <i class="fas fa-image fa-4x"></i>
-                    </div>
-                    {% endif %}
-
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ course.title }}</h5>
-                        <p class="text-muted mb-2">
-                            {% if course.location %}
-                                {{ course.location }}
-                            {% else %}
-                                {{ course.description|truncatewords:10 }}
-                            {% endif %}
-                        </p>
-                        <div class="d-flex align-items-center justify-content-between mt-3">
-                            <div class="text-muted small">
-                                <i class="fas fa-ruler-combined"></i> 50 x 100
-                            </div>
-                            <div class="fw-bold" style="font-size:1.1rem; color:var(--brand-green);">
-                                {% if course.fees %}
-                                    KSH. {{ course.fees|floatformat:0 }}
-                                {% else %}
-                                    Contact for price
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-footer bg-white border-top">
-                        <div class="d-flex gap-2">
-                            <a href="{% url 'website:courses_detail' course.id %}" class="btn btn-sm btn-outline-primary flex-grow-1">
-                                View Lands
-                            </a>
-                            <a href="{% url 'website:contact' %}?listing={{ course.id }}" class="btn btn-sm btn-primary">
-                                Contact Sales
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {% include 'partials/property_card.html' %}
             {% endfor %}
         </div>
-        
         {% else %}
-        <div class="alert alert-info text-center py-5">
-            <i class="fas fa-info-circle fa-3x mb-3"></i>
-            <h5 class="mt-3">No Listings Found</h5>
-            <p class="mb-0">No listings match your search criteria. Please try again with different keywords.</p>
+        <div class="empty-state">
+            {% icon 'search' %}
+            <h2>No listings found</h2>
+            <p>No listings match your search. Try a different location or <a href="{% url 'website:courses_list' %}">view all properties</a>.</p>
         </div>
         {% endif %}
     </div>
 </section>
 
-<!-- Call to Action -->
-<section class="py-5 bg-light">
-    <div class="container text-center">
-        <h2 class="fw-bold mb-3">Need help finding the right plot?</h2>
-        <p class="text-muted mb-4">Talk to our land sales team for more information about available plots, pricing, and secure investments.</p>
-        <a href="{% url 'website:contact' %}" class="btn btn-primary btn-lg">
-            <i class="fas fa-envelope"></i> Contact Us
-        </a>
-    </div>
-</section>
-
+{% include 'partials/cta_band.html' with cta_title="Need help finding the right plot?" cta_text="Tell us your budget and preferred location, and our land sales team will recommend verified options." %}
 {% endblock %}

@@ -1,134 +1,43 @@
-{% load static %}
+{% load ui %}{% with page=request.resolver_match.url_name %}
+<header class="site-header" id="siteHeader">
+    <div class="container site-header__inner">
+        <a class="brand" href="{% url 'website:home' %}" aria-label="Helasabili home">
+            {% if site_settings and site_settings.logo %}
+            <img class="brand__logo" src="{{ site_settings.logo.url }}" alt="" height="40">
+            {% else %}
+            <span class="brand__mark" aria-hidden="true">{% icon 'house' %}</span>
+            {% endif %}
+            <span class="brand__text">
+                <span class="brand__name">Helasabili</span>
+                <span class="brand__tag">Mobile Capital Ltd</span>
+            </span>
+        </a>
 
-<header class="site-header" id="siteNavbar">
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'website:home' %}" aria-label="Helasabili home page">
-                <span class="brand-mark">
-                    <i class="fas fa-building"></i>
-                </span>
-                <span class="brand-copy">
-                    <span class="brand-name">Helasabili</span>
-                </span>
-            </a>
-
-            <button class="navbar-toggler" type="button" id="siteNavToggle" aria-controls="navbarNav" aria-expanded="false" aria-label="Open navigation menu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="mobile-nav-panel" id="navbarNav">
-                <div class="mobile-nav-heading">
-                    <span class="fw-bold">Menu</span>
-                    <button class="mobile-nav-close" type="button" aria-label="Close navigation menu">
-                        <i class="fas fa-times" aria-hidden="true"></i>
-                    </button>
-                </div>
-
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'website:home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'website:about' %}">About</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'courses_list' or request.resolver_match.url_name == 'apply' %}active{% endif %}" href="#" id="propertiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Properties
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="propertiesDropdown">
-                            <li><a class="dropdown-item" href="{% url 'website:courses_list' %}">Listings</a></li>
-                            <li><a class="dropdown-item" href="{% url 'website:apply' %}">Book Now</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" href="{% url 'website:blog_list' %}">News &amp; Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'videos' %}active{% endif %}" href="{% url 'website:videos' %}">Videos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'website:gallery' %}">Gallery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'website:contact' %}">Contact</a>
-                    </li>
-                </ul>
-
-                <div class="header-actions">
-                    <a class="nav-button nav-button-secondary" href="{% url 'website:contact' %}">
-                        <i class="fas fa-phone-alt"></i> Call Sales
-                    </a>
-                    {% if user.is_authenticated and user.is_staff %}
-                    <a class="nav-button nav-button-primary" href="{% url 'dashboard:dashboard' %}">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
-                    {% endif %}
-                </div>
+        <nav class="site-nav" id="siteNav" aria-label="Main">
+            <ul class="site-nav__list">
+                <li><a href="{% url 'website:home' %}" {% if page == 'home' %}aria-current="page"{% endif %}>Home</a></li>
+                <li><a href="{% url 'website:courses_list' %}" {% if page == 'courses_list' or page == 'courses_detail' %}aria-current="page"{% endif %}>Properties</a></li>
+                <li><a href="{% url 'website:about' %}" {% if page == 'about' %}aria-current="page"{% endif %}>About</a></li>
+                <li><a href="{% url 'website:gallery' %}" {% if page == 'gallery' %}aria-current="page"{% endif %}>Gallery</a></li>
+                <li><a href="{% url 'website:videos' %}" {% if page == 'videos' %}aria-current="page"{% endif %}>Videos</a></li>
+                <li><a href="{% url 'website:blog_list' %}" {% if page == 'blog_list' or page == 'blog_detail' %}aria-current="page"{% endif %}>News</a></li>
+                <li><a href="{% url 'website:contact' %}" {% if page == 'contact' %}aria-current="page"{% endif %}>Contact</a></li>
+            </ul>
+            <div class="site-nav__actions">
+                {% if contact_info and contact_info.phone_primary %}
+                <a class="header-phone" href="tel:{{ contact_info.phone_primary }}">
+                    {% icon 'phone' %}<span>{{ contact_info.phone_primary }}</span>
+                </a>
+                {% endif %}
+                {% if user.is_authenticated and user.is_staff %}
+                <a class="btn btn--ghost btn--sm" href="{% url 'dashboard:dashboard' %}">{% icon 'layout-dashboard' %} Dashboard</a>
+                {% endif %}
+                <a class="btn btn--accent btn--sm" href="{% url 'website:apply' %}" {% if page == 'apply' %}aria-current="page"{% endif %}>{% icon 'calendar-check' %} Book a visit</a>
             </div>
-        </div>
-    </nav>
+        </nav>
+
+        <button type="button" class="icon-btn nav-toggle" data-nav-open aria-controls="siteNav" aria-expanded="false" aria-label="Open menu">{% icon 'menu' 'nav-toggle__open' %}{% icon 'x' 'nav-toggle__close' %}</button>
+    </div>
 </header>
-<div class="mobile-nav-backdrop" data-close-site-menu></div>
-
-<script>
-    (function () {
-        const navbar = document.getElementById('siteNavbar');
-        const toggle = document.getElementById('siteNavToggle');
-        const menu = document.getElementById('navbarNav');
-        const closeButton = navbar && navbar.querySelector('.mobile-nav-close');
-        const backdrop = document.querySelector('[data-close-site-menu]');
-
-        if (!navbar || !toggle || !menu || !backdrop || !closeButton) return;
-
-        function setMenuOpen(open) {
-            document.body.classList.toggle('site-menu-open', open);
-            menu.classList.toggle('is-open', open);
-            backdrop.classList.toggle('show', open);
-
-            if (window.innerWidth < 1200) {
-                menu.style.display = open ? 'block' : 'none';
-                menu.style.transform = open ? 'translateX(0)' : 'translateX(-105%)';
-                menu.style.visibility = open ? 'visible' : 'hidden';
-                menu.style.pointerEvents = open ? 'auto' : 'none';
-            } else {
-                menu.style.display = 'flex';
-                menu.style.transform = 'none';
-                menu.style.visibility = 'visible';
-                menu.style.pointerEvents = 'auto';
-            }
-
-            backdrop.style.opacity = open ? '1' : '0';
-            backdrop.style.visibility = open ? 'visible' : 'hidden';
-            backdrop.style.pointerEvents = open ? 'auto' : 'none';
-            toggle.setAttribute('aria-expanded', String(open));
-            toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
-        }
-
-        toggle.addEventListener('click', function () {
-            setMenuOpen(!document.body.classList.contains('site-menu-open'));
-        });
-        closeButton.addEventListener('click', function () {
-            setMenuOpen(false);
-        });
-        backdrop.addEventListener('click', function () {
-            setMenuOpen(false);
-        });
-        menu.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-item').forEach(function (link) {
-            link.addEventListener('click', function () {
-                setMenuOpen(false);
-            });
-        });
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') setMenuOpen(false);
-        });
-        const desktopQuery = window.matchMedia('(min-width: 1200px)');
-        const closeMenuOnDesktop = function (event) {
-            if (event.matches) setMenuOpen(false);
-        };
-        if (desktopQuery.addEventListener) {
-            desktopQuery.addEventListener('change', closeMenuOnDesktop);
-        } else if (desktopQuery.addListener) {
-            desktopQuery.addListener(closeMenuOnDesktop);
-        }
-    }());
-</script>
+<div class="nav-backdrop" data-nav-close hidden></div>
+{% endwith %}

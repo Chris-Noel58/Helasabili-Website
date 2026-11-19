@@ -158,7 +158,7 @@ class CourseForm(forms.ModelForm):
     """Property project management form for admin."""
     class Meta:
         model = Course
-        fields = ['title', 'description', 'location', 'plot_size', 'fees', 'featured_image', 'extra_details', 'is_active', 'order']
+        fields = ['title', 'description', 'location', 'plot_size', 'fees', 'featured_image', 'extra_details', 'is_active', 'is_featured', 'order']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -190,6 +190,9 @@ class CourseForm(forms.ModelForm):
                 'placeholder': 'Additional listing details (optional)'
             }),
             'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'is_featured': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
             }),
             'order': forms.NumberInput(attrs={

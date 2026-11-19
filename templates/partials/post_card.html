@@ -1,0 +1,16 @@
+{% load ui %}{# Expects: post #}
+<article class="post-card">
+    <a class="post-card__media" href="{% url 'website:blog_detail' post.slug %}" tabindex="-1" aria-hidden="true">
+        {% if post.featured_image %}
+        <img src="{{ post.featured_image.url }}" srcset="{{ post.featured_image|srcset:800 }}" sizes="(min-width: 1100px) 360px, (min-width: 700px) 45vw, 92vw" alt="" loading="lazy" decoding="async">
+        {% else %}
+        <span class="media-placeholder">{% icon 'newspaper' %}</span>
+        {% endif %}
+    </a>
+    <div class="post-card__body">
+        <p class="meta">{% icon 'calendar' %}<time datetime="{{ post.published_date|date:'c' }}">{{ post.published_date|date:"M j, Y" }}</time></p>
+        <h3 class="post-card__title"><a href="{% url 'website:blog_detail' post.slug %}">{{ post.title }}</a></h3>
+        <p class="post-card__excerpt">{{ post.excerpt|striptags|truncatewords:22 }}</p>
+        <a class="link-arrow" href="{% url 'website:blog_detail' post.slug %}">Read article {% icon 'arrow-right' %}</a>
+    </div>
+</article>

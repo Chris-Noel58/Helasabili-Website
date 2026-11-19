@@ -1,24 +1,33 @@
-{% load static %}
+{% load ui %}
 <div id="ai-chat-widget" class="ai-chat-closed">
-  <button id="ai-chat-toggle" class="ai-chat-toggle">Chat with AI</button>
+  <button id="ai-chat-toggle" class="ai-chat-toggle" type="button" aria-controls="ai-chat-panel" aria-expanded="false">
+    {% icon 'message-circle' %}<span>Ask LandAI</span>
+  </button>
 
-  <div id="ai-chat-panel" class="ai-chat-panel" aria-hidden="true">
+  <div id="ai-chat-panel" class="ai-chat-panel" role="dialog" aria-label="LandAI assistant" aria-hidden="true">
     <header class="ai-chat-header">
-      <div class="ai-chat-title">LandAI</div>
-      <button id="ai-chat-close" class="ai-chat-close">×</button>
+      <span class="ai-chat-avatar">{% icon 'sparkles' %}</span>
+      <div>
+        <div class="ai-chat-title">LandAI</div>
+        <div class="ai-chat-subtitle">Ask about plots, prices or booking</div>
+      </div>
+      <button id="ai-chat-close" class="ai-chat-close" type="button" aria-label="Close chat">{% icon 'x' %}</button>
     </header>
 
-    <section id="ai-chat-messages" class="ai-chat-messages" role="log" aria-live="polite"></section>
+    <section id="ai-chat-messages" class="ai-chat-messages" role="log" aria-live="polite">
+      <div class="ai-chat-bubble ai">Hi! I can help you find a plot, check prices or book a site visit. What are you looking for?</div>
+    </section>
 
     <div class="ai-chat-suggestions" id="ai-chat-suggestions">
-      <button data-suggestion="Show plots under KES 800,000">Show plots under KES 800,000</button>
-      <button data-suggestion="Land near Nakuru">Land near Nakuru</button>
-      <button data-suggestion="Installment plans">Installment plans</button>
+      <button type="button" data-suggestion="Show plots under KES 800,000">Plots under KES 800k</button>
+      <button type="button" data-suggestion="Land near Nakuru">Land near Nakuru</button>
+      <button type="button" data-suggestion="Installment plans">Installment plans</button>
     </div>
 
     <footer class="ai-chat-footer">
-      <input id="ai-chat-input" placeholder="Ask me about plots, prices, or booking" autocomplete="off" />
-      <button id="ai-chat-send">Send</button>
+      <label class="visually-hidden" for="ai-chat-input">Message</label>
+      <input id="ai-chat-input" placeholder="Type your question…" autocomplete="off">
+      <button id="ai-chat-send" type="button" aria-label="Send message">{% icon 'send' %}</button>
     </footer>
   </div>
 </div>
