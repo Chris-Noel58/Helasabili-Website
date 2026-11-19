@@ -73,7 +73,10 @@ def _public_reviews(limit=None):
 def home(request):
     """Home page view with featured content"""
     courses = Course.objects.filter(is_active=True).order_by('-created_at', '-pk')[:6]
-    testimonials = _public_reviews(limit=6)
+    all_reviews = _public_reviews()
+    testimonials = all_reviews[:4]
+    rated = [r['rating'] for r in all_reviews if r.get('rating')]
+    review_avg = round(sum(rated) / len(rated), 1) if rated else None
     blog_posts = BlogPost.objects.filter(status='published').order_by('-published_date')[:3]
     gallery_images = GalleryImage.objects.filter(is_active=True).order_by('order', 'id')
     featured_gallery_images = gallery_images.filter(show_in_gallery=True)
@@ -91,6 +94,8 @@ def home(request):
     context = {
         'courses': courses,
         'testimonials': testimonials,
+        'review_count': len(all_reviews),
+        'review_avg': review_avg,
         'google_reviews_url': _google_review_url(),
         'blog_posts': blog_posts,
         'gallery_images': gallery_images,

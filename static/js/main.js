@@ -392,7 +392,7 @@
         '.section-head', '.why-content > .section-lead', '.card-grid > *', '.feature-grid > *', '.steps > *',
         '.bento__item', '.gallery-tile', '.team-card', '.value-card', '.highlight-strip li', '.thumb-grid > a',
         '.cta-band__inner', '.form-card', '.contact-panel', '.price-card', '.faq details', '.feature-post',
-        '.fact-row', '.detail-list', '.empty-state', '.center-actions'
+        '.fact-row', '.detail-list', '.empty-state', '.center-actions', '.reviews-summary', '.reviews-list > *'
     ].join(',');
     var REVEAL_ZOOM = '.why-media, .split__media, .director__photo, .photo-grid';
 

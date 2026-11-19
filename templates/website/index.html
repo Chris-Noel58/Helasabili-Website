@@ -214,31 +214,25 @@
     </div>
 </section>
 
-<!-- Testimonials -->
-<section class="section section--navy" aria-labelledby="reviews-title">
+<!-- News -->
+{% if blog_posts %}
+<section class="section section--tint" aria-labelledby="news-title">
     <div class="container">
         <div class="section-head">
             <div>
-                <p class="eyebrow eyebrow--light">Client reviews</p>
-                <h2 id="reviews-title" class="section-title">What our buyers say</h2>
+                <p class="eyebrow">News &amp; updates</p>
+                <h2 id="news-title" class="section-title">Latest from Helasabili</h2>
             </div>
-            <div class="section-head__actions">
-                <a class="btn btn--light" href="{% url 'website:testimonials' %}#review-form-title">Write a review</a>
-                {% if google_reviews_url %}<a class="btn btn--ghost-light" href="{{ google_reviews_url }}" target="_blank" rel="noopener noreferrer">Review us on Google</a>{% endif %}
-            </div>
+            <a class="btn btn--outline" href="{% url 'website:blog_list' %}">All articles {% icon 'arrow-right' %}</a>
         </div>
-        {% if testimonials %}
         <div class="card-grid card-grid--scroll">
-            {% for review in testimonials %}
-                {% include 'partials/review_card.html' %}
+            {% for post in blog_posts %}
+                {% include 'partials/post_card.html' %}
             {% endfor %}
         </div>
-        <div class="center-actions"><a class="link-arrow link-arrow--light" href="{% url 'website:testimonials' %}">Read all reviews {% icon 'arrow-right' %}</a></div>
-        {% else %}
-        <div class="empty-state empty-state--dark">{% icon 'quote' %}<p>No reviews yet. <a href="{% url 'website:testimonials' %}#review-form-title">Be the first to share your experience.</a></p></div>
-        {% endif %}
     </div>
 </section>
+{% endif %}
 
 <!-- Gallery preview -->
 {% if featured_gallery_images %}
@@ -285,26 +279,50 @@
 </section>
 {% endif %}
 
-<!-- News -->
-{% if blog_posts %}
-<section class="section" aria-labelledby="news-title">
-    <div class="container">
-        <div class="section-head">
-            <div>
-                <p class="eyebrow">News &amp; updates</p>
-                <h2 id="news-title" class="section-title">Latest from Helasabili</h2>
+{% include 'partials/cta_band.html' %}
+
+<!-- Testimonials (last section before the footer) -->
+<section class="section reviews-section" aria-labelledby="reviews-title">
+    <div class="container reviews-layout">
+        <div class="reviews-summary">
+            <p class="eyebrow">Client reviews</p>
+            <h2 id="reviews-title" class="section-title">What our buyers say</h2>
+            {% if review_avg %}
+            <div class="rating-summary">
+                <span class="rating-summary__score">{{ review_avg|floatformat:1 }}</span>
+                <div>
+                    {% with rounded=review_avg|floatformat:0 %}
+                    <div class="stars" role="img" aria-label="Average rating {{ review_avg|floatformat:1 }} out of 5">
+                        {% for i in "12345" %}<span class="star{% if i|add:0 <= rounded|add:0 %} is-on{% endif %}">{% icon 'star-solid' %}</span>{% endfor %}
+                    </div>
+                    {% endwith %}
+                    <small>Based on {{ review_count }} review{{ review_count|pluralize }}</small>
+                </div>
             </div>
-            <a class="btn btn--outline" href="{% url 'website:blog_list' %}">All articles {% icon 'arrow-right' %}</a>
+            {% else %}
+            <p class="section-lead">Real experiences from landowners who bought with Helasabili.</p>
+            {% endif %}
+            <div class="reviews-summary__actions">
+                <a class="btn btn--primary" href="{% url 'website:testimonials' %}#review-form-title">{% icon 'send' %} Write a review</a>
+                {% if google_reviews_url %}<a class="btn btn--outline" href="{{ google_reviews_url }}" target="_blank" rel="noopener noreferrer">Review us on Google</a>{% endif %}
+            </div>
+            {% if review_count > testimonials|length %}
+            <a class="link-arrow" href="{% url 'website:testimonials' %}">Read all {{ review_count }} reviews {% icon 'arrow-right' %}</a>
+            {% endif %}
         </div>
-        <div class="card-grid card-grid--scroll">
-            {% for post in blog_posts %}
-                {% include 'partials/post_card.html' %}
+
+        {% if testimonials %}
+        <div class="reviews-list reviews-list--{{ testimonials|length }} card-grid--scroll">
+            {% for review in testimonials %}
+                {% include 'partials/review_card.html' %}
             {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-state">{% icon 'quote' %}<p>No reviews yet. <a href="{% url 'website:testimonials' %}#review-form-title">Be the first to share your experience.</a></p></div>
+        {% endif %}
     </div>
 </section>
-{% endif %}
 
-{% include 'partials/cta_band.html' %}
+
 
 {% endblock %}
