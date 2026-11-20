@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
-{% load ui %}
+{% load ui seo %}
 
 {% block title %}{{ post.title }} - Helasabili Mobile Capital Ltd{% endblock %}
 {% block meta_description %}{% if post.excerpt %}{{ post.excerpt|striptags|truncatechars:155 }}{% else %}Read property news and updates from Helasabili Mobile Capital Ltd.{% endif %}{% endblock %}
 {% block og_title %}{{ post.title }}{% endblock %}
 {% block og_image %}{% if post.featured_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.featured_image|thumb:1200 }}">{% endif %}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block structured_data %}{% article_jsonld post %}{% endblock %}
 
 {% block content %}
 <article class="article">

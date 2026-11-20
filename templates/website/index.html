@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-{% load static ui %}
+{% load static ui seo %}
 
 {% block title %}Helasabili Mobile Capital Ltd | Verified Land for Sale in Nakuru &amp; Nanyuki{% endblock %}
 {% block meta_description %}Find verified 50x100 land plots in Nakuru and Nanyuki with transparent pricing, secure transactions, and fast title delivery from Helasabili Mobile Capital Ltd.{% endblock %}
 {% block body_class %}page-home{% endblock %}
+{% block structured_data %}{% videos_jsonld videos 3 %}{% endblock %}
 
 {% block preload %}
 {% if hero_listings %}{% with first=hero_listings.0 %}

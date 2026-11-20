@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
-{% load ui %}
+{% load ui seo %}
 
 {% block title %}Video Tours - Helasabili Mobile Capital Ltd{% endblock %}
 {% block meta_description %}Watch Helasabili videos featuring available plots, property locations, and guidance for buyers.{% endblock %}
+
+{% block structured_data %}{% videos_jsonld videos %}{% endblock %}
 
 {% block content %}
 {% include 'partials/page_header.html' with title="Video tours" crumb="Videos" subtitle="Walk through our plots, locations and buying process from wherever you are." %}

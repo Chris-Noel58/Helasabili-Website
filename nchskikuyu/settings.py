@@ -57,6 +57,23 @@ if 'runserver' in os.sys.argv or os.environ.get('RUN_MAIN') or os.environ.get('W
 # If you need to enable DEBUG locally override with environment variable DEBUG=1
 # (kept explicit to avoid accidental developer_override in production)
 
+# Google Analytics 4 measurement ID (e.g. G-ABC123XYZ). Leave unset to disable tracking.
+import re as _re
+GA_MEASUREMENT_ID = config('GA_MEASUREMENT_ID', default='').strip()
+if GA_MEASUREMENT_ID and not _re.fullmatch(r'G-[A-Z0-9]{4,20}', GA_MEASUREMENT_ID):
+    GA_MEASUREMENT_ID = ''
+
+# Never run production on a missing or placeholder key: anyone who knows it can
+# forge session cookies (e.g. log in to the dashboard) and password-reset links.
+_INSECURE_KEYS = {'', 'your-real-secret-key'}
+if not DEBUG and (SECRET_KEY in _INSECURE_KEYS or SECRET_KEY.startswith('django-insecure')):
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured(
+        'SECRET_KEY environment variable must be set to a long random value in production. '
+        'Generate one with: python -c "from django.core.management.utils import '
+        'get_random_secret_key; print(get_random_secret_key())"'
+    )
+
 # Normalize ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS to avoid [''] when empty
 _raw_allowed = config('ALLOWED_HOSTS', default='169.58.136.166,kikuyu-campus-website.onrender.com,.onrender.com,helasabili.co.ke,127.0.0.1,localhost', cast=str)
 if _raw_allowed:
@@ -106,6 +123,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     
     # Third party apps
     'rest_framework',

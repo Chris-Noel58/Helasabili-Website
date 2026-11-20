@@ -120,6 +120,7 @@
             feedback.textContent = result.message;
             feedback.hidden = false;
             form.hidden = true;
+            if (typeof window.hsTrack === 'function') window.hsTrack('generate_lead', { form: 'site_visit_popup' });
             markDismissed();
         } catch (error) {
             console.error('Site visit request could not be submitted.', error);

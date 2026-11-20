@@ -1,3 +1,6 @@
+from django.conf import settings
+
+from core.analytics import pop_events_js
 from core.models import ContactInfo, AboutPage, Course
 from .models import SiteSettings, TeamMember
 
@@ -28,6 +31,8 @@ def site_context(request):
         team_members = []
 
     return {
+        'ga_measurement_id': settings.GA_MEASUREMENT_ID,
+        'analytics_events': pop_events_js(request),
         'contact_info': contact_info,
         'about_page': about_page,
         'site_name': 'Helasabili Mobile Capital Ltd',

@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods, require_POST
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.conf import settings
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from urllib.parse import urlencode
 import json
 import re
@@ -23,6 +23,7 @@ from core.models import (
     Application, AboutPage, ContactInfo, ContactMessage, AboutImage, AboutVideo
 )
 from core.models import Video
+from core.analytics import track_event
 from core.forms import ApplicationForm, SiteVisitBookingForm, ContactForm, CustomerReviewForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import modelform_factory
@@ -315,6 +316,8 @@ def apply(request):
             application = form.save(commit=False)
             application.ip_address = get_client_ip(request)
             application.save()
+            track_event(request, 'generate_lead', form='book_visit',
+                        listing=application.course.title if application.course_id else '')
 
             listing = application.course
             subject = f'New land booking request: {listing.title}'
@@ -407,6 +410,8 @@ def contact(request):
                 sent=False,
                 attempts=0,
             )
+            track_event(request, 'generate_lead', form='contact',
+                        listing=listing.title if listing else '')
 
             # Persist conversation for admin review
             try:
@@ -533,9 +538,18 @@ def about_admin_edit(request):
 
 # ==================== STUDENT PORTAL ====================
 
-def student_portal(request):
-    """Render the student portal template"""
-    return render(request, 'website/student_portal.html')
+@require_http_methods(['GET', 'HEAD'])
+def robots_txt(request):
+    """Tell crawlers to skip private areas and where the sitemap lives."""
+    lines = [
+        'User-agent: *',
+        'Disallow: /admin/',
+        'Disallow: /dashboard/',
+        'Disallow: /api/',
+        '',
+        f'Sitemap: https://{request.get_host()}/sitemap.xml',
+    ]
+    return HttpResponse('\n'.join(lines) + '\n', content_type='text/plain')
 
 
 def landai_chat_api(request):

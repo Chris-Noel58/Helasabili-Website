@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-{% load ui %}
+{% load ui seo %}
 
 {% block title %}{{ course.title }}{% if course.location %} - {{ course.location }}{% endif %} | Helasabili Mobile Capital Ltd{% endblock %}
 {% block meta_description %}{% if course.description %}{{ course.description|striptags|truncatechars:155 }}{% else %}View details, pricing, location, and booking information for {{ course.title }} from Helasabili Mobile Capital Ltd.{% endif %}{% endblock %}
 {% block og_title %}{{ course.title }} | Helasabili{% endblock %}
 {% block og_image %}{% if course.featured_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ course.featured_image|thumb:1200 }}">{% endif %}{% endblock %}
+{% block structured_data %}{% listing_jsonld course %}{% endblock %}
 {% block preload %}{% if course.featured_image %}<link rel="preload" as="image" href="{{ course.featured_image|thumb:1200 }}" imagesrcset="{{ course.featured_image|srcset }}" imagesizes="(min-width: 992px) 760px, 100vw" fetchpriority="high">{% endif %}{% endblock %}
 
 {% block mobile_bar %}

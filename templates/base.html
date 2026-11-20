@@ -1,4 +1,4 @@
-{% load static ui %}<!DOCTYPE html>
+{% load static ui seo %}<!DOCTYPE html>
 <html lang="en" data-icons="{% asset 'img/icons.svg' %}">
 <head>
     <meta charset="UTF-8">
@@ -7,12 +7,32 @@
     <title>{% block title %}Helasabili Mobile Capital Ltd{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Helasabili Mobile Capital Ltd offers verified land plots and secure property investments in Nakuru and Nanyuki.{% endblock %}">
     <meta name="theme-color" content="#1f1367">
-    <meta property="og:type" content="website">
+    {% canonical_url as canonical %}
+    <link rel="canonical" href="{{ canonical }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:site_name" content="Helasabili Mobile Capital Ltd">
     <meta property="og:title" content="{% block og_title %}Helasabili Mobile Capital Ltd{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Verified land plots and secure property investments in Nakuru and Nanyuki.{% endblock %}">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    {% block og_image %}{% endblock %}
+    <meta property="og:url" content="{{ canonical }}">
+    <meta property="og:locale" content="en_KE">
+    {% block og_image %}{% default_share_image as share_image %}{% if share_image %}<meta property="og:image" content="{{ share_image }}">{% endif %}{% endblock %}
+    <meta name="twitter:card" content="summary_large_image">
+
+    {# schema.org data for Google: the business on every page, plus page-specific blocks #}
+    {% site_jsonld %}
+    {% block structured_data %}{% endblock %}
+
+    {% if ga_measurement_id %}
+    {# Google Analytics 4 — only loads when GA_MEASUREMENT_ID is set on the server #}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_measurement_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ ga_measurement_id }}');
+        {% if analytics_events %}{{ analytics_events }}.forEach(function (e) { gtag('event', e[0], e[1]); });{% endif %}
+    </script>
+    {% endif %}
 
     {% if site_settings and site_settings.logo %}
     <link rel="icon" href="{{ site_settings.logo.url }}">

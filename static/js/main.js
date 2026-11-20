@@ -322,6 +322,7 @@
                 box.innerHTML = '';
                 box.appendChild(iframe);
                 box.classList.add('is-playing');
+                track('video_play', { video_title: iframe.title, video_id: box.dataset.youtubeId });
             });
         });
     }
@@ -479,7 +480,30 @@
         });
     }
 
+    /* ---------- Analytics: conversion clicks (no-op unless GA4 is configured) ---------- */
+    function track(name, params) {
+        if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    }
+    window.hsTrack = track;
+
+    function initAnalytics() {
+        document.addEventListener('click', function (e) {
+            var el = e.target.closest('a, button');
+            if (!el) return;
+            var href = el.getAttribute('href') || '';
+            // Where on the page the click came from: header, footer, mobile-bar, price-card or content
+            var where = el.closest('header, footer, .mobile-bar, .price-card');
+            var params = { placement: where ? (where.className.split(' ')[0] || where.tagName.toLowerCase()) : 'content' };
+            if (href.indexOf('tel:') === 0) track('click_call', params);
+            else if (href.indexOf('mailto:') === 0) track('click_email', params);
+            else if (/wa\.me\/|whatsapp\.com/.test(href)) track('click_whatsapp', params);
+            else if (/\/apply\/?(\?|$)/.test(href)) track('click_book_visit', params);
+            else if (el.id === 'ai-chat-toggle') track('open_chat', params);
+        });
+    }
+
     function init() {
+        initAnalytics();
         initNav();
         initMobileBar();
         initReveal();
