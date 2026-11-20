@@ -43,6 +43,33 @@ def config(key, default=None, cast=None):
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def _load_dotenv(path):
+    """Load KEY=VALUE lines from a .env file (gitignored) into os.environ.
+
+    One file on the server then serves both `manage.py` commands and gunicorn.
+    Variables already set in the real environment always win.
+    """
+    try:
+        lines = path.read_text(encoding='utf-8').splitlines()
+    except (FileNotFoundError, PermissionError):
+        return
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+        if line.startswith('export '):
+            line = line[len('export '):]
+        key, value = line.split('=', 1)
+        key, value = key.strip(), value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in '"\'':
+            value = value[1:-1]
+        if key:
+            os.environ.setdefault(key, value)
+
+
+_load_dotenv(BASE_DIR / '.env')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 # Embedded from .env so the project can run without a .env file.
 SECRET_KEY = config('SECRET_KEY', default='your-real-secret-key')
