@@ -317,6 +317,8 @@
                 iframe.title = btn.getAttribute('aria-label').replace('Play video: ', '');
                 iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
                 iframe.allowFullscreen = true;
+                // YouTube requires a Referer to identify the embedding site (else Error 153)
+                iframe.referrerPolicy = 'strict-origin-when-cross-origin';
                 box.innerHTML = '';
                 box.appendChild(iframe);
                 box.classList.add('is-playing');

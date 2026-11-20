@@ -334,6 +334,9 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = config('SECURE_HSTS_INCLUDE_SUBDOMAINS', defaul
 SECURE_HSTS_PRELOAD = config('SECURE_HSTS_PRELOAD', default=False, cast=bool)
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
+# Django defaults to 'same-origin', which strips the Referer on cross-origin
+# requests; YouTube embeds then fail with "Error 153". Send origin only.
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # WhiteNoise Static Files
 if not DEBUG:
